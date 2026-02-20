@@ -1,0 +1,101 @@
+--collision.lua | library
+--[[
+  This library is for collisions, drag & drop behaviors. 
+  for rectangular collision:
+    collision.rect(x,y,obj) | obj being the object with an x,y,width,height | x,y being any camera transfomrations
+  
+  for circular collisions: 
+    collision.cricle(x,y,obj) | obj being the object with an x,y,radius | x,y being any camera transfomrations
+    
+]]
+
+
+
+local collision = {
+  holding = false,
+  holdingObj = nil,
+  heldItem = nil
+
+}
+
+function collision.twoCircle(c1, c2)
+    local dx = c1.x - c2.x
+    local dy = c1.y - c2.y
+    local distanceSq = dx * dx + dy * dy
+    local radiusSum = c1.radius + c2.radius
+
+    return distanceSq < radiusSum * radiusSum
+end
+
+function collision.circleRect(circle, rect)
+    local cx, cy, r = circle.x, circle.y, circle.radius
+    local rx, ry, rw, rh = rect.x, rect.y, rect.width, rect.height
+
+    -- find closest point on the rectangle to the circle center
+    local closestX = math.max(rx, math.min(cx, rx + rw))
+    local closestY = math.max(ry, math.min(cy, ry + rh))
+
+    -- distance from circle center to closest point
+    local dx = cx - closestX
+    local dy = cy - closestY
+
+    return (dx * dx + dy * dy) <= (r * r)
+end
+
+
+
+function collision.twoRect(obj1,obj2)
+  local x1 = obj1.x
+  local y1 = obj1.y
+  local w1 = obj1.width
+  local h1 = obj1.height
+  
+  local x2 = obj2.x
+  local y2 = obj2.y
+  local w2 = obj2.width
+  local h2 = obj2.height
+  
+  return x1 < x2 + w2 and
+         x1 + w1 > x2 and
+         y1 < y2 + h2 and
+         y1 + h1 > y2
+end
+
+function collision.rect(obj,x,y)
+  local x = x or 0
+  local y = y or 0
+  
+  local x1 = CursorX + x
+  local y1 = CursorY + y
+  
+  local x2 = obj.x
+  local y2 = obj.y
+  
+  local width = obj.width 
+  local height = obj.height
+  
+  return x1 > x2 and x1 < x2 + width
+    and y1 > y2 and y1 < y2 + height
+end
+
+function collision.circle(obj,x,y)
+  local x = x or 0
+  local y = y or 0
+  
+  local x1 = CursorX + x
+  local y1 = CursorY + y
+  
+  local x2 = obj.x
+  local y2 = obj.y
+  local radius = obj.radius
+  
+  
+  local dx = x1 - x2
+  local dy = y1 - y2
+  local distance = math.sqrt(dx*dx+dy*dy)
+  
+  
+  return distance <= radius
+end
+
+return collision
