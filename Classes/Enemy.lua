@@ -33,8 +33,11 @@ function Enemy:hit(damage)
     local damage = damage or 0
     self.health = self.health - damage
     self.isHit = true
+    game.lookouts[1].Report:action("damageDealt", damage)
+    game.lookouts[1].Report:action("shotHit")
     if self.health <= 0 then
         self:die()
+        game.lookouts[1].Report:action("enemyKilled")
     end
 end
 

@@ -28,38 +28,38 @@ end
 
 --this function updates all current tweens in the 'tweens' array 
 local function tween_update(dt)
-	for i, instance in ipairs(tweens) do
-    --make sure  instance is not being held
-    if instance.object.held then
-      table.remove(tweens,i)
-    end
-		--timer
-		instance.timer = instance.timer + dt
-		--update position
-		if instance.timer < instance.t then --makes sure timer isn't more than the time wanted.
-			local timerPercentange = instance.timer/instance.t
-			--calculates the distance between final destination and current 
-			local x_between = instance.dX - instance.oX 
-			local y_between = instance.dY - instance.oY
-			if instance.tweenType == "linear" then --linear
-				--updates objects x, y
-				instance.object.x = instance.oX + (x_between*timerPercentange)
-				instance.object.y = instance.oY + (y_between*timerPercentange)
+	for i = #tweens, 1, -1 do
+		local instance = tweens[i]
 
-			end
-			if instance.tweenType == "quad" then --quadratic
-				instance.object.x = instance.dX + (x_between * timerPercentange * timerPercentange)
-				instance.object.y = instance.dY + (y_between * timerPercentange * timerPercentange)
-			end
-		else -- removes if tween has finished
+		if instance.object.held then
+			instance.object.tweening = false
 			table.remove(tweens, i)
-			--if tween finished it should be at the destination x & y if not set them there (also for subpixels)
-			instance.object.x = instance.dX
-			instance.object.y = instance.dY
-      
-      if type(instance.func) == 'function' then
-        instance.func(instance.object)
-      end
+		else
+			instance.timer = instance.timer + dt
+
+			if instance.timer < instance.t then
+			local p = instance.timer / instance.t
+			local x_between = instance.dX - instance.oX
+			local y_between = instance.dY - instance.oY
+
+			if instance.tweenType == "linear" then
+				instance.object.x = instance.oX + x_between * p
+				instance.object.y = instance.oY + y_between * p
+			elseif instance.tweenType == "quad" then
+				instance.object.x = instance.oX + x_between * p * p
+				instance.object.y = instance.oY + y_between * p * p
+			end
+			else
+				instance.object.tweening = false
+				instance.object.x = instance.dX
+				instance.object.y = instance.dY
+
+				if type(instance.func) == "function" then
+					instance.func(instance.object)
+				end
+
+				table.remove(tweens, i)
+			end
 		end
 	end
 end
@@ -73,16 +73,16 @@ end
 
 --function that other script calls to start tween of an object 
 function tweenTo(object, t, tween, x, y,func) 
-  local t = t or 1
-  local x = x or 0
-  local y = y or 0
-  local func = func or function() end
+	local t = t or 1
+	local x = x or 0
+	local y = y or 0
+	local func = func or function() end
   
   
   
 	if object.x == x and object.y == y then
-    return
-  end
+    	return
+	end
   
   --error checking
 	if object == nil then
@@ -92,15 +92,14 @@ function tweenTo(object, t, tween, x, y,func)
 	if t > 0 then
 		--print("time for tween is not valid number")
 	end
-	if tween ~= "linear" then
-		print("not a valid tween")
-    return
+	if tween ~= "linear" and tween ~= "quad" then
+		error("not a valid tween")
+    	return
 	end
 
 	--removes old tween and replaces with the new tween.
-	for i, instance in ipairs(tweens) do
-		if object == instance.object then
-			--removes tween at the old pos
+	for i = #tweens, 1, -1 do
+		if tweens[i].object == object then
 			table.remove(tweens, i)
 		end
 	end
@@ -109,6 +108,7 @@ function tweenTo(object, t, tween, x, y,func)
 	local objectX = object.x
 	local objectY = object.y
 	--insert tween into the tween array
+	object.tweening = true
 	table.insert(tweens, 
 		{
 			object = object,
@@ -120,7 +120,7 @@ function tweenTo(object, t, tween, x, y,func)
 			oX = objectX, -- original x 
 			oY = objectY, -- original y
       func = func, -- function on finish if tween has one
-		})
+	})
 end
 
 function rotate(object, t, tween, endAngle) 

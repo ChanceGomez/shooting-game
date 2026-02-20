@@ -50,7 +50,7 @@ end
 function Bird:draw()
     local flipped = self.facing ~= -1
     love.graphics.setColor(self.color)
-    ap:draw("bird" .. self.id,self.animations[self.animation],.15,self.x,self.y,self.isAlive,flipped)
+    ap:draw("bird" .. self.id,self.animations[self.animation],.15,math.floor(self.x),math.floor(self.y),self.isAlive,flipped)
     Enemy.draw(self)
 end
 

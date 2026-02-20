@@ -41,6 +41,11 @@ function game:update(dt)
         lookout:update(dt)
     end
 
+    if rClick then
+        endofround:getReport(self.lookouts[1].Report)
+        Scene = "endofround"
+    end
+
     if left then
         self:sceneUp()
     elseif right then

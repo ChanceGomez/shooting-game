@@ -6,14 +6,19 @@ function Pistol:new()
   
   obj.damage = 10
   obj.fireRate = 0.4
-  obj.ammo = 4
   obj.maxAmmo = 4
-  obj.reloadTime = 1.5
+  obj.reloadTime = 1
   obj.isReloading = false
   obj.crosshairImage = al:getImage("crosshair_pistol")
   obj.bulletAnimation = al:getAnimation("pistol_bullet_animation")
 
   return obj
+end
+
+
+
+function Pistol:loadBullet(bullet)
+    Gun.loadBullet(self,bullet)
 end
 
 function Pistol:fire()

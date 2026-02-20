@@ -11,21 +11,15 @@ function Lookout:new()
   obj.x = 0
   obj.y = 0
   obj.cloudsTimer = 0
+  obj.Report = Report:new()
   obj.buttons = {}
   obj.isHoveringButton = false
   obj.reloadShelfOpen = false
-  obj.reloadShelf = {
-    x = -128,
-    y = obj.y + Height - 132,
-    images = {
-        background = al:getImage("reloadshelf_background"),
-    },
-  }
-
+  obj.reloadShelf = ReloadShelf:new(-128,obj.y + Height - 68)
     --load buttons
     table.insert(obj.buttons, {
         x = obj.x + 4,
-        y = obj.y + Height - 100,
+        y = obj.y + Height - 68,
         image = al:getImage("button_ammoreload"),
         hoveredImage = al:getImage("button_ammoreload_hovered"),
         width = al:getImage("button_ammoreload"):getWidth(),
@@ -46,7 +40,7 @@ end
 
 function Lookout:openReloadShelf()
     --animate button
-    tweenTo(self.buttons[1],.2,"linear",128,self.buttons[1].y)
+    tweenTo(self.buttons[1],.2,"linear",127,self.buttons[1].y)
     tweenTo(self.reloadShelf,.2,"linear",0,self.reloadShelf.y)
 end
 
@@ -57,6 +51,7 @@ function Lookout:closeReloadShelf()
 end
 
 function Lookout:update(dt)
+    self.isHoveringButton = false
     --update buttons
     button:updateAll(self.buttons)
 
@@ -68,6 +63,12 @@ function Lookout:update(dt)
             self.isHoveringButton = false
         end
     end
+    if collision.rect(self.reloadShelf) then
+        self.isHoveringButton = true
+    end
+
+    --update reload shelf
+    self.reloadShelf:update(dt)
 
     self.handler:update(dt)
     self.cloudsTimer = self.cloudsTimer + dt
@@ -113,13 +114,14 @@ function Lookout:draw()
     button:drawAll(self.buttons)
 
     --draw reloadshelf
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(self.reloadShelf.images.background,self.reloadShelf.x,self.reloadShelf.y)
+    self.reloadShelf:draw()
 
     --draw crosshair
     game.Player:draw()
 
-
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.setFont(perfect_dos_16)
+    love.graphics.print("ammo " .. #game.Player.gun.ammo .. "/" .. game.Player.gun.maxAmmo,10,270)
 
     love.graphics.setColor(.9,.9,.9,1)
     love.graphics.draw(al:getImage("background_hud_layer1"),0,0)

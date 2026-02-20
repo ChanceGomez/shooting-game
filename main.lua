@@ -24,6 +24,7 @@ ap = require("scripts/animationplayer")
 --Scenes  
   game = require("Scenes/game")
   title = require("Scenes/title")
+  endofround = require("Scenes/endofround")
   
 --Global vars
 Width,Height = 640,360
@@ -38,17 +39,22 @@ settings = {
 
 Scenes = {
   game = {
-      draw = function() game:draw() end,
-      load = function() game:load() end,
-      update = function(dt) game:update(dt) end,
+    draw = function() game:draw() end,
+    load = function() game:load() end,
+    update = function(dt) game:update(dt) end,
     },
   title = {
-      draw = function() title:draw() end,
-      load = function() title:load() end,
-      update = function(dt) title:update(dt) end,
+    draw = function() title:draw() end,
+    load = function() title:load() end,
+    update = function(dt) title:update(dt) end,
     },
+  endofround = {
+    draw = function() endofround:draw() end,
+    load = function() endofround:load() end,
+    update = function(dt) endofround:update(dt) end,
   }
-Scene = "game"
+}
+Scene = "title"
 independentRandom = love.math.newRandomGenerator(os.time())
 
 --Functions
@@ -81,6 +87,9 @@ function love.load()
 
   --Load classes
     Lookout = require("classes/Lookout")
+    Report = require("classes/Report")
+    ReloadShelf = require("classes/ReloadShelf")
+    ReloadShelfBullet = require("classes/ReloadShelfBullet")
     EnemyHandler = require("classes/EnemyHandler")
     Player = require("classes/Player")
     Enemy = require("classes/Enemy")
