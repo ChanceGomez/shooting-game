@@ -6,11 +6,15 @@ local flyingAnimation = al:getAnimation("animation_bird_flying")
 local dyingAnimation = al:getAnimation("animation_bird_dying")
 local staticID = 1
 
-function Bird:new(x,y,handler)
+function Bird:new(x,y,handler,difficulty)
   local obj = setmetatable(Enemy:new(x,y,handler), Bird)
-  
-  obj.health = 20
-  obj.speed = 25
+
+  if difficulty == nil then error() end
+  local difficulty = difficulty or 1
+
+  obj.health = 20 * (math.max(difficulty/1.6,1))
+  obj.speed = 25 * (math.max(difficulty/3,1))
+
   obj.passive = true
   obj.animation = "flying"
   obj.animations = {

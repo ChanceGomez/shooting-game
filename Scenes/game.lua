@@ -1,9 +1,9 @@
 local game = {
     Player = nil,
-    Enemies = {},
     lookouts = {},
     scene = 1,
-    camera = { x = 0, y = 0 }
+    camera = { x = 0, y = 0 },
+    round = 1
 }
 
 function game:sceneUp()
@@ -20,6 +20,11 @@ function game:sceneDown()
     end
 end
 
+function game:endRound()
+    endofround:getReport(self.lookouts[1].Report)
+    Scene = "endofround"
+end
+
 function game:load()
   self.canvas = love.graphics.newCanvas(Width,Height)
   self.Player = Player:new()
@@ -32,18 +37,12 @@ function game:update(dt)
     if self.Player then
         self.Player:update(dt)
     end
-    for i, enemy in pairs(self.Enemies) do
-        enemy:update(dt)
-    end
 
     --Update lookouts
-    for i, lookout in pairs(self.lookouts) do
-        lookout:update(dt)
-    end
+    self.lookouts[1]:update(dt)
 
     if rClick then
-        endofround:getReport(self.lookouts[1].Report)
-        Scene = "endofround"
+        self:endRound()
     end
 
     if left then

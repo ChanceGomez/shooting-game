@@ -1,6 +1,7 @@
 local infopanel = {
 	image = nil,
-  defaultCursorOffset = 4
+  defaultCursorOffsetX = 12,
+  defaultCursorOffsetY = 12,
 }
 
 function infopanel:load()
@@ -8,10 +9,16 @@ function infopanel:load()
 end
 
 function infopanel:draw(obj) 
-  local offset = self.defaultCursorOffset
+  local offsetX = self.defaultCursorOffsetX
+  local offsetY = self.defaultCursorOffsetY
   
-	local x,y = CursorX + offset,CursorY
+	local x,y = CursorX + offsetX,CursorY + offsetY
 	local text = obj.info
+	if text == nil then 
+		if obj.description then
+			text = obj.description
+		end
+	end
 	
 	if text == nil then
 		return

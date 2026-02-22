@@ -15,7 +15,13 @@ function Pistol:new()
   return obj
 end
 
+function Pistol:increaseMaxAmmo(ammo)
+    Gun.increaseMaxAmmo(self,ammo)
+end
 
+function Pistol:increaseDamage(damage)
+    Gun.increaseDamage(self,damage)
+end
 
 function Pistol:loadBullet(bullet)
     Gun.loadBullet(self,bullet)

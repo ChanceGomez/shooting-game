@@ -19,12 +19,26 @@ function Gun:loadBullet(bullet)
     table.insert(self.ammo,bullet)
 end
 
+function Gun:increaseDamage(damage)
+    local damage = damage or 1
+    if damage >= 1 then
+        self.damage = self.damage + damage
+    end
+end
+
+function Gun:increaseMaxAmmo(ammo)
+    local ammo = ammo or 1
+    if ammo >= 1 then
+        self.maxAmmo = self.maxAmmo + ammo
+    end
+end
+
 function Gun:fire()
     if self.ammo[1] == nil then return false end
     if game.lookouts[1].isHoveringButton then
         return false
     end
-   game.lookouts[1].handler:checkHit(self.ammo[1].damage)
+   game.lookouts[1].handler:checkHit(self.ammo[1].damage * self.damage)
    game.lookouts[1].Report:action("shotFired")
    table.remove(self.ammo,1)
 end

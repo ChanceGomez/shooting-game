@@ -24,12 +24,16 @@ function title:update(dt)
 end
 
 function title:draw()
+    
+    
     love.graphics.setBackgroundColor(.1,.1,.1,1)
+    
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(al:getImage("background_title_text"))
 
-    button:drawAll(self.buttons)
 
+    button:drawAll(self.buttons)
+    
 
     --Cursor
     love.graphics.setColor(1,1,1,1)

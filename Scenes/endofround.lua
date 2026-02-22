@@ -15,9 +15,8 @@ function endofround:load()
         image = endshiftImage,
         visible = true,
         clicked = function()
-            table.remove(game.lookouts,1)
-            game.lookouts[1] = Lookout:new()
-            Scene = "game"
+            Scene = "shop"
+            shop:loadShop()
         end,
     })
 end

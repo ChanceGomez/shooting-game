@@ -73,6 +73,14 @@ function collision.rect(obj,x,y)
   
   local width = obj.width 
   local height = obj.height
+
+  if width == nil then
+    width = obj.image:getWidth()
+  end
+
+  if height == nil then
+    height = obj.image:getHeight()
+  end
   
   return x1 > x2 and x1 < x2 + width
     and y1 > y2 and y1 < y2 + height

@@ -12,7 +12,7 @@ function ReloadShelfBullet:new(reloadShelf,x,y,isDud)
     obj.x = x or 0
     obj.y = y or 0
     obj.hovered = false
-    obj.damage = 10
+    obj.damage = 1
     obj.inAnimation = false
     obj.reloadShelf = reloadShelf
     obj.isDud = isDud or false

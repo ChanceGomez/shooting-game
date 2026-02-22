@@ -1,20 +1,26 @@
 local Lookout = {}
 Lookout.__index = Lookout
 
-function Lookout:new()
+function Lookout:new(enemies,difficulty)
   local obj = setmetatable({}, Lookout)
   
+  local enemies = enemies or 5
+  local difficulty = difficulty or 1
+
+  obj.enemies = enemies
+  obj.difficulty = difficulty
   obj.enemies = {}
   obj.canvas = love.graphics.newCanvas(Width,Height)
-  obj.handler = EnemyHandler:new(obj)
-  obj.handler:startRound(5)
+  obj.handler = EnemyHandler:new(enemies,difficulty)
+  obj.handler:startRound()
   obj.x = 0
   obj.y = 0
+  obj.roundTimer = 0
   obj.cloudsTimer = 0
   obj.Report = Report:new()
   obj.buttons = {}
   obj.isHoveringButton = false
-  obj.reloadShelfOpen = false
+  obj.reloadShelfOpen = true
   obj.reloadShelf = ReloadShelf:new(-128,obj.y + Height - 68)
     --load buttons
     table.insert(obj.buttons, {
@@ -35,6 +41,8 @@ function Lookout:new()
         end
     })
 
+    obj:openReloadShelf()
+
   return obj
 end
 
@@ -50,7 +58,18 @@ function Lookout:closeReloadShelf()
     tweenTo(self.reloadShelf,.2,"linear",-128,self.reloadShelf.y)
 end
 
+function Lookout:removeEnemy(enemy)
+    for i, instance in ipairs(self.enemies) do
+        if instance == enemy then
+            table.remove(self.enemies,i)
+        end
+    end
+end
+
 function Lookout:update(dt)
+    --update timer
+    self.roundTimer = self.roundTimer + dt
+
     self.isHoveringButton = false
     --update buttons
     button:updateAll(self.buttons)
@@ -67,8 +86,13 @@ function Lookout:update(dt)
         self.isHoveringButton = true
     end
 
+    if not self.handler.isRoundActive then
+        game:endRound()
+    end
+
     --update reload shelf
     self.reloadShelf:update(dt)
+
 
     self.handler:update(dt)
     self.cloudsTimer = self.cloudsTimer + dt
@@ -80,7 +104,7 @@ function Lookout:draw()
     love.graphics.clear()
 
     --background color
-        love.graphics.setBackgroundColor(0.2,0.2,0.25)
+        love.graphics.setBackgroundColor(0.2,0.2,math.min(math.max(self.roundTimer/120+.25,.25),.40))
 
     --clouds background
         local img = al:getImage("background_clouds_layer1")
@@ -122,6 +146,8 @@ function Lookout:draw()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setFont(perfect_dos_16)
     love.graphics.print("ammo " .. #game.Player.gun.ammo .. "/" .. game.Player.gun.maxAmmo,10,270)
+
+    love.graphics.print("enemies " .. #game.lookouts[1].enemies, 10,250)
 
     love.graphics.setColor(.9,.9,.9,1)
     love.graphics.draw(al:getImage("background_hud_layer1"),0,0)

@@ -19,12 +19,16 @@ infopanel = require("scripts/infopanel")
 Observer = require("scripts/observer")
 popup = require("scripts/popup")
 ap = require("scripts/animationplayer")
+upgrades = require("scripts/upgrades")
+roundscript = require("scripts/roundscript")
+artifacts = require("scripts/artifacts")
 
 
 --Scenes  
   game = require("Scenes/game")
   title = require("Scenes/title")
   endofround = require("Scenes/endofround")
+  shop = require("Scenes/shop")
   
 --Global vars
 Width,Height = 640,360
@@ -52,7 +56,12 @@ Scenes = {
     draw = function() endofround:draw() end,
     load = function() endofround:load() end,
     update = function(dt) endofround:update(dt) end,
-  }
+  },
+  shop = {
+    draw = function() shop:draw() end,
+    load = function() shop:load() end,
+    update = function(dt) shop:update(dt) end,
+  },
 }
 Scene = "title"
 independentRandom = love.math.newRandomGenerator(os.time())
@@ -107,6 +116,10 @@ function love.load()
     scene:load()
   end
   
+  --load scripts
+  upgrades:load()
+  artifacts:load()
+
   --set global audio
   love.audio.setVolume(settings.volume)
 end

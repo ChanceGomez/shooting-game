@@ -3,7 +3,6 @@ Enemy.__index = Enemy
 
 function Enemy:new(x,y,handler)
   local obj = setmetatable({}, Enemy)
-  
   obj.x = x or 0
   obj.y = y or 0
   obj.health = 100
@@ -21,11 +20,17 @@ function Enemy:new(x,y,handler)
 end
 
 function Enemy:die()
-    --remove enemy from handler
+    --change animation to die animation
     self.isAlive = false
     self.color = {0.7,0.5,0.5,1}
     if self.animation then
         self.animation = "dying"
+    end
+end
+
+function Enemy:delete()
+    if self.handler then
+        self.handler:removeEnemy(self)
     end
 end
 
@@ -53,13 +58,14 @@ function Enemy:update(dt)
         end
     end
 
-    if self.lifeTimer > 30 then
-        self:die()
+    if not collision.twoRect({x=0,y=0,width=Width,height=Height},self) and self.lifeTimer > 5 then
+        Enemy.delete(self)
     end
 end
 
 function Enemy:draw()
     if settings.hitbox then
+        love.graphics.setLineWidth(1)
         love.graphics.rectangle("line",self.x-1,self.y-1,self.width+2,self.height+2)
         love.graphics.setFont(perfect_dos_16)
         love.graphics.print(self.isAlive and "alive" or "dead",self.x+self.width + 2, self.y)
