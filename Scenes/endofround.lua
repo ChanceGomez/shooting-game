@@ -1,10 +1,13 @@
 local endofround = {
     report = nil,
     buttons = {},
+    resourcesEarned = 0,
 }
 
 function endofround:getReport(report)
     self.report = report
+    self.resourcesEarned = report.enemyKilled * 5
+    game.Player.resources = game.Player.resources + self.resourcesEarned
 end
 
 function endofround:load()
@@ -32,12 +35,15 @@ function endofround:draw()
         local x = 5
         local report = self.report
         love.graphics.setColor(1,1,1,1)
+        love.graphics.setFont(perfect_dos_16)
         love.graphics.print("Damage Dealt: " .. report.damageDealt,x,5)
         love.graphics.print("Enemies Killed: " .. report.enemyKilled,x,25)
         love.graphics.print("Shots Fired: " .. report.shotFired,x,45)
         love.graphics.print("Bullets Loaded: " .. report.loadedBullet,x,65)
         love.graphics.print("Bullets Discarded: " .. report.discardedBullet,x,85)
         love.graphics.print("Shots hit: " .. report.shotHit,x,105)
+        love.graphics.setFont(perfect_dos_32)
+        love.graphics.print("Resources Earned: " .. self.resourcesEarned,x,155)
 
 
     end

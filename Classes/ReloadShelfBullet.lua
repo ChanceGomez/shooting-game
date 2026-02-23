@@ -39,7 +39,7 @@ end
 function ReloadShelfBullet:loadingAnimation()
     self.inAnimation = true
     local x,y = self.x,self.y - 64
-    tweenTo(self,game.Player.gun.reloadTime,"linear",x,y,
+    tweenTo(self,game.Player.gun.reloadRate,"linear",x,y,
     function() 
         self:delete() if self.isDud then return end 
         game.Player.gun:loadBullet(self) 
@@ -50,7 +50,7 @@ end
 function ReloadShelfBullet:discardAnimation()
     self.inAnimation = true
     local x,y = self.x,self.y + 64
-    tweenTo(self,game.Player.gun.reloadTime,"linear",x,y,
+    tweenTo(self,game.Player.gun.reloadRate,"linear",x,y,
     function() 
         self:delete() 
         game.lookouts[1].Report:action("discardedBullet")

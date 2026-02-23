@@ -145,9 +145,11 @@ function Lookout:draw()
 
     love.graphics.setColor(1,1,1,1)
     love.graphics.setFont(perfect_dos_16)
-    love.graphics.print("ammo " .. #game.Player.gun.ammo .. "/" .. game.Player.gun.maxAmmo,10,270)
+    love.graphics.print("ammo: " .. #game.Player.gun.ammo .. "/" .. game.Player.gun.maxAmmo,10,270)
 
-    love.graphics.print("enemies " .. #game.lookouts[1].enemies, 10,250)
+    love.graphics.print("damage: " .. game.Player.gun.damage, 10,250)
+    love.graphics.print("enemies: " .. #self.enemies, 10,230)
+    love.graphics.print("reloadrate: " .. math.floor(game.Player.gun.reloadRate*100)/100, 10,210) 
 
     love.graphics.setColor(.9,.9,.9,1)
     love.graphics.draw(al:getImage("background_hud_layer1"),0,0)

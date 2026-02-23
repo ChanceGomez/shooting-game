@@ -1,29 +1,51 @@
 local shop = {
     buttons = {},
-    isUpgrade = false,
-    upgrade = nil,
+    isArtifact = false,
+    artifact = nil,
+    maxAmmoLevel = 0,
+    maxAmmoCost = 0,
+    damageLevel = 0,
+    damageCost = 0,
+    reloadRateLevel = 0,
+    reloadRateCost = 0,
+    maxLevel = 10,
 }
 
 
 
-function shop:displayUpgrade()
-    self.isUpgrade = true
-    local upgrade = upgrades:getRandomUpgrade()
-    upgrade.x = 100
-    upgrade.y = 100
-    self.upgrade = upgrade
+function shop:displayArtifact()
+    self.isArtifact = true
+    local artifact = artifacts:getRandomArtifact()
+    artifact.x = 100
+    artifact.y = 100
+    self.artifact = artifact
 end
 
 function shop:loadShop()
-    self:displayUpgrade()
-    if game.round % 5 == 0 then
-        self:displayUpgrade()
+    self:displayArtifact()
+    if game.round % 3 == 0 then
+        self:displayArtifact()
     end
+
+
+
 end
 
 function shop:upgradeClicked()
-    if self.upgrade then
-        self.upgrade = nil
+    --update costs
+    self.maxAmmoCost = 5*(self.maxAmmoLevel+1)
+    self.damageCost = 5*(self.damageLevel+1)
+    self.reloadRateCost = 5*(self.reloadRateLevel+1)
+
+    --update descriptions
+    self.buttons["increase_maxAmmo"].description = "Upgrade the max ammo of your gun, Cost: " .. self.maxAmmoCost
+    self.buttons["increase_damage"].description = "Upgrade the damage of your gun, Cost: " .. self.damageCost
+    self.buttons["increase_reloadRate"].description = "Upgrade the reload rate of your gun, Cost: " .. self.reloadRateCost
+end
+
+function shop:artifactClicked()
+    if self.artifact then
+        self.artifact = nil
     end
 end
 
@@ -42,12 +64,73 @@ function shop:load()
             Scene = "game"
         end,
     })
+    --upgrades
+
+    --max ammo
+    self.buttons["increase_maxAmmo"] ={
+        x = 100,
+        y = 200,
+        image = al:getImage("add_button"),
+        visible = true,
+        description = "Upgrade the max ammo of your gun, Cost: " .. self.maxAmmoCost,
+        clicked = function()
+            self:upgradeClicked()
+            if self.maxAmmoLevel >= self.maxLevel then return end
+            if game.Player.resources > self.maxAmmoCost then
+                game.Player.resources = game.Player.resources - self.maxAmmoCost
+            else
+                return
+            end
+            self.maxAmmoLevel = self.maxAmmoLevel + 1
+            game.Player.gun:increaseMaxAmmo(1)
+        end
+    }
+
+    self.buttons["increase_damage"] = {
+        x = 100,
+        y = 232,
+        image = al:getImage("add_button"),
+        visible = true,
+        description = "Upgrade the damage of your gun, Cost: " .. self.damageCost,
+        clicked = function()
+            self:upgradeClicked()
+            if self.damageLevel >= self.maxLevel then return end
+            if game.Player.resources > self.damageCost then
+                game.Player.resources = game.Player.resources - self.damageCost
+            else
+                return
+            end
+            self.damageLevel = self.damageLevel + 1
+            game.Player.gun:increaseDamage(1)
+        end
+    }
+
+    self.buttons["increase_reloadRate"] ={
+        x = 100,
+        y = 264,
+        image = al:getImage("add_button"),
+        visible = true,
+        description = "Upgrade the reload rate of your gun, Cost: " .. self.reloadRateCost,
+        clicked = function()
+            self:upgradeClicked()
+            if self.reloadRateLevel >= self.maxLevel then return end
+            if game.Player.resources > self.reloadRateCost then
+                game.Player.resources = game.Player.resources - self.reloadRateCost
+            else
+                return
+            end
+            self.reloadRateLevel = self.reloadRateLevel + 1
+            game.Player.gun:increaseReloadRate(.15)
+        end
+    }
+
+    self:upgradeClicked()
 end
 
 function shop:update()
     button:updateAll(self.buttons)
-    if self.upgrade then 
-        button:update(self.upgrade)
+    if self.artifact then 
+        button:update(self.artifact)
     end
 end
 
@@ -60,16 +143,54 @@ function shop:draw()
     love.graphics.setFont(perfect_dos_32)
     love.graphics.print("Upgrades",60,25)
 
-    --draw upgrade if upgrade
-    if self.upgrade then
-        button:draw(self.upgrade)
-        if collision.rect(self.upgrade) then
-            infopanel:draw(self.upgrade)
+    --draw artifact if artifact
+    if self.artifact then
+        button:draw(self.artifact)
+        if collision.rect(self.artifact) then
+            infopanel:draw(self.artifact)
         end
     end
 
+
+    --draw upgrade
+    for i = 1, self.maxAmmoLevel do
+        local upgrade = self.buttons.increase_maxAmmo
+        local x,y = upgrade.x,upgrade.y
+
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.rectangle("fill",x+24+(i*12),y,10,24)
+    end
+
+    for i = 1, self.damageLevel do
+        local upgrade = self.buttons.increase_damage
+        local x,y = upgrade.x,upgrade.y
+
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.rectangle("fill",x+24+(i*12),y,10,24)
+    end
+
+    for i = 1, self.reloadRateLevel do
+        local upgrade = self.buttons.increase_reloadRate
+        local x,y = upgrade.x,upgrade.y
+
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.rectangle("fill",x+24+(i*12),y,10,24)
+    end
+
+    --draw resource count
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.setFont(perfect_dos_16)
+    love.graphics.print("Resources: " .. game.Player.resources,640-128,10)
+
+
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(al:getImage("cursor"),CursorX,CursorY)
+
+    for i, button in pairs(self.buttons) do
+        if button.description and collision.rect(button) then
+            infopanel:draw(button)
+        end
+    end
 end
 
 

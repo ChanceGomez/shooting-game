@@ -6,7 +6,15 @@ local artifacts = {
 
 function artifacts:load()
     --load artifacts
-    
+    self.artifacts.autoReload = {
+        clicked = function()
+            shop:artifactClicked()
+        end,
+        description = "start automatically reloading the chamber",
+        image = al:getImage("upgrademaxammo_shop_icon"),
+        width = al:getImage("upgrademaxammo_shop_icon"):getWidth(),
+        height = al:getImage("upgrademaxammo_shop_icon"):getHeight(),
+    }
     --get count of how many artifacts
     for i, upgrade in pairs(self.artifacts) do
         self.artifactsCount = self.artifactsCount + 1
@@ -18,7 +26,7 @@ function artifacts:load()
 end
 
 
-function artifacts:getRandomUpgrade()
+function artifacts:getRandomArtifact()
     local key = self.keys[math.random(#self.keys)]
     return self.artifacts[key]
 end

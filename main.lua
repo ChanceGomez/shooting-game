@@ -76,6 +76,7 @@ local function loadAssets()
     --perfect dos font
     perfect_dos_12 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",12)
     perfect_dos_16 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",16)
+    perfect_dos_20 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",28)
     perfect_dos_32 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",32)
 end
 

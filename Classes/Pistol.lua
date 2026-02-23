@@ -7,7 +7,7 @@ function Pistol:new()
   obj.damage = 10
   obj.fireRate = 0.4
   obj.maxAmmo = 4
-  obj.reloadTime = 1
+  obj.reloadRate = 1
   obj.isReloading = false
   obj.crosshairImage = al:getImage("crosshair_pistol")
   obj.bulletAnimation = al:getAnimation("pistol_bullet_animation")
@@ -17,6 +17,10 @@ end
 
 function Pistol:increaseMaxAmmo(ammo)
     Gun.increaseMaxAmmo(self,ammo)
+end
+
+function Pistol:increaseReloadRate(amount)
+    Gun.increaseReloadRate(self,amount)
 end
 
 function Pistol:increaseDamage(damage)

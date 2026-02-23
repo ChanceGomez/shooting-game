@@ -10,6 +10,7 @@ function Gun:new()
     obj.ammo = {}
     obj.maxAmmo = 0
     obj.canReload = false
+    obj.reloadRate = 2
 
   return obj
 end
@@ -23,6 +24,14 @@ function Gun:increaseDamage(damage)
     local damage = damage or 1
     if damage >= 1 then
         self.damage = self.damage + damage
+    end
+end
+
+function Gun:increaseReloadRate(amount)
+    local amount = amount or .10
+    amount = 1 - amount
+    if amount > 0 then
+        self.reloadRate = self.reloadRate*amount
     end
 end
 

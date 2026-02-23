@@ -26,6 +26,7 @@ function Bird:new(x,y,handler,difficulty)
   obj.height = obj.animations['flying'][1]:getHeight()
   obj.id = staticID
   obj.lifeTimer = 0
+
   
     staticID = staticID + 1
 
@@ -44,8 +45,12 @@ function Bird:update(dt)
     Enemy.update(self, dt)
     --update position
     if self.isAlive then
-        self.x = self.x + self.speed * self.facing * dt
-        self.y = self.y - (self.speed + (math.sin(love.timer.getTime() * 5) * 20)) * dt
+        local speed = self.speed
+        if self.isHit then
+            speed = speed/2
+        end
+        self.x = self.x + speed * self.facing * dt
+        self.y = self.y - (speed + (math.sin(love.timer.getTime() * 5) * 20)) * dt
     else
         self.y = self.y + 55 * dt
     end
@@ -54,7 +59,8 @@ end
 function Bird:draw()
     local flipped = self.facing ~= -1
     love.graphics.setColor(self.color)
-    ap:draw("bird" .. self.id,self.animations[self.animation],.15,math.floor(self.x),math.floor(self.y),self.isAlive,flipped)
+    local speed = 5/self.speed
+    ap:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped)
     Enemy.draw(self)
 end
 

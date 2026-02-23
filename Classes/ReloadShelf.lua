@@ -91,7 +91,7 @@ function ReloadShelf:update(dt)
     end
 
     if self.bullet and not self.bullet.held and not self.bullet.tweening then
-        tweenTo(self.bullet,game.Player.gun.reloadTime,"linear",10,8)
+        tweenTo(self.bullet,game.Player.gun.reloadRate,"linear",9,8)
     end
 end
 
