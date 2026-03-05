@@ -1,5 +1,6 @@
 local game = {
     Player = nil,
+    Observer = Observer:new(),
     lookouts = {},
     scene = 1,
     camera = { x = 0, y = 0 },
@@ -33,6 +34,9 @@ function game:load()
 end
 
 function game:update(dt)
+
+    --observer
+    game.Observer:trigger("update")
   --update player
     if self.Player then
         self.Player:update(dt)

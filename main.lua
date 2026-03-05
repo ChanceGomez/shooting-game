@@ -16,12 +16,15 @@ button = require("scripts/buttons")
 zdraw = require("scripts/zdraw")
 event = require("scripts/events")
 infopanel = require("scripts/infopanel")
-Observer = require("scripts/observer")
 popup = require("scripts/popup")
 ap = require("scripts/animationplayer")
 upgrades = require("scripts/upgrades")
 roundscript = require("scripts/roundscript")
 artifacts = require("scripts/artifacts")
+ct = require("scripts/customtext")
+
+--Preloaded classes
+Observer = require("classes/Observer")
 
 
 --Scenes  
@@ -63,7 +66,7 @@ Scenes = {
     update = function(dt) shop:update(dt) end,
   },
 }
-Scene = "title"
+Scene = "shop"
 independentRandom = love.math.newRandomGenerator(os.time())
 
 --Functions
@@ -92,8 +95,11 @@ function love.load()
   --load assets
   loadAssets()
   
-  --scripts 
+  --load scripts
+  upgrades:load()
+  artifacts:load()
   infopanel:load()
+  ct:load()
 
   --Load classes
     Lookout = require("classes/Lookout")
@@ -116,10 +122,7 @@ function love.load()
   for i, scene in pairs(Scenes) do
     scene:load()
   end
-  
-  --load scripts
-  upgrades:load()
-  artifacts:load()
+
 
   --set global audio
   love.audio.setVolume(settings.volume)

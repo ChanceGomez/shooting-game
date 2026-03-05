@@ -22,6 +22,7 @@ function ReloadShelf:new(x,y)
     obj.buttons = {}
     obj.deletedBullets = {}
     obj.dudPercentage = 30
+    obj.autoReload = false
     table.insert(obj.buttons, {
         x = obj.x,
         y = obj.y,
@@ -85,13 +86,24 @@ function ReloadShelf:update(dt)
         self:reload()
     end
 
+    --if autoreload
+    if self.autoReload then
+        if self.bullet and not self.reloading then
+            if self.bullet.isDud then
+                self:discardBullet()
+            else
+                self:loadBullet()
+            end
+        end
+    end
+
     --update soon to be deleted bullets
     for i, bullet in ipairs(self.deletedBullets) do
         bullet:update()
     end
 
     if self.bullet and not self.bullet.held and not self.bullet.tweening then
-        tweenTo(self.bullet,game.Player.gun.reloadRate,"linear",9,8)
+        tweenTo(self.bullet,game.Player.gun.reloadRate,"linear",9,8,function() self.reloading = false end)
     end
 end
 

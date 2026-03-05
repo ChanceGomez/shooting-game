@@ -21,7 +21,7 @@ function Lookout:new(enemies,difficulty)
   obj.buttons = {}
   obj.isHoveringButton = false
   obj.reloadShelfOpen = true
-  obj.reloadShelf = ReloadShelf:new(-128,obj.y + Height - 68)
+  obj.ReloadShelf = ReloadShelf:new(-128,obj.y + Height - 68)
     --load buttons
     table.insert(obj.buttons, {
         x = obj.x + 4,
@@ -49,13 +49,13 @@ end
 function Lookout:openReloadShelf()
     --animate button
     tweenTo(self.buttons[1],.2,"linear",127,self.buttons[1].y)
-    tweenTo(self.reloadShelf,.2,"linear",0,self.reloadShelf.y)
+    tweenTo(self.ReloadShelf,.2,"linear",0,self.ReloadShelf.y)
 end
 
 function Lookout:closeReloadShelf()
     --animate button
     tweenTo(self.buttons[1],.2,"linear",4,self.buttons[1].y)
-    tweenTo(self.reloadShelf,.2,"linear",-128,self.reloadShelf.y)
+    tweenTo(self.ReloadShelf,.2,"linear",-128,self.ReloadShelf.y)
 end
 
 function Lookout:removeEnemy(enemy)
@@ -82,7 +82,7 @@ function Lookout:update(dt)
             self.isHoveringButton = false
         end
     end
-    if collision.rect(self.reloadShelf) then
+    if collision.rect(self.ReloadShelf) then
         self.isHoveringButton = true
     end
 
@@ -91,7 +91,7 @@ function Lookout:update(dt)
     end
 
     --update reload shelf
-    self.reloadShelf:update(dt)
+    self.ReloadShelf:update(dt)
 
 
     self.handler:update(dt)
@@ -138,7 +138,7 @@ function Lookout:draw()
     button:drawAll(self.buttons)
 
     --draw reloadshelf
-    self.reloadShelf:draw()
+    self.ReloadShelf:draw()
 
     --draw crosshair
     game.Player:draw()

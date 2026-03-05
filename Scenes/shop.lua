@@ -16,8 +16,8 @@ local shop = {
 function shop:displayArtifact()
     self.isArtifact = true
     local artifact = artifacts:getRandomArtifact()
-    artifact.x = 100
-    artifact.y = 100
+    artifact.x = Width/2 - artifact.image:getWidth()/2
+    artifact.y = Height/2 - artifact.image:getHeight()/2
     self.artifact = artifact
 end
 
@@ -64,12 +64,12 @@ function shop:load()
             Scene = "game"
         end,
     })
-    --upgrades
+    self:loadShop()
 
     --max ammo
     self.buttons["increase_maxAmmo"] ={
-        x = 100,
-        y = 200,
+        x = 70,
+        y = 70,
         image = al:getImage("add_button"),
         visible = true,
         description = "Upgrade the max ammo of your gun, Cost: " .. self.maxAmmoCost,
@@ -87,8 +87,8 @@ function shop:load()
     }
 
     self.buttons["increase_damage"] = {
-        x = 100,
-        y = 232,
+        x = 70,
+        y = 70+32,
         image = al:getImage("add_button"),
         visible = true,
         description = "Upgrade the damage of your gun, Cost: " .. self.damageCost,
@@ -106,8 +106,8 @@ function shop:load()
     }
 
     self.buttons["increase_reloadRate"] ={
-        x = 100,
-        y = 264,
+        x = 70,
+        y = 70+64,
         image = al:getImage("add_button"),
         visible = true,
         description = "Upgrade the reload rate of your gun, Cost: " .. self.reloadRateCost,
@@ -128,9 +128,10 @@ function shop:load()
 end
 
 function shop:update()
-    button:updateAll(self.buttons)
     if self.artifact then 
         button:update(self.artifact)
+    else
+        button:updateAll(self.buttons)
     end
 end
 
@@ -145,6 +146,8 @@ function shop:draw()
 
     --draw artifact if artifact
     if self.artifact then
+        love.graphics.setColor(.3,.3,.3,.8)
+        love.graphics.rectangle("fill",0,0,Width,Height)
         button:draw(self.artifact)
         if collision.rect(self.artifact) then
             infopanel:draw(self.artifact)

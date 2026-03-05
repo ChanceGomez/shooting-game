@@ -9,14 +9,17 @@ function infopanel:load()
 end
 
 function infopanel:draw(obj) 
-  local offsetX = self.defaultCursorOffsetX
-  local offsetY = self.defaultCursorOffsetY
+	local offsetX = self.defaultCursorOffsetX
+	local offsetY = self.defaultCursorOffsetY
+	local font = obj.description.font or obj.font or nil
   
 	local x,y = CursorX + offsetX,CursorY + offsetY
 	local text = obj.info
 	if text == nil then 
-		if obj.description then
+		if type(obj.description) == "string" then
 			text = obj.description
+		elseif obj.description.text then
+			text = obj.description.text
 		end
 	end
 	
@@ -38,11 +41,9 @@ function infopanel:draw(obj)
 
 	
 	--draw panel and text
-  love.graphics.setColor(1,1,1,1)
+  	love.graphics.setColor(1,1,1,1)
 	love.graphics.draw(self.image,x,y)
-	love.graphics.setFont(perfect_dos_16)
-	love.graphics.setColor(0,0,0,1)
-	love.graphics.printf(text,x+8,y+8,self.image:getWidth()-8)
+	ct:draw(text,font,x+4,y+4,self.image:getWidth()-8,{0,0,0,1})
 end
 
 

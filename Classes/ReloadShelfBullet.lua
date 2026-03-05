@@ -3,7 +3,7 @@ ReloadShelfBullet.__index = ReloadShelfBullet
 
 local bulletImage = al:getImage("bullet")
 
-function ReloadShelfBullet:new(reloadShelf,x,y,isDud)
+function ReloadShelfBullet:new(ReloadShelf,x,y,isDud)
     local obj = setmetatable({},ReloadShelfBullet)
 
     obj.image = bulletImage
@@ -14,7 +14,7 @@ function ReloadShelfBullet:new(reloadShelf,x,y,isDud)
     obj.hovered = false
     obj.damage = 1
     obj.inAnimation = false
-    obj.reloadShelf = reloadShelf
+    obj.ReloadShelf = ReloadShelf
     obj.isDud = isDud or false
     obj.color = {1,1,1,1}
 
@@ -27,10 +27,10 @@ end
 
 function ReloadShelfBullet:delete()
     if self.inAnimation then
-        for i = #self.reloadShelf.deletedBullets, #self.reloadShelf.deletedBullets, -1 do
-            local bullet = self.reloadShelf.deletedBullets[i]
+        for i = #self.ReloadShelf.deletedBullets, #self.ReloadShelf.deletedBullets, -1 do
+            local bullet = self.ReloadShelf.deletedBullets[i]
             if bullet == self then
-                table.remove(self.reloadShelf.deletedBullets,i)
+                table.remove(self.ReloadShelf.deletedBullets,i)
             end
         end
     end

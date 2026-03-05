@@ -7,8 +7,7 @@ function Observer:new()
   local obj = setmetatable({}, self)
   
   obj.events = {}
-  
-  
+
   return obj
 end
 
@@ -25,7 +24,7 @@ function Observer:trigger(name,tbl)
   end
 end
 
-function Observer:add(obj,trigger)
+function Observer:add(trigger,obj)
   if self.events[trigger] == nil then 
     self.events[trigger] = {}
   end
