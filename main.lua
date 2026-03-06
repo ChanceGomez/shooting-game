@@ -39,11 +39,14 @@ Scale = 3
 mainCanvas = nil
 GameSpeed = 1
 
+--Game setting
 settings = {
-  volume = .5,
-  hitbox = true,
-  }
+  volume = .5, -- Global volume
+  hitbox = true, -- Display hitboxes on enemies
+  debug = true,
+}
 
+-- All scenes
 Scenes = {
   game = {
     draw = function() game:draw() end,
@@ -66,13 +69,14 @@ Scenes = {
     update = function(dt) shop:update(dt) end,
   },
 }
-Scene = "shop"
+Scene = "shop" -- Current scene
+
+-- Independant random for cosmetic purposes
 independentRandom = love.math.newRandomGenerator(os.time())
 
---Functions
+-- local functions
 
 local function loadAssets()
-
   --images
     al:loadImages("assets/Sprites")
   
@@ -83,12 +87,14 @@ local function loadAssets()
     perfect_dos_32 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",32)
 end
 
+-- love functions
+
 function love.load()
   --graphics
   love.window.setVSync(false)
   love.graphics.setDefaultFilter("nearest", "nearest")
   
-  love.mouse.setVisible(false)
+  love.mouse.setVisible(false) -- set cursor to invisible
   
   mainCanvas = love.graphics.newCanvas(Width,Height)
 
@@ -130,10 +136,7 @@ end
 
 function love.update(dt)
   --debug exit
-  if qClick then love.event.quit() end
-  
-  
-
+  if qClick and settings.debug then love.event.quit() end
   
   --update scene
   Scenes[Scene].update(dt)
@@ -162,6 +165,7 @@ function love.draw()
   
   
   --gui debug
+  if not settings.debug then return end
   love.graphics.setColor(1,1,1,1)
   love.graphics.print(math.floor(love.timer.getFPS()),640-32,10)
   

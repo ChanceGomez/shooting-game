@@ -2,7 +2,6 @@ local Observer = {}
 Observer.__index = Observer
 
 
-
 function Observer:new()
   local obj = setmetatable({}, self)
   
@@ -10,7 +9,6 @@ function Observer:new()
 
   return obj
 end
-
 
 function Observer:trigger(name,tbl)
   local wrapper = tbl or false

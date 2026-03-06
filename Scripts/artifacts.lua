@@ -28,7 +28,7 @@ function artifacts:load()
             shop:artifactClicked()
             game.Observer:add("update",{
                 event = function()
-                    game.lookouts[1].ReloadShelf.autoReload = true
+                    game:getReloadShelf().autoReload = true
                     game.Player.reloadRate = game.Player.gun.reloadRate * 1.25
                 end,
             })
@@ -45,7 +45,7 @@ function artifacts:load()
             --Improve the damage of the bullets
             game.Player.gun.damage = game.Player.gun.damage * 1.50
             --Reduce amount of duds
-            game.lookouts[1].ReloadShelf.dudPercentage = game.lookouts[1].ReloadShelf.dudPercentage * .75
+            game:getReloadShelf().dudPercentage = game:getReloadShelf().dudPercentage * .75
         end,
         description = {
             text = "Increase damage from bullet by " .. getFormat("positive") .. "50% aswell as " .. getFormat("positive") .. "-25% duds",

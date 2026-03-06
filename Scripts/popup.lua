@@ -1,18 +1,23 @@
-local popup = {}
+--[[
+  Autor: Chance Francisco Gomez | chance.f.gomez@gmail.com
+  File: popup.lua
+
+  --------------------------------------------------------------------
+
+  How to use:
+
+]]
+
+local popup = {
+
+}
 
 
 
-function popup:update(object)
-  
+-- queues a pop up to go on screen
+function popup:queuePopUp()
+
 end
-
-function popup:draw(object)
-  if love.keyboard.isDown(object.holdHotkey) then
-    
-  end
-end
-
-
 
 
 return popup

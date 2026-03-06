@@ -1,3 +1,17 @@
+--[[
+    Author: Chance Francisco Gomez | chance.f.gomez@gmail.com
+    File: roundscript.lua
+
+    ---------------------------------------------------------------
+
+    How it works:
+        This file is a datapoint to plan & change how the rounds should go.
+        For example in the roundscript there is 'easy', 'medium', 'hard' in each of 
+        these subcategories there can exist a different amount of enemies and difficulty scaling
+
+        {5,3} = 5 enemies, level 3 difficulty
+]]
+
 local roundscript = {
     easy = {
         [1] = {5,1},

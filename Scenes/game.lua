@@ -7,6 +7,26 @@ local game = {
     round = 1
 }
 
+--[[
+    Get Methods
+]]
+function game:getHandler(lookoutNum)
+    local lookoutNum = lookoutNum or 1
+    return self.lookouts[lookoutNum].handler
+end
+
+function game:getReloadShelf(lookoutNum)
+    local lookoutNum = lookoutNum or 1
+    return self.lookouts[lookoutNum].ReloadShelf
+end
+
+function game:getPlayerGun()
+    return self.Player.gun
+end
+
+
+----------
+
 function game:sceneUp()
     if self.scene > 1 then
         self.scene = self.scene - 1

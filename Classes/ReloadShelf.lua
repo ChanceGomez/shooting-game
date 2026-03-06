@@ -1,6 +1,7 @@
 local ReloadShelf = {}
 ReloadShelf.__index = ReloadShelf
 
+--Static images
 local backgroundImage = al:getImage("reloadshelf_background")
 local outlineImage = al:getImage("reloadshelf_outline")
 
