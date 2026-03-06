@@ -76,7 +76,7 @@ function shop:load()
         clicked = function()
             self:upgradeClicked()
             if self.maxAmmoLevel >= self.maxLevel then return end
-            if game.Player.resources > self.maxAmmoCost then
+            if game.Player.resources >= self.maxAmmoCost then
                 game.Player.resources = game.Player.resources - self.maxAmmoCost
             else
                 return
@@ -95,7 +95,7 @@ function shop:load()
         clicked = function()
             self:upgradeClicked()
             if self.damageLevel >= self.maxLevel then return end
-            if game.Player.resources > self.damageCost then
+            if game.Player.resources >= self.damageCost then
                 game.Player.resources = game.Player.resources - self.damageCost
             else
                 return
@@ -114,7 +114,7 @@ function shop:load()
         clicked = function()
             self:upgradeClicked()
             if self.reloadRateLevel >= self.maxLevel then return end
-            if game.Player.resources > self.reloadRateCost then
+            if game.Player.resources >= self.reloadRateCost then
                 game.Player.resources = game.Player.resources - self.reloadRateCost
             else
                 return

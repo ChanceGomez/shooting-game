@@ -8,6 +8,9 @@
         text that is being inputted should be formatted as such
         "{1,1,1,1}Hello my name is {1,0,0,1}Chance"
         the {} is the delimter while the inside info is the color
+        
+    Features:
+        Accepts decimal inputs in the color delimiter
 ]]
 
 
@@ -43,7 +46,7 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
         if arg1.text then
             text = arg1.text
         else
-            return
+            text = ""
         end
         
         if arg1.font then
@@ -69,7 +72,7 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
     --if arg1 is not a table then assume it is choosing each arg individually
     else
         text = arg1 or ""
-        font = arg2 or nil
+        font = arg2 or self.defaultFont
         x = arg3 or x
         y = arg4 or y
         limit = arg5 or limit
@@ -86,8 +89,29 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
         --boolean to tell system if it is inside a delimiter
         local isWord = true
 
+        -- Boolean to tell system if current number is a decimal to check for period
+        local isDecimal = false
+        local currentDecimal = "."
+
+        --Variable to store previous letter
+        local previousLetter = ""
+
         --temp table to get the color inside the delimiter then insert into wrapper.color
         local color = {}
+        local function endDecimal()
+            --make sure actually in decimal
+            if isDecimal then
+                isDecimal = false
+            else
+                return
+            end
+            --Turn decimal into real number
+            local currentDecimal = tonumber(currentDecimal)
+            --make sure it is a valid decimal
+            if currentDecimal == nil then return end
+            --insert into color table
+            table.insert(color,currentDecimal)
+        end
         --Go through each letter of the word
         for letter in word:gmatch(".") do
             --Check to see if delimter if true then switch isWord to false so that no letters are added
@@ -96,11 +120,25 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
 
             --Check to see if inside delimiter and is on a number value
             elseif letter ~= "}" and letter ~= "," and isWord == false then
-                local colorValue = tonumber(letter)
-                if colorValue < 0 and colorValue > 1 then
-                    colorValue = defaultColor[#color]
+                if letter == "." then
+                    isDecimal = true
+                    if previousLetter ~= "," then
+                        table.remove(color,#color)
+                    end
                 end
-                table.insert(color,colorValue)
+                --Check to see if inside a decimal but make sure its not the decimal
+                if isDecimal and letter ~= "." then
+                    currentDecimal = currentDecimal .. letter
+                end
+                
+                --Make sure not inside a decimal
+                if not isDecimal then
+                    local colorValue = tonumber(letter)
+                    if colorValue < 0 and colorValue > 1 then
+                        colorValue = defaultColor[#color]
+                    end
+                    table.insert(color,colorValue)
+                end
             end
 
             --if outside delimiter then add the letter to the word
@@ -108,10 +146,19 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
                 wrapper.word = wrapper.word .. letter
             end
 
+            --Check to see if letter is a comma (,) if so then no longer in decimal
+            if letter == "," then
+                endDecimal()
+            end
+
             --Check to see if left delimiter if so then switch isWord to let system know
             if letter == "}" then
+                endDecimal()
                 isWord = true
             end
+
+            --Set previous letter
+            previousLetter = letter
         end
 
         --Make sure color is valid
@@ -119,7 +166,7 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
             --if only 3 color values add default alpha of 1
             if #color == 3 then
                 table.insert(color,1)
-            
+
             --if less then or more then 3 just set to default color
             else
                 color = defaultColor

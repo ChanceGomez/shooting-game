@@ -65,7 +65,8 @@ function EnemyHandler:update(dt)
         enemy:update(dt)
     end
 
-    if self.enemies == 0 and self.isRoundActive and #self.enemyQueue == 0 and #game.lookouts[1].enemies == 0 then
+    --print(self.enemies,self.isRoundActive,#self.enemyQueue,#game.lookouts[1].enemies)
+    if self.enemies <= 0 and self.isRoundActive and #self.enemyQueue == 0 and #game.lookouts[1].enemies == 0 then
         self.isRoundActive = false
     end 
 end

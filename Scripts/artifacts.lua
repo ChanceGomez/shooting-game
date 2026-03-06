@@ -2,7 +2,24 @@ local artifacts = {
     artifacts = {},
     keys = {},
     artifactsCount = 0,
+    colorFormat = {
+        positive = {0,.7,0,1},
+        negative = {.7,0,0,1},
+    }
 }
+
+local function getFormat(name)
+    local returnString = "{"
+    for i, number in ipairs(artifacts.colorFormat[name]) do
+        returnString = returnString .. number
+        if i == 4 then
+            returnString = returnString .. "}"
+            break
+        end
+        returnString = returnString .. ","
+    end
+    return returnString
+end
 
 function artifacts:load()
     --load artifacts
@@ -17,10 +34,11 @@ function artifacts:load()
             })
         end,
         description = {
-            text = "start {0,1,0,1}automatically reloading the chamber, {1,0,0,1}-25% reload speed",
+            text = "start " .. getFormat("positive") .. "automatically reloading the chamber, " .. getFormat("negative") .. "-25% reload speed",
         },
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
+    print(self.artifacts.autoReload.description.text)
     self.artifacts.improvedAmmunition = {
         clicked = function()
             shop:artifactClicked()
@@ -30,7 +48,7 @@ function artifacts:load()
             game.lookouts[1].ReloadShelf.dudPercentage = game.lookouts[1].ReloadShelf.dudPercentage * .75
         end,
         description = {
-            text = "Increase damage from bullet by {0,1,0,1}50% aswell as {0,1,0,1}-25% duds",
+            text = "Increase damage from bullet by " .. getFormat("positive") .. "50% aswell as " .. getFormat("positive") .. "-25% duds",
         },
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
@@ -43,7 +61,7 @@ function artifacts:load()
             game.Player.gun.fireRate = game.Player.gun.fireRate * 3.0
         end,
         description = {
-            text = "Increase damage by {0,1,0,1}500% but fire rate is increased by {1,0,0,1}300%",
+            text = "Increase damage by " .. getFormat("positive") .. "500% but fire rate is increased by " .. getFormat("negative") .. "300%",
         },
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
