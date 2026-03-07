@@ -1,3 +1,8 @@
+--[[
+    Author: Chance Francisco Gomez | chance.f.gomez@gmail.com
+    File: Enemy.lua 
+]]
+
 local Enemy = {}
 Enemy.__index = Enemy
 

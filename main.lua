@@ -32,6 +32,7 @@ Observer = require("classes/Observer")
   title = require("Scenes/title")
   endofround = require("Scenes/endofround")
   shop = require("Scenes/shop")
+  difficultyselection = require("Scenes/difficultyselection")
   
 --Global vars
 Width,Height = 640,360
@@ -44,6 +45,7 @@ settings = {
   volume = .5, -- Global volume
   hitbox = true, -- Display hitboxes on enemies
   debug = true,
+  difficulty = 'easy',
 }
 
 -- All scenes
@@ -67,6 +69,11 @@ Scenes = {
     draw = function() shop:draw() end,
     load = function() shop:load() end,
     update = function(dt) shop:update(dt) end,
+  },
+  difficultyselection = {
+    draw = function() difficultyselection:draw() end,
+    load = function() difficultyselection:load() end,
+    update = function(dt) difficultyselection:update(dt) end,
   },
 }
 Scene = "shop" -- Current scene
@@ -167,7 +174,10 @@ function love.draw()
   --gui debug
   if not settings.debug then return end
   love.graphics.setColor(1,1,1,1)
-  love.graphics.print(math.floor(love.timer.getFPS()),640-32,10)
+  love.graphics.setFont(perfect_dos_16)
+  love.graphics.print(math.floor(love.timer.getFPS()),640-32,22)
+  love.graphics.print(CursorX .. ' ' .. CursorX, 640-32,33)
+  love.graphics.print("round: " .. game.round, 640-32,43)
   
 end
 

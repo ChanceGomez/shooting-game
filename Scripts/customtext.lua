@@ -23,62 +23,10 @@ function customtext:load()
     self.defaultFont = perfect_dos_16 or love.graphics.newFont() -- Change 'perfect_dos_16' to default font
 end
 
---[[
-    arg1: text or (table containing rest of data)
-    arg2: font
-    arg3: x
-    arg4: y
-    arg5: max length (limit)
-    arg6: default color (the default color when there is not a designated change in color)
-]]
-function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
-    local words = {}                -- Contains all the words that will be rendered to screen
-    local text = nil                -- Contains the text that is wanted to be rendered
-    local font = self.defaultFont   -- Is the font that is used to draw
-    local x,y = 0,0                 -- Position for the text
-    local limit = 1000              -- How far the text can go in the x pos
-    local defaultColor = {1,1,1,1}  -- default color to revert to if no change
 
-    --Check to see if text == tble
-    --If table is true then get all the variables needed and if missing then return 
-    --With exception of x,y 
-    if type(arg1) == "table" then
-        if arg1.text then
-            text = arg1.text
-        else
-            text = ""
-        end
-        
-        if arg1.font then
-            font = arg1.font or font
-        end
-
-        if arg1.x then
-            x = arg1.x or x
-        end
-
-        if arg1.y then
-            y = arg1.y or y
-        end
-
-        if arg1.limit then
-            limit = arg1.limit or limit
-        end
-
-        if arg1.defaultColor then
-            defaultColor = arg1.defaultColor or defaultColor
-        end
-
-    --if arg1 is not a table then assume it is choosing each arg individually
-    else
-        text = arg1 or ""
-        font = arg2 or self.defaultFont
-        x = arg3 or x
-        y = arg4 or y
-        limit = arg5 or limit
-        defaultColor = arg6 or defaultColor
-    end
-    
+--Function to get the transform the text into a word array
+local function getFormattedWords(text,defaultColor)
+    local words = {}
     --Divide up the text into words seperated by whitespace
     for word in string.gmatch(text, "%S+") do
         --wrapper to insert into words
@@ -179,6 +127,77 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
         --add wrapper to words
         table.insert(words, wrapper)
     end
+
+    return words
+end
+
+local function argumentHandler(self,arg1,arg2,arg3,arg4,arg5,arg6)
+    local text = arg1 or ""
+    local font = arg2 or self.defaultFont
+    local x = arg3 or 0
+    local y = arg4 or 0
+    local limit = arg5 or 1000
+    local defaultColor = arg6 or {1,1,1,1}
+
+
+    return text,font,x,y,limit,defaultColor
+end
+
+--Gets the dimensions that a text will be
+function customtext:getDimensions(arg1,arg2,arg3,arg4,arg5,arg6)
+    local words = {} -- Contains all the words that will be rendered to screen
+
+    -- Send arguments through the handler to get nils out
+    local text,font,x,y,limit,defaultColor = argumentHandler(self,arg1,arg2,arg3,arg4,arg5,arg6)
+
+    --[[
+        Logic
+    ]]
+
+    local width = 0
+    local height = font:getHeight() -- get the initial height
+    
+    --Get the formatted words into an array
+    words = getFormattedWords(text,defaultColor)
+   
+
+    local function Return()
+        width = 0
+        height = height + font:getHeight() + self.yMargin
+    end
+    
+    --loop through to get width & height
+    for i, word in ipairs(words) do
+        local word = word.word
+        if width + font:getWidth(word) > limit then
+            Return()
+        end
+        width = width + font:getWidth(word .. ' ')
+        
+        if width > limit then
+            Return()
+        end
+    end
+
+    return limit,height
+end
+
+--[[
+    arg1: text or (table containing rest of data)
+    arg2: font
+    arg3: x
+    arg4: y
+    arg5: max length (limit)
+    arg6: default color (the default color when there is not a designated change in color)
+]]
+function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
+    local words = {}                -- Contains all the words that will be rendered to screen
+
+    -- Send arguments through the handler to get nils out
+    local text,font,x,y,limit,defaultColor = argumentHandler(self,arg1,arg2,arg3,arg4,arg5,arg6)
+
+    -- Get the text into a formatted array
+    words = getFormattedWords(text,defaultColor)
 
     --Draw all the words
     local textX,textY = x,y

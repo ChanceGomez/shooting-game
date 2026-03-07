@@ -1,33 +1,40 @@
+--[[
+    Author: Chance Francisco Gomez | chance.f.gomez@gmail.com
+    File: Bird.lua | Parent Class: Enemy.lua
+]]
+
 local Bird = {}
 Bird.__index = Bird
 
-
+-- Static images
 local flyingAnimation = al:getAnimation("animation_bird_flying")
 local dyingAnimation = al:getAnimation("animation_bird_dying")
+
+-- Static ID
 local staticID = 1
 
 function Bird:new(x,y,handler,difficulty)
-  local obj = setmetatable(Enemy:new(x,y,handler), Bird)
+    local obj = setmetatable(Enemy:new(x,y,handler), Bird)
 
-  if difficulty == nil then error() end
-  local difficulty = difficulty or 1
+    if difficulty == nil then error() end
+    local difficulty = difficulty or 1
 
-  obj.health = 20 * (math.max(difficulty/1.6,1))
-  obj.speed = 25 * (math.max(difficulty/3,1))
+    obj.health = 20 * (math.max(difficulty/1.6,1))
+    obj.speed = 25 * (math.max(difficulty/3,1))
 
-  obj.passive = true
-  obj.animation = "flying"
-  obj.animations = {
+    obj.passive = true
+    obj.animation = "flying"
+    obj.animations = {
     flying = flyingAnimation,
     dying = dyingAnimation
-  }
-  obj.facing = math.random(0,1) == 0 and -1 or 1
-  obj.width = obj.animations['flying'][1]:getWidth()
-  obj.height = obj.animations['flying'][1]:getHeight()
-  obj.id = staticID
-  obj.lifeTimer = 0
+    }
+    obj.facing = math.random(0,1) == 0 and -1 or 1
+    obj.width = obj.animations['flying'][1]:getWidth()
+    obj.height = obj.animations['flying'][1]:getHeight()
+    obj.id = staticID
+    obj.lifeTimer = 0
 
-  
+    --increase static id
     staticID = staticID + 1
 
   return obj

@@ -23,8 +23,8 @@ local roundscript = {
     }
 }
 
-function roundscript:getData(round)
-    local difficulty = 'easy'
+function roundscript:getData(round,difficulty)
+    local difficulty = difficulty or 'easy'
     local data = self[difficulty]
 
     local enemies = 4

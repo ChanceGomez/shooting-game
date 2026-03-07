@@ -11,11 +11,12 @@ local assetloader = {
 }
 
 --Retrieves image based off a name
-function assetloader:getImage(name)
+function assetloader:getImage(name,isAnimationCall)
+	local isAnimationCall = isAnimationCall or false
 	--try catch
 	if self.images[name] then	
 		return self.images[name]
-	else
+	elseif not isAnimationCall then
 		print(name.. " not found settings default")
 		if self.images['default'] then
 			return self.images['default']
@@ -86,7 +87,7 @@ function assetloader:getAnimation(name)
   
   while switch do
     local key = name .. i
-    local image = self:getImage(key)
+    local image = self:getImage(key,true)
     i = i + 1
     
     if self.images[key] then
@@ -97,6 +98,9 @@ function assetloader:getAnimation(name)
     end
   end
   
+  if #tbl == 0 then
+	print("animation does not exist: ", name)
+  end
   return tbl
 end
 

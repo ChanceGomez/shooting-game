@@ -14,7 +14,7 @@ function title:load()
         visible = true,
         description = "Start the game",
         clicked = function()
-            Scene = "game"
+            Scene = "difficultyselection"
         end
     })
 end

@@ -1,21 +1,24 @@
 local infopanel = {
-	image = nil,
-  defaultCursorOffsetX = 12,
-  defaultCursorOffsetY = 12,
+	defaultCursorOffsetX = 12,
+	defaultCursorOffsetY = 12,
 }
 
 function infopanel:load()
-	self.image = al:getImage('infopanel')
+
 end
 
-function infopanel:draw(obj) 
+function infopanel:draw(obj,panelMaxSize) 
+	local panelMaxSize = panelMaxSize or 256
 	local offsetX = self.defaultCursorOffsetX
 	local offsetY = self.defaultCursorOffsetY
-	local font = obj.description.font or obj.font or nil
+	local font = obj.font or nil
   
 	local x,y = CursorX + offsetX,CursorY + offsetY
 	local text = obj.info
-	if text == nil then 
+	if font == nil and obj.description then
+		font = obj.description.font
+	end
+	if text == nil and obj.description then 
 		if type(obj.description) == "string" then
 			text = obj.description
 		elseif obj.description.text then
@@ -30,20 +33,25 @@ function infopanel:draw(obj)
 		return
 	end
   
+
+	local width,height = ct:getDimensions(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
+
 	--figure out of panel would go over the border
-	if y > Height - self.image:getHeight() then
-		y = Height - self.image:getHeight()
+	if y > Height - height then
+		y = Height - height
 	end
 
-	if x > Width - self.image:getWidth() then
-		x = Width - self.image:getWidth()
-  end
+	if x > Width - width then
+		x = Width - width
+  	end
 
 	
 	--draw panel and text
-  	love.graphics.setColor(1,1,1,1)
-	love.graphics.draw(self.image,x,y)
-	ct:draw(text,font,x+4,y+4,self.image:getWidth()-8,{0,0,0,1})
+	local margin = 8
+  	love.graphics.setColor(.9,.9,.9,1)
+	love.graphics.rectangle("fill",x,y,width,height+margin)
+	ct:draw(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
+	
 end
 
 

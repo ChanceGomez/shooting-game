@@ -64,7 +64,6 @@ function EnemyHandler:newEnemy(enemy,x,y,difficulty)
     local enemy = enemy or "Bird"
     self.enemies = self.enemies - 1
     table.insert(game.lookouts[1].enemies, Enemies[enemy]:new(x,y,self,difficulty))
-
 end
 
 -- Removes enemy from lookouts

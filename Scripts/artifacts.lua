@@ -36,7 +36,7 @@ function artifacts:load()
         description = {
             text = "start " .. getFormat("positive") .. "automatically reloading the chamber, " .. getFormat("negative") .. "-25% reload speed",
         },
-        image = al:getImage("upgrademaxammo_shop_icon"),
+        image = al:getImage("artifact_autoreload"),
     }
     print(self.artifacts.autoReload.description.text)
     self.artifacts.improvedAmmunition = {
