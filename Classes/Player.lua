@@ -21,7 +21,7 @@ function Player:fireGun()
 end
 
 function Player:update(dt)
-   if leftClick then
+   if love.mouse.isDown(1) then
         self:fireGun()
    end 
 

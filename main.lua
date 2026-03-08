@@ -46,6 +46,7 @@ settings = {
   hitbox = true, -- Display hitboxes on enemies
   debug = true,
   difficulty = 'easy',
+  loadShopOnStart = true
 }
 
 -- All scenes
@@ -76,16 +77,17 @@ Scenes = {
     update = function(dt) difficultyselection:update(dt) end,
   },
 }
-Scene = "shop" -- Current scene
+Scene = "title" -- Current scene
 
 -- Independant random for cosmetic purposes
-independentRandom = love.math.newRandomGenerator(os.time())
+cosmeticRandom = love.math.newRandomGenerator(os.time())
 
 -- local functions
 
 local function loadAssets()
   --images
     al:loadImages("assets/Sprites")
+    al:loadAudios("assets/Audios")
   
     --perfect dos font
     perfect_dos_12 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",12)

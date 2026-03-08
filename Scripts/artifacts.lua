@@ -24,23 +24,22 @@ end
 function artifacts:load()
     --load artifacts
     self.artifacts.autoReload = {
-        clicked = function()
+        clicked = function(self)
             shop:artifactClicked()
             game.Observer:add("update",{
                 event = function()
                     game:getReloadShelf().autoReload = true
-                    game.Player.reloadRate = game.Player.gun.reloadRate * 1.25
                 end,
             })
+            game.Player.gun.reloadRate = game.Player.gun.reloadRate * 1.25
         end,
         description = {
             text = "start " .. getFormat("positive") .. "automatically reloading the chamber, " .. getFormat("negative") .. "-25% reload speed",
         },
         image = al:getImage("artifact_autoreload"),
     }
-    print(self.artifacts.autoReload.description.text)
     self.artifacts.improvedAmmunition = {
-        clicked = function()
+        clicked = function(self)
             shop:artifactClicked()
             --Improve the damage of the bullets
             game.Player.gun.damage = game.Player.gun.damage * 1.50
@@ -53,7 +52,7 @@ function artifacts:load()
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
     self.artifacts.railGun = {
-        clicked = function()
+        clicked = function(self)
             shop:artifactClicked()
             --Add damage multiplier
             game.Player.gun.damage = game.Player.gun.damage * 5
@@ -65,12 +64,24 @@ function artifacts:load()
         },
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
+    self.artifacts.extendedMagazine = {
+        clicked = function(self)
+            shop:artifactClicked()
+            game:getPlayerGun().maxAmmo = game:getPlayerGun().maxAmmo *2.0
+        end,
+        description = {
+            text = "Increase ammo capacity by " .. getFormat("positive") .. "200%",
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
     --get count of how many artifacts and get there widths/heights aswell as add the fonts for description
     for i, artifact in pairs(self.artifacts) do
         self.artifactsCount = self.artifactsCount + 1
         artifact.width = artifact.image:getWidth()
         artifact.height = artifact.image:getHeight()
-        artifact.description.font = perfect_dos_16
+        if not artifact.description.font then
+            artifact.description.font = perfect_dos_16
+        end
     end
     --get keys
     for key in pairs(self.artifacts) do
@@ -81,7 +92,6 @@ end
 
 function artifacts:getRandomArtifact()
     local key = self.keys[math.random(#self.keys)]
-    print(key,self.artifacts[key])
     return self.artifacts[key]
 end
 

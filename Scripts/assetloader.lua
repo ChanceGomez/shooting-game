@@ -30,7 +30,7 @@ end
 function assetloader:getAudio(name)
 	--try catch
 	if self.audios[name] then	
-		return self.audios[name]
+		return self.audios[name]:clone()
 	else
 		print(name.. " not found settings default")
 		if self.images['default'] then

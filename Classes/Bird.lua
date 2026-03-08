@@ -19,7 +19,7 @@ function Bird:new(x,y,handler,difficulty)
     if difficulty == nil then error() end
     local difficulty = difficulty or 1
 
-    obj.health = 20 * (math.max(difficulty/1.6,1))
+    obj.health = 30 * (math.max(difficulty/1.6,1))
     obj.speed = 25 * (math.max(difficulty/3,1))
 
     obj.passive = true
@@ -27,6 +27,10 @@ function Bird:new(x,y,handler,difficulty)
     obj.animations = {
     flying = flyingAnimation,
     dying = dyingAnimation
+    }
+    obj.sounds = {
+        hit = al:getAudio("birdhit"),
+        die = al:getAudio("birddie"),
     }
     obj.facing = math.random(0,1) == 0 and -1 or 1
     obj.width = obj.animations['flying'][1]:getWidth()
@@ -42,10 +46,12 @@ end
 
 function Bird:die()
     Enemy.die(self)
+    love.audio.play(self.sounds.die)
 end
 
 function Bird:hit(damage)
     Enemy.hit(self, damage)
+    love.audio.play(self.sounds.hit:clone())
 end
 
 function Bird:update(dt)

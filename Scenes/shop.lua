@@ -40,7 +40,6 @@ function shop:getArtifact(amountOfArtifacts)
     --change position accordingly
     local midPoint = Width/2
     local startPoint = midPoint - totalWidth/2
-    print(startPoint,midPoint,totalWidth)
     for i, artifact in ipairs(self.artifacts) do
         artifact.x = startPoint + ((i-1) * (artifact.width+margin))
     end
@@ -105,6 +104,9 @@ function shop:artifactClicked()
 end
 
 function shop:load()
+    if settings.loadShopOnStart then
+        self:loadShop()
+    end
     self.buttons["next_day"] = {
         x = 640-138,
         y = 360-58,
