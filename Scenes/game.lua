@@ -4,7 +4,7 @@ local game = {
     lookouts = {},
     scene = 1,
     camera = { x = 0, y = 0 },
-    round = 1
+    round = 4,
 }
 
 --[[
@@ -50,7 +50,7 @@ function game:load()
   self.canvas = love.graphics.newCanvas(Width,Height)
   self.Player = Player:new()
   self.Player:ChangeGun("pistol")
-  table.insert(self.lookouts, Lookout:new())
+  table.insert(self.lookouts, Lookout:new(self.round))
 end
 
 function game:update(dt)

@@ -1,17 +1,17 @@
 local Lookout = {}
 Lookout.__index = Lookout
 
-function Lookout:new(enemies,difficulty)
+function Lookout:new(round)
   local obj = setmetatable({}, Lookout)
   
-  local enemies = enemies or 5
-  local difficulty = difficulty or 1
+  local round = round or 1
+  local enemies, difficulty = roundscript:getData(round)
 
   obj.enemies = enemies
   obj.difficulty = difficulty
   obj.enemies = {}
   obj.canvas = love.graphics.newCanvas(Width,Height)
-  obj.handler = EnemyHandler:new(enemies,difficulty)
+  obj.handler = EnemyHandler:new(obj,enemies,difficulty)
   obj.handler:startRound()
   obj.x = 0
   obj.y = 0

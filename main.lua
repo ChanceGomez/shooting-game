@@ -25,6 +25,7 @@ ct = require("scripts/customtext")
 
 --Preloaded classes
 Observer = require("classes/Observer")
+Event = require("Classes/Event")
 
 
 --Scenes  
@@ -44,9 +45,11 @@ GameSpeed = 1
 settings = {
   volume = .5, -- Global volume
   hitbox = true, -- Display hitboxes on enemies
+  showHealth = false,
+  showAlive = false,
   debug = true,
   difficulty = 'easy',
-  loadShopOnStart = true
+  loadShopOnStart = true,
 }
 
 -- All scenes
@@ -77,7 +80,7 @@ Scenes = {
     update = function(dt) difficultyselection:update(dt) end,
   },
 }
-Scene = "title" -- Current scene
+Scene = "game" -- Current scene
 
 -- Independant random for cosmetic purposes
 cosmeticRandom = love.math.newRandomGenerator(os.time())
@@ -126,11 +129,13 @@ function love.load()
     Enemy = require("classes/Enemy")
     Enemies = {
         Bird = require("classes/Bird"),
+        InfectedBird = require("classes/InfectedBird")
     }
     Gun = require("classes/Gun")
     Guns = {
         pistol = require("classes/Pistol"),
     }
+  
   
   
   --load all scenes

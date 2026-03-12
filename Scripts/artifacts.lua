@@ -74,6 +74,19 @@ function artifacts:load()
         },
         image = al:getImage("upgrademaxammo_shop_icon")
     }
+    self.artifacts.increasedFireRate = {
+        clicked = function(self)
+            shop:artifactClicked()
+            game:getPlayerGun().fireRate = game:getPlayerGun().fireRate / 2.0
+            game.Player.gun.damage = game.Player.gun.damage * .50
+        end,
+        description = {
+            text = "Increase fire rate by " .. getFormat("positive") .. "200% but reduce damage by " .. getFormat("negative") .. "50%",  
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+
+
+    }
     --get count of how many artifacts and get there widths/heights aswell as add the fonts for description
     for i, artifact in pairs(self.artifacts) do
         self.artifactsCount = self.artifactsCount + 1

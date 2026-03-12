@@ -10,17 +10,20 @@
 local EnemyHandler = {}
 EnemyHandler.__index = EnemyHandler
 
-function EnemyHandler:new(enemies,difficulty)
+function EnemyHandler:new(lookout,enemyCount,difficulty)
     local obj = setmetatable({}, EnemyHandler)
   
-    local enemies = enemies or 5 -- Amount of enemies that are gonna spawn during the round
+    local enemyCount = enemyCount or 5 -- Amount of enemies that are gonna spawn during the round
     local difficulty = difficulty or 1 -- Difficulty for the round
 
+    obj.lookout = lookout
 
-    obj.enemies = enemies
+    obj.enemyCount = enemyCount
     obj.difficulty = difficulty
+    
+    obj.EventHandler = Event:new()
 
-    obj.isRoundActive = true
+    obj.isRoundActive = false
     obj.enemySpawnTimer = 0
     obj.enemyQueue = {}
 
@@ -29,18 +32,34 @@ end
 
 -- Start the round 
 function EnemyHandler:startRound()
+    local round = game.round
     --Set round to active
     self.isRoundActive = true
+
+    --Get enemies
+    local enemies = {}
+
+    for i = 1, self.enemyCount do
+        if round > 3 then
+            local weight = 50 + ((round-3) * 10)
+            local random = math.random(0,100)
+            if weight < random then
+                table.insert(enemies,"InfectedBird")
+            else
+                table.insert(enemies,"Bird")
+            end
+        else
+            table.insert(enemies,"Bird")
+        end
+    end
     
     --Spawn in enemies as a queue
-    for i = 1, self.enemies do
-        local interval = math.random(1,5)
-        event:addQueue({
+    for i = 1, self.enemyCount do
+        local interval = math.random(1,5-self.difficulty)
+        self.EventHandler:addQueue({
             t = interval,
             event = function()
-                --game.lookouts[1].handler:newEnemy("Bird",math.random(200,Width-200),Height+30,game.lookouts[1].handler.difficulty)
-                --Testing to see if you can pass through self through reference
-                EnemyHandler.newEnemy(self,"Bird",math.random(200,Width-200),Height+30,game.lookouts[1].handler.difficulty)
+                self:newEnemy(enemies[i],math.random(200,Width-200),Height+30,self.difficulty)
             end
          })
     end
@@ -62,33 +81,38 @@ function EnemyHandler:newEnemy(enemy,x,y,difficulty)
     local x = x or 320
     local y = y or 360
     local enemy = enemy or "Bird"
-    self.enemies = self.enemies - 1
-    table.insert(game.lookouts[1].enemies, Enemies[enemy]:new(x,y,self,difficulty))
+    self.enemyCount = self.enemyCount - 1
+    table.insert(self.lookout.enemies, Enemies[enemy]:new(x,y,self,difficulty))
 end
 
 -- Removes enemy from lookouts
 function EnemyHandler:removeEnemy(enemy)
-    for i, e in pairs(game.lookouts[1].enemies) do
+    for i, e in pairs(self.lookout.enemies) do
         if e == enemy then
-            table.remove(game.lookouts[1].enemies, i)
+            table.remove(self.lookout.enemies, i)
             return
         end
     end
 end
 
 function EnemyHandler:update(dt)
-    for i, enemy in pairs(game.lookouts[1].enemies) do
-        enemy:update(dt)
+    self.EventHandler:update(dt)
+    
+    if self.isRoundActive then
+        for i, enemy in pairs(self.lookout.enemies) do
+            enemy:update(dt)
+        end
     end
 
-    --print(self.enemies,self.isRoundActive,#self.enemyQueue,#game.lookouts[1].enemies)
     --Checks to see if round is over
-    if self.enemies <= 0 and self.isRoundActive and #self.enemyQueue == 0 and #game.lookouts[1].enemies == 0 then
+    if self.enemyCount <= 0 and self.isRoundActive and #self.enemyQueue == 0 and #self.lookout.enemies == 0 then
         self.isRoundActive = false
     end 
 end
 
 function EnemyHandler:draw()
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.print(tostring(self.isRoundActive) .. ' ' .. self.enemyCount,20,20)
     for i, enemy in pairs(game.lookouts[1].enemies) do
         enemy:draw()
     end

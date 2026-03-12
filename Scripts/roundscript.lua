@@ -27,8 +27,8 @@ function roundscript:getData(round,difficulty)
     local difficulty = difficulty or 'easy'
     local data = self[difficulty]
 
-    local enemies = 4
-    local difficulty = 4
+    local enemies = 9000
+    local difficulty = 5
 
     if data[round] then
         enemies = data[round][1]

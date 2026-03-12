@@ -5,7 +5,7 @@ function Player:new()
   local obj = setmetatable({}, Player)
   
   obj.gun = nil
-  obj.resources = 0
+  obj.resources = 100000
   
   return obj
 end

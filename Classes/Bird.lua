@@ -19,7 +19,7 @@ function Bird:new(x,y,handler,difficulty)
     if difficulty == nil then error() end
     local difficulty = difficulty or 1
 
-    obj.health = 30 * (math.max(difficulty/1.6,1))
+    obj.health = 20 * (math.max(difficulty/1.6,1))
     obj.speed = 25 * (math.max(difficulty/3,1))
 
     obj.passive = true

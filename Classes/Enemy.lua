@@ -63,7 +63,8 @@ function Enemy:update(dt)
         end
     end
 
-    if not collision.twoRect({x=0,y=0,width=Width,height=Height},self) and self.lifeTimer > 5 then
+    local sideMargin = 8
+    if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.lifeTimer > 5 then
         Enemy.delete(self)
     end
 end
@@ -73,7 +74,12 @@ function Enemy:draw()
         love.graphics.setLineWidth(1)
         love.graphics.rectangle("line",self.x-1,self.y-1,self.width+2,self.height+2)
         love.graphics.setFont(perfect_dos_16)
-        love.graphics.print(self.isAlive and "alive" or "dead",self.x+self.width + 2, self.y)
+        if settings.showAlive then
+            love.graphics.print(self.isAlive and "alive" or "dead",self.x+self.width + 2, self.y)
+        end
+        if settings.showHealth then
+            love.graphics.print("health: " .. self.health,self.x+self.width + 2, self.y+6)
+        end
     end
 end
 

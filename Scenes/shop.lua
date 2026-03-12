@@ -8,7 +8,7 @@ local shop = {
     damageCost = 0,
     reloadRateLevel = 0,
     reloadRateCost = 0,
-    maxLevel = 10,
+    maxLevel = 50,
 }
 
 
@@ -116,7 +116,7 @@ function shop:load()
             game.round = game.round + 1
             table.remove(game.lookouts)
 
-            table.insert(game.lookouts,Lookout:new(roundscript:getData(game.round,settings.difficulty)))
+            table.insert(game.lookouts,Lookout:new(game.round))
 
             Scene = "game"
         end,
