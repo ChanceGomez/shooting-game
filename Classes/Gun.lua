@@ -57,6 +57,8 @@ function Gun:update(dt)
     self.canReload = #self.ammo < self.maxAmmo
     --update fire rate timer
     self.fireRateTimer = self.fireRateTimer + dt
+
+    
 end
 
 

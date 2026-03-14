@@ -60,11 +60,16 @@ end
 
 
 function ReloadShelfBullet:update()
+    local ammo = game.Player.gun.ammo
+
     if collision.rect(self) then
         self.hovered = true
     else
         self.hovered = false
     end
+
+    --calculate ammo
+    
 end
 
 function ReloadShelfBullet:draw()

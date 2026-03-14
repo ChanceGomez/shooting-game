@@ -5,7 +5,7 @@ function Player:new()
   local obj = setmetatable({}, Player)
   
   obj.gun = nil
-  obj.resources = 100000
+  obj.resources = 0
   
   return obj
 end
@@ -39,7 +39,7 @@ function Player:draw()
     if game.lookouts[1].isHoveringButton then
         local cursorImage = al:getImage("cursor")
         local cursorWidth, crosshairHeight = cursorImage:getDimensions()
-        love.graphics.draw(cursorImage,x,y,0,1,1,cursorWidth/2,crosshairHeight/2)
+        love.graphics.draw(cursorImage,x,y)
     --draw the crosshair
     else
         --Ease of access vars

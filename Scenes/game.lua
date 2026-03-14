@@ -2,9 +2,8 @@ local game = {
     Player = nil,
     Observer = Observer:new(),
     lookouts = {},
-    scene = 1,
-    camera = { x = 0, y = 0 },
-    round = 4,
+    round = 1,
+    pause = false,
 }
 
 --[[
@@ -27,20 +26,6 @@ end
 
 ----------
 
-function game:sceneUp()
-    if self.scene > 1 then
-        self.scene = self.scene - 1
-        tweenTo(self.camera,.5,"linear",Width*(self.scene-1),0)
-    end
-end
-
-function game:sceneDown()
-    if self.scene < 2 then
-        self.scene = self.scene + 1
-        tweenTo(self.camera,.5,"linear",Width*(self.scene-1),0)
-    end
-end
-
 function game:endRound()
     endofround:getReport(self.lookouts[1].Report)
     Scene = "endofround"
@@ -55,6 +40,10 @@ end
 
 function game:update(dt)
 
+    if pClick then
+        game.paused = not game.paused
+    end
+
     --observer
     game.Observer:trigger("update")
   --update player
@@ -63,17 +52,12 @@ function game:update(dt)
     end
 
     --Update lookouts
-    self.lookouts[1]:update(dt)
-
-    if rClick then
-        self:endRound()
+    if not game.paused then
+        self.lookouts[1]:update(dt)
     end
 
-    if left then
-        self:sceneUp()
-    elseif right then
-        self:sceneDown()
-    end
+    --Stat panel
+    statpanel:update(dt)
 end
 
 function game:draw()
@@ -82,13 +66,8 @@ function game:draw()
 
     love.graphics.setBackgroundColor(0.1,0.1,0.1)
 
-    love.graphics.push()
-    love.graphics.translate(-self.camera.x,-self.camera.y)
-
     --Draw lookouts
     self.lookouts[1]:draw()
-
-    love.graphics.pop()
 
     love.graphics.setCanvas(mainCanvas)
     love.graphics.setColor(1,1,1,1)

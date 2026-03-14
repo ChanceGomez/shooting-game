@@ -40,6 +40,7 @@ function Enemy:delete()
 end
 
 function Enemy:hit(damage)
+    game.lookouts[1].Report:action("damageDealtBefore", damage)
     local damage = damage or 0
     self.health = self.health - damage
     self.isHit = true
@@ -73,7 +74,7 @@ function Enemy:draw()
     if settings.hitbox then
         love.graphics.setLineWidth(1)
         love.graphics.rectangle("line",self.x-1,self.y-1,self.width+2,self.height+2)
-        love.graphics.setFont(perfect_dos_16)
+        love.graphics.setFont(dogica_8)
         if settings.showAlive then
             love.graphics.print(self.isAlive and "alive" or "dead",self.x+self.width + 2, self.y)
         end

@@ -18,10 +18,13 @@ event = require("scripts/events")
 infopanel = require("scripts/infopanel")
 popup = require("scripts/popup")
 ap = require("scripts/animationplayer")
-upgrades = require("scripts/upgrades")
 roundscript = require("scripts/roundscript")
+upgrades = require("scripts/upgrades")
 artifacts = require("scripts/artifacts")
+equipment = require("scripts/equipment")
 ct = require("scripts/customtext")
+statpanel = require("scripts/statpanel")
+tab = require("scripts/tab")
 
 --Preloaded classes
 Observer = require("classes/Observer")
@@ -33,6 +36,7 @@ Event = require("Classes/Event")
   title = require("Scenes/title")
   endofround = require("Scenes/endofround")
   shop = require("Scenes/shop")
+  gun = require("Scenes/gun")
   difficultyselection = require("Scenes/difficultyselection")
   
 --Global vars
@@ -45,7 +49,7 @@ GameSpeed = 1
 settings = {
   volume = .5, -- Global volume
   hitbox = true, -- Display hitboxes on enemies
-  showHealth = false,
+  showHealth = true,
   showAlive = false,
   debug = true,
   difficulty = 'easy',
@@ -74,13 +78,18 @@ Scenes = {
     load = function() shop:load() end,
     update = function(dt) shop:update(dt) end,
   },
+  gun = {
+    draw = function() gun:draw() end,
+    load = function() gun:load() end,
+    update = function(dt) gun:update(dt) end,
+  },
   difficultyselection = {
     draw = function() difficultyselection:draw() end,
     load = function() difficultyselection:load() end,
     update = function(dt) difficultyselection:update(dt) end,
   },
 }
-Scene = "game" -- Current scene
+Scene = "gun" -- Current scene
 
 -- Independant random for cosmetic purposes
 cosmeticRandom = love.math.newRandomGenerator(os.time())
@@ -97,6 +106,9 @@ local function loadAssets()
     perfect_dos_16 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",16)
     perfect_dos_20 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",28)
     perfect_dos_32 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",32)
+
+    --dogica font
+    dogica_8 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",8)
 end
 
 -- love functions
@@ -105,7 +117,6 @@ function love.load()
   --graphics
   love.window.setVSync(false)
   love.graphics.setDefaultFilter("nearest", "nearest")
-  
   love.mouse.setVisible(false) -- set cursor to invisible
   
   mainCanvas = love.graphics.newCanvas(Width,Height)
@@ -116,10 +127,15 @@ function love.load()
   --load scripts
   upgrades:load()
   artifacts:load()
+  equipment:load()
   infopanel:load()
   ct:load()
+  statpanel:load()
+  tab:load()
 
   --Load classes
+    Inventory = require("classes/Inventory")
+    InventorySlot = require("classes/InventorySlot")
     Lookout = require("classes/Lookout")
     Report = require("classes/Report")
     ReloadShelf = require("classes/ReloadShelf")
@@ -135,6 +151,7 @@ function love.load()
     Guns = {
         pistol = require("classes/Pistol"),
     }
+    EquipmentSlot = require("classes/EquipmentSlot")
   
   
   

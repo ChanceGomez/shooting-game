@@ -24,6 +24,7 @@ end
 function artifacts:load()
     --load artifacts
     self.artifacts.autoReload = {
+        used = false,
         clicked = function(self)
             shop:artifactClicked()
             game.Observer:add("update",{
@@ -31,6 +32,7 @@ function artifacts:load()
                     game:getReloadShelf().autoReload = true
                 end,
             })
+            artifacts.artifacts.autoReload.used = true
             game.Player.gun.reloadRate = game.Player.gun.reloadRate * 1.25
         end,
         description = {
@@ -105,6 +107,9 @@ end
 
 function artifacts:getRandomArtifact()
     local key = self.keys[math.random(#self.keys)]
+    if self.artifacts[key].used then
+        return self:getRandomArtifact()
+    end
     return self.artifacts[key]
 end
 

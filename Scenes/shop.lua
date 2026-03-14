@@ -18,6 +18,7 @@ function shop:getArtifact(amountOfArtifacts)
 
     self.artifacts = {} -- reset table to empty just in case
     self.isArtifact = true -- Shop is now in artifact selection
+    self.skipArtifactButton.visible = true
 
     --positioning variables
     local totalWidth = 0
@@ -78,7 +79,9 @@ function shop:drawArtifactSelection()
 end
 
 function shop:loadShop()
-    self:getArtifact()
+    if game.round == 1 and settings.loadShopOnStart then
+        self:getArtifact()
+    end
     if game.round % 3 == 0 then
         self:getArtifact()
     end
@@ -104,9 +107,6 @@ function shop:artifactClicked()
 end
 
 function shop:load()
-    if settings.loadShopOnStart then
-        self:loadShop()
-    end
     self.buttons["next_day"] = {
         x = 640-138,
         y = 360-58,
@@ -189,16 +189,22 @@ function shop:load()
         end
     }
 
+    if settings.loadShopOnStart then
+        self:loadShop()
+    end
+
+
     self:upgradeClicked()
 end
 
-function shop:update()
+function shop:update(dt)
     if self.isArtifact then 
         button:updateAll(self.artifacts)
         button:update(self.skipArtifactButton)
     else
         button:updateAll(self.buttons)
     end
+    tab:update(dt)
 end
 
 function shop:draw()
@@ -240,7 +246,7 @@ function shop:draw()
     --draw resource count
     love.graphics.setColor(1,1,1,1)
     love.graphics.setFont(perfect_dos_16)
-    love.graphics.print("Resources: " .. game.Player.resources,640-128,10)
+    love.graphics.print("Resources: " .. game.Player.resources,640-128,28)
 
     for i, button in pairs(self.buttons) do
         if button.description and collision.rect(button) then
@@ -250,6 +256,9 @@ function shop:draw()
 
     --draw artifacts
     self:drawArtifactSelection()
+
+    --draw tab
+    tab:draw()
 
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(al:getImage("cursor"),CursorX,CursorY)

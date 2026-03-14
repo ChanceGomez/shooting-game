@@ -1,6 +1,9 @@
 local Lookout = {}
 Lookout.__index = Lookout
 
+local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
+crt_shader:send("screen_size", {love.graphics.getDimensions()})
+
 function Lookout:new(round)
   local obj = setmetatable({}, Lookout)
   
@@ -21,11 +24,12 @@ function Lookout:new(round)
   obj.buttons = {}
   obj.isHoveringButton = false
   obj.reloadShelfOpen = true
-  obj.ReloadShelf = ReloadShelf:new(-128,obj.y + Height - 68)
+  obj.ReloadShelf = ReloadShelf:new(-128,obj.y + Height - 64)
+  obj.outlineMargin = 0
     --load buttons
     table.insert(obj.buttons, {
         x = obj.x + 4,
-        y = obj.y + Height - 68,
+        y = obj.y + Height - 64,
         image = al:getImage("button_ammoreload"),
         hoveredImage = al:getImage("button_ammoreload_hovered"),
         width = al:getImage("button_ammoreload"):getWidth(),
@@ -48,13 +52,13 @@ end
 
 function Lookout:openReloadShelf()
     --animate button
-    tweenTo(self.buttons[1],.2,"linear",127,self.buttons[1].y)
-    tweenTo(self.ReloadShelf,.2,"linear",0,self.ReloadShelf.y)
+    tweenTo(self.buttons[1],.2,"linear",126,self.buttons[1].y)
+    tweenTo(self.ReloadShelf,.2,"linear",-1,self.ReloadShelf.y)
 end
 
 function Lookout:closeReloadShelf()
     --animate button
-    tweenTo(self.buttons[1],.2,"linear",4,self.buttons[1].y)
+    tweenTo(self.buttons[1],.2,"linear",self.outlineMargin,self.buttons[1].y)
     tweenTo(self.ReloadShelf,.2,"linear",-128,self.ReloadShelf.y)
 end
 
@@ -82,6 +86,12 @@ function Lookout:update(dt)
             self.isHoveringButton = false
         end
     end
+    if collision.rect(statpanel.button) then
+        self.isHoveringButton = true
+    end
+    if collision.rect(statpanel) then
+        self.isHoveringButton = true
+    end
     if collision.rect(self.ReloadShelf) then
         self.isHoveringButton = true
     end
@@ -96,15 +106,20 @@ function Lookout:update(dt)
 
     self.handler:update(dt)
     self.cloudsTimer = self.cloudsTimer + dt
+
+    crt_shader:send("time", love.timer.getTime())
 end
 
 function Lookout:draw()
+
     love.graphics.setColor(1,1,1,1)
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
+
     --background color
-        love.graphics.setBackgroundColor(0.2,0.2,math.min(math.max(self.roundTimer/120+.25,.25),.40))
+        love.graphics.setColor(0.2,0.2,math.min(math.max(self.roundTimer/120+.25,.25),.40))
+        love.graphics.rectangle("fill",0,0,Width,Height)
 
     --clouds background
         local img = al:getImage("background_clouds_layer1")
@@ -137,6 +152,10 @@ function Lookout:draw()
     --draw buttons
     button:drawAll(self.buttons)
 
+
+    --draw stat panel
+    statpanel:draw()
+
     --draw reloadshelf
     self.ReloadShelf:draw()
 
@@ -151,13 +170,19 @@ function Lookout:draw()
     love.graphics.print("enemies: " .. #self.enemies, 10,230)
     love.graphics.print("reloadrate: " .. math.floor(game.Player.gun.reloadRate*100)/100, 10,210) 
 
-    love.graphics.setColor(.9,.9,.9,1)
-    love.graphics.draw(al:getImage("background_hud_layer1"),0,0)
+
 
 
     love.graphics.setCanvas(game.canvas)
     love.graphics.setColor(1,1,1,1)
+    love.graphics.setShader(crt_shader)
     love.graphics.draw(self.canvas,self.x,self.y)
+    love.graphics.setShader()
+
+    love.graphics.setColor(.9,.9,.9,1)
+    love.graphics.draw(al:getImage("background_hud_layer1"),0,0)
+
+    
 end
 
 
