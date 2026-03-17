@@ -53,10 +53,11 @@ function statpanel:draw()
     love.graphics.draw(self.images.background,x,y)
 
     love.graphics.setColor(0,0,0,1)
-    love.graphics.setFont(dogica_8)
-    ct:draw("Reload Rate:" .. " {.8,0,0,1}" .. game:getPlayerGun().reloadRate,dogica_8,x+4,y+4,90,{0,0,0,1})
-    ct:draw("Max Ammo:" .. " {.8,0,0,1}" .. game:getPlayerGun().maxAmmo,dogica_8,x+4,y+28,90,{0,0,0,1})
-    ct:draw("Damage:" .. " {.8,0,0,1}" .. game:getPlayerGun().damage,dogica_8,x+4,y+42,90,{0,0,0,1})
+    local font = dogica_8
+    ct:draw("Reload Rate:" .. " {.8,0,0,1}" .. game:getPlayerGun().reloadRate,font,x+4,y+4,90,{0,0,0,1})
+    ct:draw("Max Ammo:" .. " {.8,0,0,1}" .. game:getPlayerGun().maxAmmo,font,x+4,y+28,90,{0,0,0,1})
+    ct:draw("Damage:" .. " {.8,0,0,1}" .. game:getPlayerGun().damage,font,x+4,y+42,90,{0,0,0,1})
+    ct:draw("Fire Rate:" .. " {.8,0,0,1}" .. game:getPlayerGun().fireRate,font,x+4,y+56,90,{0,0,0,1})
 
 
     

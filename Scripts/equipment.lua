@@ -25,17 +25,17 @@ function equipment:load()
     --load artifacts
     self.equipments.titaniumBarrel = {
         type = "barrel",
-        clicked = function(self)
-            game.Observer:add("damageDealtBefore",{
-                event = function(self,damage)
-                    print(damage)
-                end,
-            })
+        add = function(self)
+            game:getPlayerGun().fireRate = game:getPlayerGun().fireRate * .75
+
+        end,
+        remove = function(self)
+            game:getPlayerGun().fireRate = game:getPlayerGun().fireRate * 1.25
         end,
         description = {
             text = "Increase Fire Rate by 25%",
         },
-        image = al:getImage(""),
+        image = al:getImage("equipment_barrelimprovement"),
     }
 
     --get count of how many artifacts and get there widths/heights aswell as add the fonts for description

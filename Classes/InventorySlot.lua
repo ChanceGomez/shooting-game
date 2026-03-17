@@ -1,32 +1,34 @@
 local InventorySlot = {}
 InventorySlot.__index = InventorySlot
 
-local staticInventoryBackground = al:getImage("background_equipment")
-local staticInventoryBackgroundHovered = al:getImage("background_equipment_hovered")
 
-
-function InventorySlot:new(col,row,x,y,margin)
+function InventorySlot:new(x,y,images)
     local obj = setmetatable({},InventorySlot)
 
-    local image = staticInventoryBackground
-    local width = image:getWidth()
-    local height = image:getHeight()
 
     obj.col = col 
     obj.row = row 
 
-    obj.x = (col-1) * (width+margin) + x
-    obj.y = (row-1) * (height+margin) + y
-    obj.width = width
-    obj.height = height
+    obj.x = x
+    obj.y = y
+    obj.width = images.background:getWidth()
+    obj.height = images.background:getHeight()
 
     obj.item = nil
 
-    obj.images = {}
-    obj.images.background = image
-    obj.images.backgroundHovered = staticInventoryBackgroundHovered
+    obj.images = images
 
     return obj
+end
+
+function InventorySlot:addItem(item)
+    if self.item then return false end
+    self.item = item
+    return true
+end
+
+function InventorySlot:removeItem()
+    self.item = nil
 end
 
 function InventorySlot:update(dt)

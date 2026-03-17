@@ -27,10 +27,6 @@ function Observer:add(trigger,obj)
     self.events[trigger] = {}
   end
   table.insert(self.events[trigger],obj)
-  
-  for i, event in pairs(self.events) do
-
-  end
 end
 
 

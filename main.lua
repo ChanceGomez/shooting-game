@@ -28,6 +28,7 @@ tab = require("scripts/tab")
 
 --Preloaded classes
 Observer = require("classes/Observer")
+Affector = require("classes/Affector")
 Event = require("Classes/Event")
 
 
@@ -91,6 +92,9 @@ Scenes = {
 }
 Scene = "gun" -- Current scene
 
+--Global Observer
+GlobalObserver = nil
+
 -- Independant random for cosmetic purposes
 cosmeticRandom = love.math.newRandomGenerator(os.time())
 
@@ -151,9 +155,12 @@ function love.load()
     Guns = {
         pistol = require("classes/Pistol"),
     }
+    EquipmentInventory = require("classes/EquipmentInventory")
     EquipmentSlot = require("classes/EquipmentSlot")
+    ParachuteCrate = require("classes/ParachuteCrate")
   
-  
+  --get global observer
+  GlobalObserver = Observer:new()
   
   --load all scenes
   for i, scene in pairs(Scenes) do
