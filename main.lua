@@ -30,7 +30,7 @@ tab = require("scripts/tab")
 Observer = require("classes/Observer")
 Affector = require("classes/Affector")
 Event = require("Classes/Event")
-
+Button = require("classes/Button")
 
 --Scenes  
   game = require("Scenes/game")

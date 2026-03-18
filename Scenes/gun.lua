@@ -20,7 +20,21 @@ function gun:load()
         recoil = {56+self.offsetX,224+self.offsetY},
         base = {160+self.offsetX,264+self.offsetY},
     })
-    self.Inventory = Inventory:new(14,40,3,7,self.equipmentSlots)
+    self.Inventory = Inventory:new(14,40,3,7,{
+        [1] = {
+            clicked = function(slot) 
+                if slot.item == nil then return end
+                local rarity = slot.item.rarity or 1
+                game.Player.resources = game.Player.resources + (rarity * 50)
+                slot:removeItem()
+            end, 
+            description = {
+                x = 0,
+                y = 1,
+                text = "sell",
+                font = dogica_8,
+            }
+        }})
 
     --debug
     self.Inventory:addItem(equipment:getRandomEquipment())

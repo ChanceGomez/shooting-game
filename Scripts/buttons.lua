@@ -192,9 +192,9 @@ function buttons:drawAll(tbl,x,y)
 		
     --button text
 		if button.text ~= nil then
-      local bX = button.text.x or 0
-      local bY = button.text.y or 0
-      local limit = button.text.limit or 20
+		local bX = button.text.x or 0
+		local bY = button.text.y or 0
+		local limit = button.text.limit or 20
 			local x = button.x + bX
 			local y = button.y + bY
 			local color = button.text.color or {1,1,1,1}

@@ -36,6 +36,55 @@ local function generateSlots(cols,rows,x,y,margin)
     return tbl
 end
 
+local function generateFunctions(self,functions)
+    --table to return with basic function
+    local tbl = {}
+
+    local width = self.rightClickPanel.width
+    local height = 16
+
+    table.insert(tbl,Button:new({
+        x = 0,
+        y = 0,
+        visible = false,
+        color = {0,0,0,1},
+        width = width,
+        description = {
+            text = "Close",
+            font = dogica_8,
+            x = 0,
+            y = 1,
+            limit = width,
+            defaultColor = {1,1,1,1},
+        },
+        height = 16,
+        clicked = function()
+            self.isRightClick = false
+        end,
+    }))
+
+    for i, func in ipairs(functions) do
+        func.description.limit = width
+        table.insert(tbl,Button:new({
+            x = 0,
+            y = 0,
+            visible = false,
+            color = {0,0,0,1},
+            width = width,
+            description = func.description,
+            height = 16,
+            clicked = function()
+                func.clicked(self.rightClickedSlot)
+            end,
+        }))
+        height = height + 16
+    end
+
+    self.rightClickPanel.height = height
+
+    return tbl
+end
+
 local function generateSlotsByPos(tbl) 
     local returnTbl = {}
     for i, slot in ipairs(tbl) do
@@ -120,6 +169,48 @@ local function unlink(a, b)
   b._linked_keys = nil
 end
 
+function Inventory:new(x,y,col,row,functions)
+    local obj = setmetatable({},Inventory)
+
+    local cols,rows = col or 0,row or 0
+    local functions = functions or {}
+        
+
+    obj.rows = rows
+    obj.cols = cols
+
+    obj.isRightClicked = false
+    obj.rightClickedSlot = nil
+    obj.rightClickPanel = {
+        width = 96,
+        height = 32, 
+        x = 0,
+        y = 0,
+        functions = {},
+    }
+    obj.rightClickPanel.functions = generateFunctions(obj,functions)
+
+    obj.heldItem = nil
+    obj.heldItemOriginalSlot = nil
+
+    obj.inventories = {}
+
+    obj.x = x or 0
+    obj.y = y or 0
+
+    if rows then 
+        obj.slots = generateSlots(cols,rows,x,y,obj.margin)
+    end
+
+
+    return obj
+end
+
+function Inventory:rightClickPanelClicked()
+    self.isRightClick = false
+    self.rightClickedSlot = nil
+end
+
 function Inventory:getNextEmptySlot()
     for i, slot in ipairs(self.slots) do
         if slot.item == nil then
@@ -156,14 +247,20 @@ function Inventory:drag()
         self.heldItem = nil
     end
 
-    --Cycle through slots to see if any meet the requirements to take an item and hold it
+
     for i, slot in pairs(self.slots) do
+        --See if slot meets requirements to be held
         if slot.hovered and love.mouse.isDown(1) and self.heldItem == nil then
             --Set helditem to the slots item
             self.heldItem = slot.item
             self.heldItemOriginalSlot = slot
             --Remove item from the slot
             slot:removeItem()
+        end
+        -- See if slot can be rightclicked
+        if slot.hovered and rightClick and self.heldItem == nil then
+            self.isRightClick = true
+            self.rightClickedSlot = slot
         end
     end
 
@@ -173,39 +270,6 @@ function Inventory:drag()
         local x,y = CursorX-(heldItem.width/2),CursorY-(heldItem.height/2)
         heldItem.x,heldItem.y = x,y
     end
-end
-
-function Inventory:new(x,y,arg1,arg2)
-    local obj = setmetatable({},Inventory)
-
-    local cols,rows = nil,nil
-
-    if (type(arg1) == "number" or arg1 == nil) and (type(arg2) == "number" or arg2 == nil) then
-        cols,rows = arg1 or 1, arg2 or 1
-    end
-    
-    if type(arg1) == "table" then
-
-    end
-
-
-    obj.rows = rows
-    obj.cols = cols
-
-    obj.heldItem = nil
-    obj.heldItemOriginalSlot = nil
-
-    obj.inventories = {}
-
-    obj.x = x or 0
-    obj.y = y or 0
-
-    if rows then 
-        obj.slots = generateSlots(cols,rows,x,y,obj.margin)
-    end
-
-
-    return obj
 end
 
 function Inventory:linkInventory(inventory)
@@ -242,6 +306,28 @@ function Inventory:update(dt)
     for i, slot in pairs(self.slots) do
         slot:update(dt)
     end
+
+    --Upate rightclick buttons
+    if self.isRightClick then
+        local slot = self.rightClickedSlot
+        self.rightClickPanel.x,self.rightClickPanel.y = slot.x + slot.width/2, slot.y + slot.height/2
+        local x,y = self.rightClickPanel.x,self.rightClickPanel.y
+        for i, button in pairs(self.rightClickPanel.functions) do
+            button.visible = true
+
+            button.x = x
+            button.y = y + ((i-1)*16)
+            button:update()
+        end
+    else
+        for i, button in pairs(self.rightClickPanel.functions) do
+            button.visible = false
+        end
+    end
+
+    if love.mouse.isDown(1) and self.isRightClick then
+        self.isRightClick = false
+    end
 end
 
 function Inventory:drawHeldItem(item)
@@ -260,6 +346,20 @@ function Inventory:draw()
     for i, slot in pairs(self.slots) do
         if slot.hovered and slot.item and self.heldItem == nil then
             infopanel:draw(slot.item)
+        end
+    end
+
+    --Draw right click panel
+    if self.isRightClick then
+        local slot = self.rightClickedSlot
+        local rightClickPanel = self.rightClickPanel
+
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.rectangle("fill",rightClickPanel.x,rightClickPanel.y,rightClickPanel.width,rightClickPanel.height)
+
+        --draw buttons
+        for i, button in ipairs(self.rightClickPanel.functions) do
+            button:draw()
         end
     end
 

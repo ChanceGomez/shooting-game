@@ -139,6 +139,14 @@ local function argumentHandler(self,arg1,arg2,arg3,arg4,arg5,arg6)
     local limit = arg5 or 1000
     local defaultColor = arg6 or {1,1,1,1}
 
+    if type(arg1) == "table" then
+        text = arg1.text or text
+        font = arg1.font or font
+        x = arg1.x or x
+        y = arg1.y or y
+        limit = arg1.limit or limit
+        defaultColor = arg1.defaultColor or defaultColor
+    end
 
     return text,font,x,y,limit,defaultColor
 end

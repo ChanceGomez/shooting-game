@@ -11,8 +11,8 @@ local function generateSlots(tbl)
     return returnTbl 
 end
 
-function EquipmentInventory:new(tbl)
-    local obj = setmetatable(Inventory:new(),EquipmentInventory)
+function EquipmentInventory:new(tbl,functions)
+    local obj = setmetatable(Inventory:new(nil,nil,nil,nil,functions),EquipmentInventory)
 
     obj.slots = generateSlots(tbl)
 
