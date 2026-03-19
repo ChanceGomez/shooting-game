@@ -1,6 +1,7 @@
 local game = {
     Player = nil,
     Observer = Observer:new(),
+    Affector = Affector:new(),
     lookouts = {},
     round = 1,
     pause = false,

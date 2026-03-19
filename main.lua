@@ -52,9 +52,10 @@ settings = {
   hitbox = true, -- Display hitboxes on enemies
   showHealth = true,
   showAlive = false,
-  debug = true,
+  debug = false,
   difficulty = 'easy',
   loadShopOnStart = true,
+  crt = false,
 }
 
 -- All scenes
@@ -90,7 +91,7 @@ Scenes = {
     update = function(dt) difficultyselection:update(dt) end,
   },
 }
-Scene = "gun" -- Current scene
+Scene = "shop" -- Current scene
 
 --Global Observer
 GlobalObserver = nil

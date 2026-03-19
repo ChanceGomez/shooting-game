@@ -166,16 +166,18 @@ function Lookout:draw()
     love.graphics.setFont(perfect_dos_16)
     love.graphics.print("ammo: " .. #game.Player.gun.ammo .. "/" .. game.Player.gun.maxAmmo,10,270)
 
-    love.graphics.print("damage: " .. game.Player.gun.damage, 10,250)
+    love.graphics.print("damage: " .. game.Affector:trigger("damageCheck",game.Player.gun.damage), 10,250)
     love.graphics.print("enemies: " .. #self.enemies, 10,230)
-    love.graphics.print("reloadrate: " .. math.floor(game.Player.gun.reloadRate*100)/100, 10,210) 
+    love.graphics.print("reloadrate: " .. math.floor(game.Affector:trigger("reloadRateCheck",game.Player.gun.reloadRate)*100)/100, 10,210) 
 
 
 
 
     love.graphics.setCanvas(game.canvas)
     love.graphics.setColor(1,1,1,1)
-    love.graphics.setShader(crt_shader)
+    if settings.crt then
+        love.graphics.setShader(crt_shader)
+    end
     love.graphics.draw(self.canvas,self.x,self.y)
     love.graphics.setShader()
 

@@ -10,6 +10,7 @@ function Report:new()
     obj.shotFired = 0
     obj.shotHit = 0
     obj.damageDealt = 0
+    obj.resources = 0
 
     return obj
 end

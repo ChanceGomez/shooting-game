@@ -22,7 +22,6 @@ function ReloadShelf:new(x,y)
     obj.bullet = nil
     obj.buttons = {}
     obj.deletedBullets = {}
-    obj.dudPercentage = 30
     obj.autoReload = false
     table.insert(obj.buttons, {
         x = obj.x,
@@ -50,7 +49,7 @@ function ReloadShelf:reload()
     self.reloading = true
     --get random for dud chance
     local random = math.random(1,100)
-    self.bullet = ReloadShelfBullet:new(self,-128,8,random < self.dudPercentage)
+    self.bullet = ReloadShelfBullet:new(self,-128,8,random < game.Affector:trigger("dudCheck",game.Player.dudPercentage))
 end
 
 function ReloadShelf:loadBullet()
@@ -104,7 +103,7 @@ function ReloadShelf:update(dt)
     end
 
     if self.bullet and not self.bullet.held and not self.bullet.tweening then
-        tweenTo(self.bullet,game.Player.gun.reloadRate,"linear",9,8,function() self.reloading = false end)
+        tweenTo(self.bullet,game.Affector:trigger("reloadRateCheck",game.Player.gun.reloadRate),"linear",9,8,function() self.reloading = false end)
     end
 end
 

@@ -22,6 +22,8 @@ function Bird:new(x,y,handler,difficulty)
     obj.health = 20 * (math.max(difficulty/2,1))
     obj.speed = 25 * (math.max(difficulty/3,1))
 
+    obj.resources = 5
+
     obj.passive = true
     obj.animation = "flying"
     obj.animations = {
@@ -52,6 +54,14 @@ end
 function Bird:hit(damage)
     Enemy.hit(self, damage)
     love.audio.play(self.sounds.hit:clone())
+end
+
+function Bird:hitColor(dt)
+    Enemy.hitColor(self,dt)
+end
+
+function Bird:isCollision()
+    return Enemy.isCollision(self)
 end
 
 function Bird:update(dt)

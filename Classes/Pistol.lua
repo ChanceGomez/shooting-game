@@ -33,7 +33,7 @@ end
 
 function Pistol:fire()
     --Make sure gun can fire
-    if self.isReloading or self.fireRateTimer < self.fireRate then
+    if self.isReloading or self.fireRateTimer < game.Affector:trigger("fireRateCheck",self.fireRate) then
         return
     end
     --extract first frame and then get dimensions for adjustment on crosshair

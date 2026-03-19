@@ -16,6 +16,8 @@ function EnemyHandler:new(lookout,enemyCount,difficulty)
     local enemyCount = enemyCount or 5 -- Amount of enemies that are gonna spawn during the round
     local difficulty = difficulty or 1 -- Difficulty for the round
 
+    obj.isParachute = math.random(1,100) < game.Affector:trigger("parachuteCheck",game.Player.parachuteOdds)
+
     obj.lookout = lookout
 
     obj.enemyCount = enemyCount
@@ -27,6 +29,8 @@ function EnemyHandler:new(lookout,enemyCount,difficulty)
     obj.enemySpawnTimer = 0
     obj.enemyQueue = {}
 
+    obj.parachutes = {}
+
   return obj
 end
 
@@ -36,14 +40,20 @@ function EnemyHandler:startRound()
     --Set round to active
     self.isRoundActive = true
 
+    --check to see if parachute is true
+    if self.isParachute then
+        table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
+    end
+
     --Get enemies
     local enemies = {}
 
     for i = 1, self.enemyCount do
         if round > 3 then
-            local weight = 50 + ((round-3) * 10)
+            local weight = 30 + ((round-3) * 10)
             local random = math.random(0,100)
-            if weight < random then
+            print(weight,random)
+            if weight > random then
                 table.insert(enemies,"InfectedBird")
             else
                 table.insert(enemies,"Bird")
@@ -55,7 +65,7 @@ function EnemyHandler:startRound()
     
     --Spawn in enemies as a queue
     for i = 1, self.enemyCount do
-        local interval = math.random(1,5-self.difficulty)
+        local interval = math.random(math.max(5-(self.difficulty/2),0),math.max(10-self.difficulty,1))
         self.EventHandler:addQueue({
             t = interval,
             event = function()
@@ -70,8 +80,14 @@ end
 ]]
 function EnemyHandler:checkHit(damage)
     for i, enemy in pairs(game.lookouts[1].enemies) do
-        if collision.rect(enemy) and enemy.isAlive then
+        if enemy:isCollision() and enemy.isAlive then
             enemy:hit(damage) 
+        end
+    end
+
+    for i, parachute in pairs(self.parachutes) do
+        if parachute:isCollision() and parachute.isAlive then
+            parachute:hit(damage) 
         end
     end
 end
@@ -102,6 +118,9 @@ function EnemyHandler:update(dt)
         for i, enemy in pairs(self.lookout.enemies) do
             enemy:update(dt)
         end
+        for i, parachute in pairs(self.parachutes) do
+            parachute:update(dt)
+        end
     end
 
     --Checks to see if round is over
@@ -112,9 +131,14 @@ end
 
 function EnemyHandler:draw()
     love.graphics.setColor(1,1,1,1)
-    love.graphics.print(tostring(self.isRoundActive) .. ' ' .. self.enemyCount,20,20)
+    if settings.debug then
+        love.graphics.print(tostring(self.isRoundActive) .. ' ' .. self.enemyCount,20,20)
+    end
     for i, enemy in pairs(game.lookouts[1].enemies) do
         enemy:draw()
+    end
+    for i, parachute in pairs(self.parachutes) do
+        parachute:draw()
     end
 end
 

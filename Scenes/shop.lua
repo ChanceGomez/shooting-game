@@ -8,7 +8,7 @@ local shop = {
     damageCost = 0,
     reloadRateLevel = 0,
     reloadRateCost = 0,
-    maxLevel = 50,
+    maxLevel = 5,
 }
 
 
@@ -89,9 +89,9 @@ end
 
 function shop:upgradeClicked()
     --update costs
-    self.maxAmmoCost = 5*(self.maxAmmoLevel+1)
-    self.damageCost = 5*(self.damageLevel+1)
-    self.reloadRateCost = 5*(self.reloadRateLevel+1)
+    self.maxAmmoCost = 10*(self.maxAmmoLevel+1)
+    self.damageCost = 10*(self.damageLevel+1)
+    self.reloadRateCost = 10*(self.reloadRateLevel+1)
 
     --update descriptions
     self.buttons["increase_maxAmmo"].description = "Upgrade the max ammo of your gun, Cost: " .. self.maxAmmoCost
@@ -148,6 +148,7 @@ function shop:load()
             end
             self.maxAmmoLevel = self.maxAmmoLevel + 1
             game.Player.gun:increaseMaxAmmo(1)
+            self:upgradeClicked()
         end
     }
 
@@ -167,6 +168,8 @@ function shop:load()
             end
             self.damageLevel = self.damageLevel + 1
             game.Player.gun:increaseDamage(1)
+            self:upgradeClicked()
+
         end
     }
 
@@ -186,6 +189,8 @@ function shop:load()
             end
             self.reloadRateLevel = self.reloadRateLevel + 1
             game.Player.gun:increaseReloadRate(.15)
+            self:upgradeClicked()
+
         end
     }
 

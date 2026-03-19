@@ -11,28 +11,30 @@ function Affector:new()
 end
 
 function Affector:trigger(trigger,attribute)
-  if self.affectors[trigger] == nil then return end
+  if self.affectors[trigger] == nil then return attribute end
+  --print("before " .. attribute)
+  local returnAttribute = attribute
   for i, event in ipairs(self.affectors[trigger]) do
-    event:event(attribute)
+    returnAttribute = event.event(attribute)
   end
-  return attribute
+  --print("after " .. returnAttribute)
+  return returnAttribute
 end
 
 function Affector:add(trigger,func)
   if self.affectors[trigger] == nil then 
     self.affectors[trigger] = {}
   end
-  table.insert(self.affectors[trigger],func)
+  table.insert(self.affectors[trigger],{
+    event = func
+  })
+  return #self.affectors[trigger]
 end
 
-function Affector:remove(trigger,func)
+function Affector:remove(trigger,id)
     if self.affectors[trigger] == nil then return end
-    for i, affector in ipairs(self.affectors[trigger]) do
-        if affector == func then
-            table.remove(self.affectors[trigger],i)
-            return
-        end
-    end
+    table.remove(self.affectors[trigger],id) 
+    return nil
 end
 
 

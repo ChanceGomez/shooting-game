@@ -6,8 +6,7 @@ local endofround = {
 
 function endofround:getReport(report)
     self.report = report
-    self.resourcesEarned = report.enemyKilled * 5
-    game.Player.resources = game.Player.resources + self.resourcesEarned
+    game.Player.resources = game.Player.resources + self.report.resources
 end
 
 function endofround:load()
@@ -43,7 +42,7 @@ function endofround:draw()
         love.graphics.print("Bullets Discarded: " .. report.discardedBullet,x,85)
         love.graphics.print("Shots hit: " .. report.shotHit,x,105)
         love.graphics.setFont(perfect_dos_32)
-        love.graphics.print("Resources Earned: " .. self.resourcesEarned,x,155)
+        love.graphics.print("Resources Earned: " .. report.resources,x,155)
 
 
     end

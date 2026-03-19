@@ -20,6 +20,7 @@ function Enemy:new(x,y,handler)
   obj.color = {1,1,1,1}
   obj.lifeTimer = 0 
   obj.isAlive = true
+  obj.resources = 0
 
   return obj
 end
@@ -28,6 +29,7 @@ function Enemy:die()
     --change animation to die animation
     self.isAlive = false
     self.color = {0.7,0.5,0.5,1}
+    game.lookouts[1].Report:action("resources",self.resources)
     if self.animation then
         self.animation = "dying"
     end
@@ -40,7 +42,9 @@ function Enemy:delete()
 end
 
 function Enemy:hit(damage)
-    game.lookouts[1].Report:action("damageDealtBefore", damage)
+    --print("damage before: " .. damage)
+    game.Affector:trigger("damage",damage)
+    --print("damage after: " .. damage)
     local damage = damage or 0
     self.health = self.health - damage
     self.isHit = true
@@ -52,9 +56,9 @@ function Enemy:hit(damage)
     end
 end
 
-function Enemy:update(dt)
-    self.lifeTimer = self.lifeTimer + dt
-    if self.isHit and self.isAlive then 
+function Enemy:hitColor(dt)
+    self.lifeTimer = self.lifeTimer + dt    
+    if self.isHit then 
         self.color = {1,0,0,1}
         self.hitTimer = self.hitTimer + dt
         if self.hitTimer >= self.hitDuration then
@@ -63,6 +67,24 @@ function Enemy:update(dt)
             self.color = {1,1,1,1}
         end
     end
+end
+
+function Enemy:isCollision()
+    if collision.rect(self) then
+        return true
+    else
+        return false
+    end
+end
+
+function Enemy:deadColor()
+    if not self.isHit and not self.isAlive then
+        self.color = {.6,.6,.6,1}
+    end
+end
+
+function Enemy:update(dt)
+    self:hitColor(dt)
 
     local sideMargin = 8
     if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.lifeTimer > 5 then

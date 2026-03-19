@@ -17,7 +17,7 @@ function gun:load()
         barrel = {328+self.offsetX,240+self.offsetY},
         stabalizer = {376+self.offsetX,32+self.offsetY},
         antenna = {136+self.offsetX,24+self.offsetY},
-        recoil = {56+self.offsetX,224+self.offsetY},
+        reloader = {56+self.offsetX,224+self.offsetY},
         base = {160+self.offsetX,264+self.offsetY},
     })
     self.Inventory = Inventory:new(14,40,3,7,{
@@ -37,8 +37,6 @@ function gun:load()
         }})
 
     --debug
-    self.Inventory:addItem(equipment:getRandomEquipment())
-    self.Inventory:addItem(equipment:getRandomEquipment())
     self.Inventory:addItem(equipment:getRandomEquipment())
 
     --Link the inventories

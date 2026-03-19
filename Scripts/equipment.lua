@@ -24,16 +24,104 @@ end
 function equipment:load()
     --load artifacts
     self.equipments.titaniumBarrel = {
+        rarity = 1,
         type = "barrel",
+        ids = {},
         add = function(self)
-            game:getPlayerGun().fireRate = game:getPlayerGun().fireRate * .75
-
+            self.ids["fireRateCheck"] = game.Affector:add("fireRateCheck",
+                function(fireRate)
+                    return fireRate * .75
+                end
+            )
         end,
         remove = function(self)
-            game:getPlayerGun().fireRate = game:getPlayerGun().fireRate * 1.25
+            self.ids["fireRateCheck"] = game.Affector:remove("fireRateCheck",self.affectorID)
         end,
         description = {
-            text = "Increase Fire Rate by 25%",
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Barrel: " .. "Increase Fire Rate by 25%",
+        },
+        image = al:getImage("equipment_barrelimprovement"),
+    }
+    self.equipments.titaniumStabalizer = {
+        rarity = 1,
+        type = "stabalizer",
+        ids = {},
+        add = function(self)
+            self.ids["dudCheck"] = game.Affector:add("dudCheck",
+                function(dud)
+                    return dud * .75
+                end
+            )
+        end,
+        remove = function(self)
+            self.ids["dudCheck"] = game.Affector:remove("dudCheck",self.affectorID)
+        end,
+        description = {
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Stabilizer: " .. "Decrease dud chance by 25%",
+        },
+        image = al:getImage("equipment_barrelimprovement"),
+    }
+    self.equipments.titaniumReloader = {
+        rarity = 1,
+        type = "reloader",
+        ids = {},
+        add = function(self)
+            self.ids["reloadRateCheck"] = game.Affector:add("reloadRateCheck",
+                function(reload)
+                    return reload * .75
+                end
+            )
+        end,
+        remove = function(self)
+            self.ids["reloadRateCheck"] = game.Affector:remove("reloadRateCheck",self.ids["reloadRateCheck"])
+        end,
+        description = {
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Reloader: " .. "Increase reload rate by 25%",
+        },
+        image = al:getImage("equipment_barrelimprovement"),
+    }
+    self.equipments.titaniumAntenna = {
+        rarity = 1,
+        type = "antenna",
+        ids = {},
+        add = function(self)
+            self.ids["parachuteCheck"] = game.Affector:add("parachuteCheck",
+                function(parachute)
+                    return parachute * .75
+                end
+            )
+        end,
+        remove = function(self)
+            self.ids["parachuteCheck"] = game.Affector:remove("parachuteCheck",self.affectorID)
+        end,
+        description = {
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Antenna: " .. "Increase parachutes by 25%",
+        },
+        image = al:getImage("equipment_barrelimprovement"),
+    }
+    self.equipments.titaniumBase = {
+        rarity = 1,
+        type = "base",
+        ids = {},
+        add = function(self)
+            self.ids["reloadRateCheck"] = game.Affector:add("reloadRateCheck",
+                function(reload)
+                    return reload * .90
+                end
+            )
+            self.ids["fireRateCheck"] = game.Affector:add("fireRateCheck",
+                function(fireRate)
+                    return fireRate * .90
+                end
+            )
+        end,
+        remove = function(self)
+            self.ids["reloadRateCheck"] = game.Affector:remove("reloadRateCheck",self.ids["reloadRateCheck"])
+            self.ids["fireRateCheck"] = game.Affector:remove("fireRateCheck",self.ids["fireRateCheck"])
+
+        end,
+        description = {
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Base: " .. "Increase reload rate by 10%, fire rate by 10%",
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
@@ -53,8 +141,19 @@ function equipment:load()
     end
 end
 
+function equipment:getEquipment(name)
+    return self.equipments[name]
+end
 
-function equipment:getRandomEquipment()
+function equipment:getRandomEquipment(rarity)
+    local rarity = rarity or false
+    if rarity then
+        for i, equipment in pairs(self.equipments) do
+            if equipment.rarity == rarity then
+                return equipment
+            end
+        end
+    end
     local key = self.keys[math.random(#self.keys)]
     if self.equipments[key].used then
         return self:getRandomEquipment()

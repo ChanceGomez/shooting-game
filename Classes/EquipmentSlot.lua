@@ -28,7 +28,9 @@ function EquipmentSlot:addItem(item)
 end
 
 function EquipmentSlot:removeItem()
-    self.item:remove()
+    if self.item then
+        self.item:remove()
+    end
     InventorySlot.removeItem(self)
 end
 
