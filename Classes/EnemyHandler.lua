@@ -43,29 +43,35 @@ function EnemyHandler:startRound()
     --check to see if parachute is true
     if self.isParachute then
         table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
+        --table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
     end
 
     --Get enemies
     local enemies = {}
 
+    local round = self.lookout.round
+
     for i = 1, self.enemyCount do
-        if round > 3 then
-            local weight = 30 + ((round-3) * 10)
-            local random = math.random(0,100)
-            print(weight,random)
-            if weight > random then
-                table.insert(enemies,"InfectedBird")
-            else
-                table.insert(enemies,"Bird")
-            end
-        else
-            table.insert(enemies,"Bird")
+        local random = math.random(0,100)
+
+        local enemy = "Bird"
+
+        if random < 5 + ((round-1)*5) then
+            enemy = "BigBird"
         end
+        if random < 0 + ((round-2)*7) then
+            enemy = "InfectedBird"
+        end
+        if random < 5 + ((round-4)*5) then
+            enemy = "InfectedBigBird"
+        end
+
+        table.insert(enemies,enemy)
     end
     
     --Spawn in enemies as a queue
     for i = 1, self.enemyCount do
-        local interval = math.random(math.max(5-(self.difficulty/2),0),math.max(10-self.difficulty,1))
+        local interval = math.random(math.max(3-(self.difficulty/2),0),math.max(6-self.difficulty,1))
         self.EventHandler:addQueue({
             t = interval,
             event = function()

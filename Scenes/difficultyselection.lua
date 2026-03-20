@@ -22,6 +22,10 @@ end
 
 function difficultyselction:update(dt)
     button:updateAll(self.buttons)
+
+    if escapeClick then 
+        Scene = "title"
+    end
 end
 
 function difficultyselction:draw()

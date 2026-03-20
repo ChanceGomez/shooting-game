@@ -52,7 +52,7 @@ settings = {
   hitbox = true, -- Display hitboxes on enemies
   showHealth = true,
   showAlive = false,
-  debug = false,
+  debug = true,
   difficulty = 'easy',
   loadShopOnStart = true,
   crt = false,
@@ -91,7 +91,7 @@ Scenes = {
     update = function(dt) difficultyselection:update(dt) end,
   },
 }
-Scene = "shop" -- Current scene
+Scene = "game" -- Current scene
 
 --Global Observer
 GlobalObserver = nil
@@ -114,6 +114,7 @@ local function loadAssets()
 
     --dogica font
     dogica_8 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",8)
+    dogica_16 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",16)
 end
 
 -- love functions
@@ -150,7 +151,8 @@ function love.load()
     Enemy = require("classes/Enemy")
     Enemies = {
         Bird = require("classes/Bird"),
-        InfectedBird = require("classes/InfectedBird")
+        InfectedBird = require("classes/InfectedBird"),
+        BigBird = require("classes/BigBird"),
     }
     Gun = require("classes/Gun")
     Guns = {

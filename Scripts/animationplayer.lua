@@ -35,9 +35,10 @@ function animationplayer:update(dt)
   end
 end
 
-function animationplayer:draw(name,images,timeBetweenFrames,x,y,looping,flipped)
+function animationplayer:draw(name,images,timeBetweenFrames,x,y,looping,flipped,size)
   local looping = looping or false
   local flipped = flipped or false
+  local size = size or 1
   local name = name or "default"
 
 
@@ -67,9 +68,9 @@ function animationplayer:draw(name,images,timeBetweenFrames,x,y,looping,flipped)
     --draw the animation
     if flipped then
       local oX, oY = animation.images[animation.frame]:getDimensions()
-      love.graphics.draw(animation.images[animation.frame],animation.x,animation.y,0,-1,1,oX)
+      love.graphics.draw(animation.images[animation.frame],animation.x,animation.y,0,-size,size,oX)
     else
-      love.graphics.draw(animation.images[animation.frame],animation.x,animation.y)
+      love.graphics.draw(animation.images[animation.frame],animation.x,animation.y,0,size,size)
     end
     return
   end

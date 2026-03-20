@@ -258,7 +258,7 @@ function Inventory:drag()
             slot:removeItem()
         end
         -- See if slot can be rightclicked
-        if slot.hovered and rightClick and self.heldItem == nil then
+        if slot.hovered and rightClick and self.heldItem == nil and slot.item then
             self.isRightClick = true
             self.rightClickedSlot = slot
         end

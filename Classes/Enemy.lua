@@ -35,6 +35,11 @@ function Enemy:die()
     end
 end
 
+function Enemy:escape()
+    game.Player.health = game.Player.health - 1
+    Enemy.delete(self)
+end
+
 function Enemy:delete()
     if self.handler then
         self.handler:removeEnemy(self)
@@ -84,11 +89,11 @@ function Enemy:deadColor()
 end
 
 function Enemy:update(dt)
-    self:hitColor(dt)
+    Enemy.hitColor(self,dt)
 
     local sideMargin = 8
     if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.lifeTimer > 5 then
-        Enemy.delete(self)
+        Enemy.escape(self)
     end
 end
 

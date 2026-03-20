@@ -6,8 +6,9 @@ function Player:new()
   
   obj.gun = nil
   obj.resources = 0
-  obj.parachuteOdds = 20
+  obj.parachuteOdds = 75
   obj.dudPercentage = 10
+  obj.health = 3
   
   return obj
 end

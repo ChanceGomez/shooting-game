@@ -22,14 +22,14 @@ CursorX,CursorY = 0,0
 
 
 function controls:update()
-  local scale = Scale or 1
-	--Cursor
-	CursorX,CursorY = love.mouse.getPosition()
-  CursorX = CursorX/scale
-  CursorY = CursorY/scale
+    local scale = Scale or 1
+    --Cursor
+    CursorX,CursorY = love.mouse.getPosition()
+    CursorX = CursorX/scale
+    CursorY = CursorY/scale
 
-  CursorX = math.floor(CursorX)
-  CursorY = math.floor(CursorY)
+    CursorX = math.floor(CursorX)
+    CursorY = math.floor(CursorY)
 
     -- alphabet
     aClick = false
@@ -59,6 +59,9 @@ function controls:update()
     yClick = false
     zClick = false
 	
+    --control keys
+    escapeClick = false
+
 	--arrow keys
 	up 		= false
 	down 	= false
@@ -118,6 +121,9 @@ function love.keypressed(key)
     elseif key == "x" then xClick = true; controls.typeableClicked = true; controls.last_typable = "x"
     elseif key == "y" then yClick = true; controls.typeableClicked = true; controls.last_typable = "y"
     elseif key == "z" then zClick = true; controls.typeableClicked = true; controls.last_typable = "z"
+
+    elseif key == "escape" then escapeClick = true; controls.typeableClicked = false;
+
 
     elseif key == "1" then oneClick = true; controls.numberClicked = true; controls.last_number = "1"
     elseif key == "2" then twoClick = true; controls.numberClicked = true; controls.last_number = "2"

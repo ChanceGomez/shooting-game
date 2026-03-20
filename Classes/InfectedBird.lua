@@ -21,6 +21,10 @@ function InfectedBird:new(x,y,handler,difficulty)
     return obj
 end
 
+function InfectedBird:escape()
+    Enemy.escape(self)
+end
+
 function InfectedBird:die()
     Enemies.Bird.die(self)
 end

@@ -11,8 +11,8 @@ function ParachuteCrate:new(x,y,rarity,handler)
     obj.y = y or 0
     obj.rarity = rarity or 1
 
-    obj.speed = 10
-    obj.health = 10
+    obj.speed = 20 * (rarity)
+    obj.health = 10 * rarity
     obj.isAlive = true
 
     obj.item = equipment:getRandomEquipment(obj.rarity)

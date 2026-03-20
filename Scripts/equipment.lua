@@ -147,17 +147,17 @@ end
 
 function equipment:getRandomEquipment(rarity)
     local rarity = rarity or false
+
+    local key = self.keys[math.random(#self.keys)]
+
     if rarity then
-        for i, equipment in pairs(self.equipments) do
-            if equipment.rarity == rarity then
-                return equipment
-            end
+        if self.equipments[key].rarity == 1 then 
+            return self.equipments[key]
+        else
+            self:getRandomEquipment(rarity)
         end
     end
-    local key = self.keys[math.random(#self.keys)]
-    if self.equipments[key].used then
-        return self:getRandomEquipment()
-    end
+
     return self.equipments[key]
 end
 

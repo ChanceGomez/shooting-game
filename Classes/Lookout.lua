@@ -10,6 +10,7 @@ function Lookout:new(round)
   local round = round or 1
   local enemies, difficulty = roundscript:getData(round)
 
+  obj.round = round
   obj.enemies = enemies
   obj.difficulty = difficulty
   obj.enemies = {}
@@ -149,6 +150,11 @@ function Lookout:draw()
         love.graphics.setColor(.6,.6,.6,1)
         love.graphics.draw(al:getImage("background_vegetation"),0,0)
 
+
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.draw(al:getImage("background_night_level"))
+        self.handler:draw()
+
     --draw buttons
     button:drawAll(self.buttons)
 
@@ -184,6 +190,18 @@ function Lookout:draw()
     love.graphics.setColor(.9,.9,.9,1)
     love.graphics.draw(al:getImage("background_hud_layer1"),0,0)
 
+    love.graphics.setColor(1,1,1,1)
+    local font = dogica_8
+    local text = "Health:"
+    love.graphics.setFont(font)
+    love.graphics.print(text,(Width/2)-(font:getWidth(text)/2),15)
+
+    local width,height,margin = 4,16,2
+    local totalWidth = (width+margin) * game.Player.health
+    for i = 1, game.Player.health do
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.rectangle("fill",Width/2+(i*(width+margin))-totalWidth,25,width,height)
+    end
     
 end
 
