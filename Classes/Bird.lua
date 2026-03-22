@@ -13,14 +13,14 @@ local dyingAnimation = al:getAnimation("animation_bird_dying")
 -- Static ID
 local staticID = 1
 
-function Bird:new(x,y,handler,difficulty)
+function Bird:new(x,y,handler,difficulty,facing)
     local obj = setmetatable(Enemy:new(x,y,handler), Bird)
 
     if difficulty == nil then error() end
     local difficulty = difficulty or 1
 
-    obj.health = 20 * (math.max(difficulty/2,1))
-    obj.speed = 25 * (math.max(difficulty/3,1))
+    obj.health = 20 * (math.max(difficulty/3,1))
+    obj.speed = 25 * (math.max(difficulty/6,1))
 
     obj.resources = 5
 
@@ -34,7 +34,7 @@ function Bird:new(x,y,handler,difficulty)
         hit = al:getAudio("birdhit"),
         die = al:getAudio("birddie"),
     }
-    obj.facing = math.random(0,1) == 0 and -1 or 1
+    obj.facing = facing or 1
     obj.width = obj.animations['flying'][1]:getWidth()
     obj.height = obj.animations['flying'][1]:getHeight()
     obj.id = staticID

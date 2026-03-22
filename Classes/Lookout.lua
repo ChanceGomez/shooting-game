@@ -4,15 +4,12 @@ Lookout.__index = Lookout
 local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
 crt_shader:send("screen_size", {love.graphics.getDimensions()})
 
-function Lookout:new(round)
+function Lookout:new(enemies,difficulty,isArtifact)
   local obj = setmetatable({}, Lookout)
-  
-  local round = round or 1
-  local enemies, difficulty = roundscript:getData(round)
 
-  obj.round = round
-  obj.enemies = enemies
+  obj.isArtifact = isArtifact or false
   obj.difficulty = difficulty
+  obj.enemyCount = #enemies
   obj.enemies = {}
   obj.canvas = love.graphics.newCanvas(Width,Height)
   obj.handler = EnemyHandler:new(obj,enemies,difficulty)
@@ -26,6 +23,7 @@ function Lookout:new(round)
   obj.isHoveringButton = false
   obj.reloadShelfOpen = true
   obj.ReloadShelf = ReloadShelf:new(-128,obj.y + Height - 64)
+  obj.BackgroundHandler = BackgroundHandler:new()
   obj.outlineMargin = 0
     --load buttons
     table.insert(obj.buttons, {
@@ -72,6 +70,7 @@ function Lookout:removeEnemy(enemy)
 end
 
 function Lookout:update(dt)
+    game.Observer:trigger("lookoutUpdate",{dt = dt})
     --update timer
     self.roundTimer = self.roundTimer + dt
 
@@ -98,7 +97,7 @@ function Lookout:update(dt)
     end
 
     if not self.handler.isRoundActive then
-        game:endRound()
+        game:endRound(self.isArtifact)
     end
 
     --update reload shelf
@@ -141,6 +140,7 @@ function Lookout:draw()
 
     --draw enemies
         self.handler:draw()
+
     
     --vegetation background
         love.graphics.setColor(.9,.9,.9,1)
@@ -154,6 +154,7 @@ function Lookout:draw()
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(al:getImage("background_night_level"))
         self.handler:draw()
+
 
     --draw buttons
     button:drawAll(self.buttons)
@@ -172,8 +173,7 @@ function Lookout:draw()
     love.graphics.setFont(perfect_dos_16)
     love.graphics.print("ammo: " .. #game.Player.gun.ammo .. "/" .. game.Player.gun.maxAmmo,10,270)
 
-    love.graphics.print("damage: " .. game.Affector:trigger("damageCheck",game.Player.gun.damage), 10,250)
-    love.graphics.print("enemies: " .. #self.enemies, 10,230)
+    love.graphics.print("enemies: " .. self.enemyCount, 10,230)
     love.graphics.print("reloadrate: " .. math.floor(game.Affector:trigger("reloadRateCheck",game.Player.gun.reloadRate)*100)/100, 10,210) 
 
 

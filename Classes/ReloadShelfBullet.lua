@@ -4,7 +4,7 @@ ReloadShelfBullet.__index = ReloadShelfBullet
 --Static images
 local bulletImage = al:getImage("bullet")
 
-function ReloadShelfBullet:new(ReloadShelf,x,y,isDud)
+function ReloadShelfBullet:new(ReloadShelf,x,y)
     local obj = setmetatable({},ReloadShelfBullet)
 
     obj.image = bulletImage
@@ -13,10 +13,9 @@ function ReloadShelfBullet:new(ReloadShelf,x,y,isDud)
     obj.x = x or 0
     obj.y = y or 0
     obj.hovered = false
-    obj.damage = 1
+    obj.damage = game.Player.gun.damage
     obj.inAnimation = false
     obj.ReloadShelf = ReloadShelf
-    obj.isDud = isDud or false
     obj.color = {1,1,1,1}
 
     if obj.isDud then
@@ -42,9 +41,9 @@ function ReloadShelfBullet:loadingAnimation()
     local x,y = self.x,self.y - 64
     tweenTo(self,game.Player.gun.reloadRate,"linear",x,y,
     function() 
-        self:delete() if self.isDud then return end 
         game.Player.gun:loadBullet(self) 
         game.lookouts[1].Report:action("loadedBullet")
+        self:delete() 
     end)
 end
 
@@ -60,20 +59,11 @@ end
 
 
 function ReloadShelfBullet:update()
-    local ammo = game.Player.gun.ammo
-
-    if collision.rect(self) then
-        self.hovered = true
-    else
-        self.hovered = false
-    end
-
-    --calculate ammo
     
 end
 
 function ReloadShelfBullet:draw()
-    love.graphics.setColor(self.color)
+    love.graphics.setColor({1,1,1,1})
     love.graphics.draw(self.image,self.x,self.y)
 end
 

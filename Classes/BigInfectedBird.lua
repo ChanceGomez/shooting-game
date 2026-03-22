@@ -5,12 +5,13 @@ BigInfectedBird.__index = BigInfectedBird
 local flyingAnimation = al:getAnimation("animation_infectedbird_flying")
 local dyingAnimation = al:getAnimation("animation_infectedbird_dying")
 
-function BigInfectedBird:new(x,y,handler,difficulty)
-    local obj = setmetatable(Enemies.Bird:new(x,y,handler,difficulty),InfectedBird)
+function BigInfectedBird:new(x,y,handler,difficulty,facing)
+    local obj = setmetatable(Enemies.Bird:new(x,y,handler,difficulty,facing),BigInfectedBird)
 
     --Power scaling
+    obj.difficulty = difficulty
     obj.health = 30 * (math.max(difficulty/1.5,1))
-    obj.speed = 30 * (math.max(difficulty/2.8,1))
+    obj.speed = 20 * (math.max(difficulty/8,1))
     obj.resources = 15
 
     obj.animations = {
@@ -26,6 +27,9 @@ end
 
 function BigInfectedBird:die()
     Enemies.Bird.die(self)
+    self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,1)
+    self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,-1)
+
 end
 
 function BigInfectedBird:escape()

@@ -79,12 +79,7 @@ function shop:drawArtifactSelection()
 end
 
 function shop:loadShop()
-    if game.round == 1 and settings.loadShopOnStart then
-        self:getArtifact()
-    end
-    if game.round % 3 == 0 then
-        self:getArtifact()
-    end
+
 end
 
 function shop:upgradeClicked()
@@ -113,12 +108,7 @@ function shop:load()
         image = al:getImage("nextday_button"),
         visible = true,
         clicked = function()
-            game.round = game.round + 1
-            table.remove(game.lookouts)
-
-            table.insert(game.lookouts,Lookout:new(game.round))
-
-            Scene = "game"
+            Scene = "map"
         end,
     }
     self.skipArtifactButton = {
@@ -129,6 +119,17 @@ function shop:load()
         clicked = function()
             self:artifactClicked()
         end
+    }
+
+    self.buttons["increase_health"] = {
+        x = 500,
+        y = 70,
+        image = al:getImage("add_button"),
+        visible = true,
+        description = "Increase Health",
+        clicked = function()
+            game.Player.health = game.Player.health + 1
+        end,
     }
 
     --max ammo

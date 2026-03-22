@@ -125,6 +125,33 @@ function equipment:load()
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
+    self.equipments.jankyBase = {
+        rarity = 1,
+        type = "base",
+        ids = {},
+        add = function(self)
+            self.ids["dudCheck"] = game.Affector:add("dudCheck",
+                function(dud)
+                    return dud * 1.50
+                end
+            )
+            self.ids["dudDamage"] = game.Affector:add("dudDamage",
+                function(damage)
+                    return damage * 1.50
+                end
+            )
+        end,
+        remove = function(self)
+            self.ids["dudCheck"] = game.Affector:remove("dudCheck",self.ids["dudCheck"])
+            self.ids["dudDamage"] = game.Affector:remove("dudDamage",self.ids["dudDamage"])
+
+        end,
+        description = {
+            text = "{.2,.2,.5}Janky {.2,.2,.5}Base: " .. "Increase dud chance by 50%, increase dud damage by 50%",
+        },
+        image = al:getImage("equipment_barrelimprovement"),
+    }
+
 
     --get count of how many artifacts and get there widths/heights aswell as add the fonts for description
     for i, equipment in pairs(self.equipments) do

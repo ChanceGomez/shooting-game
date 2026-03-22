@@ -26,9 +26,13 @@ end
 
 
 ----------
+function game:createLookout(enemies,difficulty,isArtifact)
+    self.lookouts[1] = Lookout:new(enemies,difficulty,isArtifact)
+end
 
-function game:endRound()
-    endofround:getReport(self.lookouts[1].Report)
+
+function game:endRound(isArtifact)
+    endofround:getReport(self.lookouts[1].Report,isArtifact)
     Scene = "endofround"
 end
 
@@ -36,7 +40,6 @@ function game:load()
   self.canvas = love.graphics.newCanvas(Width,Height)
   self.Player = Player:new()
   self.Player:ChangeGun("pistol")
-  table.insert(self.lookouts, Lookout:new(self.round))
 end
 
 function game:update(dt)

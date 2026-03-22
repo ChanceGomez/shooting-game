@@ -5,12 +5,13 @@ BigBird.__index = BigBird
 local flyingAnimation = al:getAnimation("animation_bird_flying")
 local dyingAnimation = al:getAnimation("animation_bird_dying")
 
-function BigBird:new(x,y,handler,difficulty)
-    local obj = setmetatable(Enemies.Bird:new(x,y,handler,difficulty),BigBird)
+function BigBird:new(x,y,handler,difficulty,facing)
+    local obj = setmetatable(Enemies.Bird:new(x,y,handler,difficulty,facing),BigBird)
 
     --Power scaling
-    obj.health = 60 * (math.max(difficulty/1.5,1))
-    obj.speed = 20 * (math.max(difficulty/2.8,1))
+    obj.difficulty = difficulty
+    obj.health = 60 * (math.max(difficulty/1.7,1))
+    obj.speed = 20 * (math.max(difficulty/8,1))
     obj.resources = 30
 
     obj.animations = {
@@ -26,6 +27,8 @@ end
 
 function BigBird:die()
     Enemies.Bird.die(self)
+    self.handler:newEnemy("Bird",self.x+15,self.y,self.difficulty,1)
+    self.handler:newEnemy("Bird",self.x+15,self.y,self.difficulty,-1)
 end
 
 function BigBird:escape()

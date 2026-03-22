@@ -4,8 +4,10 @@ local endofround = {
     resourcesEarned = 0,
 }
 
-function endofround:getReport(report)
+function endofround:getReport(report,isArtifact)
+    game.Player.gun.ammo = {}
     self.report = report
+    self.isArtifact = isArtifact or false
     game.Player.resources = game.Player.resources + self.report.resources
 end
 
@@ -19,6 +21,9 @@ function endofround:load()
         clicked = function()
             Scene = "shop"
             shop:loadShop()
+            if self.isArtifact then
+                shop:getArtifact()
+            end
         end,
     })
 end

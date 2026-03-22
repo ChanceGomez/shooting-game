@@ -49,11 +49,19 @@ function ReloadShelf:reload()
     self.reloading = true
     --get random for dud chance
     local random = math.random(1,100)
-    self.bullet = ReloadShelfBullet:new(self,-128,8,random < game.Affector:trigger("dudCheck",game.Player.dudPercentage))
+    local bullet = nil
+    local x,y = -128,8
+    if random < game.Affector:trigger("dudCheck",game.Player.dudPercentage) then
+        bullet = ReloadShelfDudBullet:new(self,x,y)
+    else
+        bullet = ReloadShelfBullet:new(self,x,y)
+    end
+    self.bullet = bullet
 end
 
 function ReloadShelf:loadBullet()
     if self.bullet == nil or self.bullet.tweening then return end
+
     if game.Player.gun.canReload then
         table.insert(self.deletedBullets,self.bullet)
         self.deletedBullets[#self.deletedBullets]:loadingAnimation()
@@ -89,12 +97,14 @@ function ReloadShelf:update(dt)
     --if autoreload
     if self.autoReload then
         if self.bullet and not self.reloading then
-            if self.bullet.isDud then
-                self:discardBullet()
-            else
-                self:loadBullet()
-            end
+            self:loadBullet()
         end
+    end
+
+    if up then
+        self:loadBullet()  
+    elseif down then
+        self:discardBullet()  
     end
 
     --update soon to be deleted bullets
@@ -127,7 +137,6 @@ function ReloadShelf:draw()
     
     --Bullet
     if self.bullet then
-        love.graphics.setColor(1,1,1,1)
         self.bullet:draw()
     end
 

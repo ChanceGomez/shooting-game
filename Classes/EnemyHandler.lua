@@ -10,17 +10,17 @@
 local EnemyHandler = {}
 EnemyHandler.__index = EnemyHandler
 
-function EnemyHandler:new(lookout,enemyCount,difficulty)
+function EnemyHandler:new(lookout,enemies,difficulty)
     local obj = setmetatable({}, EnemyHandler)
   
-    local enemyCount = enemyCount or 5 -- Amount of enemies that are gonna spawn during the round
     local difficulty = difficulty or 1 -- Difficulty for the round
 
     obj.isParachute = math.random(1,100) < game.Affector:trigger("parachuteCheck",game.Player.parachuteOdds)
 
     obj.lookout = lookout
 
-    obj.enemyCount = enemyCount
+    obj.enemyCount = #enemies
+    obj.enemyList = enemies
     obj.difficulty = difficulty
     
     obj.EventHandler = Event:new()
@@ -30,6 +30,8 @@ function EnemyHandler:new(lookout,enemyCount,difficulty)
     obj.enemyQueue = {}
 
     obj.parachutes = {}
+    obj.enemies = {}
+    obj.damagePopups = {}
 
   return obj
 end
@@ -45,39 +47,33 @@ function EnemyHandler:startRound()
         table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
         --table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
     end
-
-    --Get enemies
-    local enemies = {}
-
-    local round = self.lookout.round
-
-    for i = 1, self.enemyCount do
-        local random = math.random(0,100)
-
-        local enemy = "Bird"
-
-        if random < 5 + ((round-1)*5) then
-            enemy = "BigBird"
-        end
-        if random < 0 + ((round-2)*7) then
-            enemy = "InfectedBird"
-        end
-        if random < 5 + ((round-4)*5) then
-            enemy = "InfectedBigBird"
-        end
-
-        table.insert(enemies,enemy)
-    end
     
     --Spawn in enemies as a queue
     for i = 1, self.enemyCount do
-        local interval = math.random(math.max(3-(self.difficulty/2),0),math.max(6-self.difficulty,1))
+        local interval = math.random(1,math.max(10-self.difficulty,5))
         self.EventHandler:addQueue({
             t = interval,
             event = function()
-                self:newEnemy(enemies[i],math.random(200,Width-200),Height+30,self.difficulty)
+                local random = math.random(1,2)
+                local facing = 1 
+                if random == 2 then 
+                    facing = -1
+                end
+                self:newEnemy(self.enemyList[i],math.random(200,Width-200),Height+30,self.difficulty,facing)
             end
          })
+    end
+end
+
+function EnemyHandler:enemyDied()
+    self.lookout.enemyCount = self.lookout.enemyCount - 1
+end
+
+function EnemyHandler:deletePopup(popup)
+    for i, instance in pairs(self.damagePopups) do
+        if popup == instance then
+            table.remove(self.damagePopups,i)
+        end
     end
 end
 
@@ -85,33 +81,35 @@ end
     Checks to see if enemy is hit by collision detection
 ]]
 function EnemyHandler:checkHit(damage)
-    for i, enemy in pairs(game.lookouts[1].enemies) do
+    for i, enemy in pairs(self.enemies) do
         if enemy:isCollision() and enemy.isAlive then
             enemy:hit(damage) 
+            table.insert(self.damagePopups,DamagePopup:new(self,enemy.x,enemy.y,damage))
         end
     end
 
     for i, parachute in pairs(self.parachutes) do
         if parachute:isCollision() and parachute.isAlive then
+            table.insert(self.damagePopups,DamagePopup:new(self,parachute.x,parachute.y,damage))
             parachute:hit(damage) 
         end
     end
 end
 
 -- Spawn in an enemy
-function EnemyHandler:newEnemy(enemy,x,y,difficulty)
+function EnemyHandler:newEnemy(enemy,x,y,difficulty,facing)
     local x = x or 320
     local y = y or 360
     local enemy = enemy or "Bird"
     self.enemyCount = self.enemyCount - 1
-    table.insert(self.lookout.enemies, Enemies[enemy]:new(x,y,self,difficulty))
+    table.insert(self.enemies, Enemies[enemy]:new(x,y,self,difficulty,facing))
 end
 
 -- Removes enemy from lookouts
 function EnemyHandler:removeEnemy(enemy)
-    for i, e in pairs(self.lookout.enemies) do
+    for i, e in pairs(self.enemies) do
         if e == enemy then
-            table.remove(self.lookout.enemies, i)
+            table.remove(self.enemies, i)
             return
         end
     end
@@ -121,16 +119,19 @@ function EnemyHandler:update(dt)
     self.EventHandler:update(dt)
     
     if self.isRoundActive then
-        for i, enemy in pairs(self.lookout.enemies) do
+        for i, enemy in pairs(self.enemies) do
             enemy:update(dt)
         end
         for i, parachute in pairs(self.parachutes) do
             parachute:update(dt)
         end
+        for i, damagePopup in pairs(self.damagePopups) do
+            damagePopup:update(dt)
+        end
     end
 
     --Checks to see if round is over
-    if self.enemyCount <= 0 and self.isRoundActive and #self.enemyQueue == 0 and #self.lookout.enemies == 0 then
+    if self.enemyCount <= 0 and self.isRoundActive and #self.enemyQueue == 0 and #self.enemies == 0 then
         self.isRoundActive = false
     end 
 end
@@ -140,11 +141,14 @@ function EnemyHandler:draw()
     if settings.debug then
         love.graphics.print(tostring(self.isRoundActive) .. ' ' .. self.enemyCount,20,20)
     end
-    for i, enemy in pairs(game.lookouts[1].enemies) do
+    for i, enemy in pairs(self.enemies) do
         enemy:draw()
     end
     for i, parachute in pairs(self.parachutes) do
         parachute:draw()
+    end
+    for i, damagePopup in pairs(self.damagePopups) do
+        damagePopup:draw()
     end
 end
 

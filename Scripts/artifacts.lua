@@ -27,7 +27,7 @@ function artifacts:load()
         used = false,
         clicked = function(self)
             shop:artifactClicked()
-            game.Observer:add("update",{
+            game.Observer:add("lookoutUpdate",{
                 event = function()
                     game:getReloadShelf().autoReload = true
                 end,
@@ -86,9 +86,53 @@ function artifacts:load()
             text = "Increase fire rate by " .. getFormat("positive") .. "200% but reduce damage by " .. getFormat("negative") .. "50%",  
         },
         image = al:getImage("upgrademaxammo_shop_icon")
-
-
     }
+    self.artifacts.halfLifeDuds = {
+        clicked = function(self)
+            game.Player.gun.dudDamage = 6
+            game.Player.dudPercentage = game.Player.dudPercentage * 1.10
+        end,
+        description = {
+            text = "Increase dud bullet damage by " .. getFormat("positive") .. "5 but increase duds by " .. getFormat("negative") .. "10%",
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.lighterBullets = {
+        clicked = function(self)
+            game.Player.gun.damage = game.Player.gun.damage * .75
+            game.Player.gun.reloadRate = game.Player.gun.reloadRate * .55
+        end,
+        description = {
+            text = "Increase reload rate by " .. getFormat("positive") .. "45% but reduce damage by " .. getFormat("negative") .. " 25%"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+    --[[
+    self.artifacts.flamingDuds = {
+        clicked = function(self) 
+        
+        end,
+        description = {
+            text = ""
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.horizontalLazer = {
+        timer = 0,
+        clicked = function(self)
+            game.Observer:add("lookoutUpdate",{event = function(self,wrapper)
+                artifacts.artifacts.horizontalLazer.timer = artifacts.artifacts.horizontalLazer.timer + wrapper.dt
+                if artifacts.artifacts.horizontalLazer.timer > 3 then
+                    table.insert(game.lookouts[1].lazors,Lazor:new(0,math.random(40,320),3))
+                end
+            end,})
+        end,
+        description = {
+            text = "Every 5 seconds a horizontal lazer appears on the screen and lasts 3 seconds. deals 10 damage per tick"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+        ]]
     --get count of how many artifacts and get there widths/heights aswell as add the fonts for description
     for i, artifact in pairs(self.artifacts) do
         self.artifactsCount = self.artifactsCount + 1
@@ -102,6 +146,10 @@ function artifacts:load()
     for key in pairs(self.artifacts) do
         self.keys[#self.keys+1] = key
     end
+end
+
+function artifacts:activateArtifact(name)
+    self.artifacts[name]:clicked()
 end
 
 

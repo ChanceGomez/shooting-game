@@ -39,7 +39,9 @@ Button = require("classes/Button")
   shop = require("Scenes/shop")
   gun = require("Scenes/gun")
   difficultyselection = require("Scenes/difficultyselection")
-  
+  splashscreen = require("Scenes/splashscreen")
+  map = require("Scenes/map")
+
 --Global vars
 Width,Height = 640,360
 Scale = 3
@@ -48,11 +50,11 @@ GameSpeed = 1
 
 --Game setting
 settings = {
-  volume = .5, -- Global volume
-  hitbox = true, -- Display hitboxes on enemies
-  showHealth = true,
+  volume = .6, -- Global volume
+  hitbox = false, -- Display hitboxes on enemies
+  showHealth = false,
   showAlive = false,
-  debug = true,
+  debug = false,
   difficulty = 'easy',
   loadShopOnStart = true,
   crt = false,
@@ -90,8 +92,18 @@ Scenes = {
     load = function() difficultyselection:load() end,
     update = function(dt) difficultyselection:update(dt) end,
   },
+  splashscreen = {
+    draw = function() splashscreen:draw() end,
+    load = function() splashscreen:load() end,
+    update = function(dt) splashscreen:update(dt) end,
+  },
+  map = {
+    draw = function() map:draw() end,
+    load = function() map:load() end,
+    update = function(dt) map:update(dt) end,
+  },
 }
-Scene = "game" -- Current scene
+Scene = "title" -- Current scene
 
 --Global Observer
 GlobalObserver = nil
@@ -144,8 +156,10 @@ function love.load()
     InventorySlot = require("classes/InventorySlot")
     Lookout = require("classes/Lookout")
     Report = require("classes/Report")
+    BackgroundHandler = require("classes/BackgroundHandler")
     ReloadShelf = require("classes/ReloadShelf")
     ReloadShelfBullet = require("classes/ReloadShelfBullet")
+    ReloadShelfDudBullet = require("classes/ReloadShelfDudBullet")
     EnemyHandler = require("classes/EnemyHandler")
     Player = require("classes/Player")
     Enemy = require("classes/Enemy")
@@ -153,6 +167,7 @@ function love.load()
         Bird = require("classes/Bird"),
         InfectedBird = require("classes/InfectedBird"),
         BigBird = require("classes/BigBird"),
+        BigInfectedBird = require("classes/BigInfectedBird"),
     }
     Gun = require("classes/Gun")
     Guns = {
@@ -161,6 +176,11 @@ function love.load()
     EquipmentInventory = require("classes/EquipmentInventory")
     EquipmentSlot = require("classes/EquipmentSlot")
     ParachuteCrate = require("classes/ParachuteCrate")
+    Lazor = require("classes/Lazor")
+    Map = require("classes/MapNode/Map")
+    Node = require("classes/MapNode/Node")
+    DamagePopup = require("classes/DamagePopup")
+
   
   --get global observer
   GlobalObserver = Observer:new()

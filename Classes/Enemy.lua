@@ -29,6 +29,7 @@ function Enemy:die()
     --change animation to die animation
     self.isAlive = false
     self.color = {0.7,0.5,0.5,1}
+    self.handler:enemyDied()
     game.lookouts[1].Report:action("resources",self.resources)
     if self.animation then
         self.animation = "dying"

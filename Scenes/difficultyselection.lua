@@ -11,7 +11,7 @@ function difficultyselction:load()
         image = al:getImage("button_easy"),
         clicked = function()
             settings.difficulty = 'easy'
-            Scene = "game"
+            Scene = "map"
             game.round = 1
         end,
         description = {
