@@ -24,9 +24,9 @@ end
 function artifacts:load()
     --load artifacts
     self.artifacts.autoReload = {
+        rarity = 2,
         used = false,
-        clicked = function(self)
-            shop:artifactClicked()
+        event = function(self)
             game.Observer:add("lookoutUpdate",{
                 event = function()
                     game:getReloadShelf().autoReload = true
@@ -41,10 +41,11 @@ function artifacts:load()
         image = al:getImage("artifact_autoreload"),
     }
     self.artifacts.improvedAmmunition = {
-        clicked = function(self)
-            shop:artifactClicked()
+        rarity = 2,
+        event = function(self)
             --Improve the damage of the bullets
-            game.Player.gun.damage = game.Player.gun.damage * 1.50
+            local bullet = game:getPlayerGun().bullets
+            bullet.damage = bullet.damage * 1.50
             --Reduce amount of duds
             game.Player.dudPercentage = game.Player.dudPercentage * .75
         end,
@@ -54,42 +55,50 @@ function artifacts:load()
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
     self.artifacts.railGun = {
-        clicked = function(self)
-            shop:artifactClicked()
+        rarity = 1,
+        event = function(self)
             --Add damage multiplier
-            game.Player.gun.damage = game.Player.gun.damage * 5
+            local bullet = game:getPlayerGun().bullets
+            bullet.damage = bullet.damage * 5
             --Add the firerate penalty
             game.Player.gun.fireRate = game.Player.gun.fireRate * 3.0
         end,
         description = {
-            text = "Increase damage by " .. getFormat("positive") .. "500% but fire rate is increased by " .. getFormat("negative") .. "300%",
+            text = "Increase bullet damage by " .. getFormat("positive") .. "500% but fire rate is increased by " .. getFormat("negative") .. "300%",
         },
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
     self.artifacts.extendedMagazine = {
-        clicked = function(self)
-            shop:artifactClicked()
-            game:getPlayerGun().maxAmmo = game:getPlayerGun().maxAmmo *2.0
+        rarity = 1,
+        event = function(self)
+            game:getPlayerGun().maxAmmo = game:getPlayerGun().maxAmmo *3.0
         end,
         description = {
-            text = "Increase ammo capacity by " .. getFormat("positive") .. "200%",
+            text = "Increase ammo capacity by " .. getFormat("positive") .. "300%",
         },
         image = al:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.increasedFireRate = {
-        clicked = function(self)
-            shop:artifactClicked()
+        rarity = 1,
+        event = function(self)
             game:getPlayerGun().fireRate = game:getPlayerGun().fireRate / 2.0
-            game.Player.gun.damage = game.Player.gun.damage * .50
+
+            local dud = game:getPlayerGun().duds
+            dud.damage = dud.damage * .50
+            local bullet = game:getPlayerGun().bullets
+            bullet.damage = bullet.damage * .50
         end,
         description = {
-            text = "Increase fire rate by " .. getFormat("positive") .. "200% but reduce damage by " .. getFormat("negative") .. "50%",  
+            text = "Increase fire rate by " .. getFormat("positive") .. "200% but reduce damage of all bullets by " .. getFormat("negative") .. "50%",  
         },
         image = al:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.halfLifeDuds = {
-        clicked = function(self)
-            game.Player.gun.dudDamage = 6
+        rarity = 1,
+        event = function(self)
+            local dud = game:getPlayerGun().duds
+            dud.damage = dud.damage + 5
+
             game.Player.dudPercentage = game.Player.dudPercentage * 1.10
         end,
         description = {
@@ -98,28 +107,58 @@ function artifacts:load()
         image = al:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.lighterBullets = {
-        clicked = function(self)
-            game.Player.gun.damage = game.Player.gun.damage * .75
+        rarity = 1,
+        event = function(self)
+            local dud = game:getPlayerGun().duds
+            dud.damage = dud.damage * .75
+            local bullet = game:getPlayerGun().bullets
+            bullet.damage = bullet.damage * .75
+
+
             game.Player.gun.reloadRate = game.Player.gun.reloadRate * .55
         end,
         description = {
-            text = "Increase reload rate by " .. getFormat("positive") .. "45% but reduce damage by " .. getFormat("negative") .. " 25%"
+            text = "Increase reload rate by " .. getFormat("positive") .. "45% but reduce damage of all bullets by " .. getFormat("negative") .. "25%"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }   
+    self.artifacts.flamingDuds = {
+        rarity = 1,
+        event = function(self) 
+            local dud = game:getPlayerGun().duds.fire
+            dud.damage = dud.damage + 5
+            dud.duration = dud.duration + 3
+        end,
+        description = {
+            text = "Duds now inflame enemies for " .. getFormat("positive") .. "+5 damage every second for " .. getFormat("positive") .. "+3 seconds"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.methaneAir = {
+        rarity = 2,
+        event = function(self)
+            local dud = game:getPlayerGun().duds.fire
+            dud.damage = dud.damage + 3
+            dud.duration = dud.duration + 2
+            local bullet = game:getPlayerGun().bullets.fire
+            bullet.damage = bullet.damage + 3
+            bullet.duration = bullet.duration + 2
+
+            game.Affector:add("fireDamage",function(damage)
+                return damage * 2
+            end)
+        end,
+        description = {
+            text = "All bullets now do " .. getFormat("positive") .. "+3 fire damage every second for " .. getFormat("positive") .. "+2 seconds, and increase fire damage " .. 
+                getFormat("positive") .. "200%"
         },
         image = al:getImage("upgrademaxammo_shop_icon")
     }
     --[[
-    self.artifacts.flamingDuds = {
-        clicked = function(self) 
-        
-        end,
-        description = {
-            text = ""
-        },
-        image = al:getImage("upgrademaxammo_shop_icon")
-    }
+
     self.artifacts.horizontalLazer = {
         timer = 0,
-        clicked = function(self)
+        event = function(self)
             game.Observer:add("lookoutUpdate",{event = function(self,wrapper)
                 artifacts.artifacts.horizontalLazer.timer = artifacts.artifacts.horizontalLazer.timer + wrapper.dt
                 if artifacts.artifacts.horizontalLazer.timer > 3 then
@@ -149,14 +188,17 @@ function artifacts:load()
 end
 
 function artifacts:activateArtifact(name)
-    self.artifacts[name]:clicked()
+    self.artifacts[name]:event()
 end
 
 
-function artifacts:getRandomArtifact()
+function artifacts:getRandomArtifact(rarity)
     local key = self.keys[math.random(#self.keys)]
+    if self.artifacts[key].rarity ~= rarity then 
+        return self:getRandomArtifact(rarity)
+    end
     if self.artifacts[key].used then
-        return self:getRandomArtifact()
+        return self:getRandomArtifact(rarity)
     end
     return self.artifacts[key]
 end

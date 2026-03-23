@@ -7,10 +7,11 @@ function infopanel:load()
 
 end
 
-function infopanel:draw(obj,panelMaxSize) 
+function infopanel:draw(obj,panelMaxSize,cameraX,cameraY) 
 	local panelMaxSize = panelMaxSize or 256
 	local offsetX = self.defaultCursorOffsetX
 	local offsetY = self.defaultCursorOffsetY
+	local cameraX,cameraY = cameraX or 0, cameraY or 0
 	local font = obj.font or nil
   
 	local x,y = CursorX + offsetX,CursorY + offsetY
@@ -49,8 +50,8 @@ function infopanel:draw(obj,panelMaxSize)
 	--draw panel and text
 	local margin = 8
   	love.graphics.setColor(.9,.9,.9,1)
-	love.graphics.rectangle("fill",x,y,width,height+margin)
-	ct:draw(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
+	love.graphics.rectangle("fill",x+cameraX,y+cameraY,width,height+margin)
+	ct:draw(text,font,x+4+cameraX,y+4+cameraY,panelMaxSize,{0,0,0,1})
 	
 end
 

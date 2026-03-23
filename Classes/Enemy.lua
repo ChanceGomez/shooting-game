@@ -21,6 +21,7 @@ function Enemy:new(x,y,handler)
   obj.lifeTimer = 0 
   obj.isAlive = true
   obj.resources = 0
+  obj.effects = {}
 
   return obj
 end
@@ -47,19 +48,50 @@ function Enemy:delete()
     end
 end
 
-function Enemy:hit(damage)
-    --print("damage before: " .. damage)
-    game.Affector:trigger("damage",damage)
-    --print("damage after: " .. damage)
-    local damage = damage or 0
-    self.health = self.health - damage
+function Enemy:hit(properties)
+    local damage = properties.damage or 0
+    local fireDamage = properties.fire.damage or 0
+    local fireDuration = properties.fire.duration or 0
+
+
     self.isHit = true
-    game.lookouts[1].Report:action("damageDealt", damage)
+
+    --Check to see if there is just instant damage 
+    if damage > 0 then
+        Enemy.damage(self,damage)
+    end
+
+    --Check to see if fire damage
+    if fireDamage > 0 then
+        table.insert(self.effects,{
+            ticks = 0,
+            interval = 1,
+            timer = 0,
+            damage = fireDamage,
+            duration = fireDuration,
+        })
+    end
+
     game.lookouts[1].Report:action("shotHit")
+end
+
+function Enemy:damage(damage,type)
+    if not self.isAlive then return end
+    local type = type or ""
+
+    --Observer/Affector
+    local damage = game.Affector:trigger(type .. "Damage",damage)
+    game.lookouts[1].Report:action("damageDealt", damage)
+
+    self.health = self.health - damage
+
     if self.health <= 0 then
         self:die()
         game.lookouts[1].Report:action("enemyKilled")
     end
+
+    --damage popup
+    table.insert(self.handler.damagePopups,DamagePopup:new(self.handler,self.x,self.y,damage))
 end
 
 function Enemy:hitColor(dt)
@@ -91,6 +123,19 @@ end
 
 function Enemy:update(dt)
     Enemy.hitColor(self,dt)
+
+    --check for effects
+    for i, effect in ipairs(self.effects) do
+        effect.timer = effect.timer + dt
+        if effect.timer > 1 then
+            effect.timer = 0
+            effect.ticks = effect.ticks + 1
+            Enemy.damage(self,effect.damage,"fire")
+            if effect.ticks >= effect.duration then
+                table.remove(self.effects,i)
+            end
+        end
+    end
 
     local sideMargin = 8
     if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.lifeTimer > 5 then

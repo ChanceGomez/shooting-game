@@ -6,7 +6,7 @@ function Button:new(tbl)
 
     obj.x,obj.y = tbl.x or 0,tbl.y or 0
     obj.visible = tbl.visible
-    obj.color = tbl.color or {1,1,1,1}
+    obj.color = tbl.color or {0,0,0,1}
 
     if obj.visible == nil then
         obj.visible = true
@@ -66,7 +66,7 @@ function Button:draw()
     --draw text
     if self.description then
         local desc = self.description
-        local color = self.defaultColor 
+        local color = self.defaultColor or {1,1,1,1}
         if self.hovered then color = {0,0,0,1} end
         local text,font,x,y,limit,defaultColor = desc.text,desc.font,self.descriptionX,self.descriptionY,desc.limit,color
         ct:draw(text,font,x,y,limit,defaultColor)

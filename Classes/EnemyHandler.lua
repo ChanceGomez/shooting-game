@@ -80,18 +80,16 @@ end
 --[[
     Checks to see if enemy is hit by collision detection
 ]]
-function EnemyHandler:checkHit(damage)
+function EnemyHandler:checkHit(properties)
     for i, enemy in pairs(self.enemies) do
         if enemy:isCollision() and enemy.isAlive then
-            enemy:hit(damage) 
-            table.insert(self.damagePopups,DamagePopup:new(self,enemy.x,enemy.y,damage))
+            enemy:hit(properties) 
         end
     end
 
     for i, parachute in pairs(self.parachutes) do
         if parachute:isCollision() and parachute.isAlive then
-            table.insert(self.damagePopups,DamagePopup:new(self,parachute.x,parachute.y,damage))
-            parachute:hit(damage) 
+            parachute:hit(properties) 
         end
     end
 end

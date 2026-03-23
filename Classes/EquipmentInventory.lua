@@ -44,6 +44,16 @@ end
 
 function EquipmentInventory:update(dt)
     Inventory.update(self,dt)
+    --Check to see if hoveredSlot has an item and goes into a slot
+    if self.hoveredSlot then
+        if self.hoveredSlot.item then
+            for i, slot in pairs(self.slots) do
+                if self.hoveredSlot.item.type == i then
+                    slot.available = true
+                end
+            end
+        end
+    end
     --Check to see if helditem can go in any slots
     if self.heldItem then
         for i, slot in pairs(self.slots) do

@@ -1,8 +1,8 @@
-local Pistol = {}
-Pistol.__index = Pistol
+local Cannon = {}
+Cannon.__index = Cannon
 
-function Pistol:new()
-  local obj = setmetatable(Gun:new(), Pistol)
+function Cannon:new()
+  local obj = setmetatable(Gun:new(), Cannon)
   
   obj.damage = 10
   obj.fireRate = 0.4
@@ -15,23 +15,23 @@ function Pistol:new()
   return obj
 end
 
-function Pistol:increaseMaxAmmo(ammo)
+function Cannon:increaseMaxAmmo(ammo)
     Gun.increaseMaxAmmo(self,ammo)
 end
 
-function Pistol:increaseReloadRate(amount)
+function Cannon:increaseReloadRate(amount)
     Gun.increaseReloadRate(self,amount)
 end
 
-function Pistol:increaseDamage(damage)
+function Cannon:increaseDamage(damage)
     Gun.increaseDamage(self,damage)
 end
 
-function Pistol:loadBullet(bullet)
+function Cannon:loadBullet(bullet)
     Gun.loadBullet(self,bullet)
 end
 
-function Pistol:fire()
+function Cannon:fire()
     --Make sure gun can fire
     if self.isReloading or self.fireRateTimer < game.Affector:trigger("fireRateCheck",self.fireRate) then
         return
@@ -44,13 +44,13 @@ function Pistol:fire()
     self.fireRateTimer = 0
 end
 
-function Pistol:update(dt)
+function Cannon:update(dt)
     Gun.update(self,dt)
 end
 
-function Pistol:draw()
+function Cannon:draw()
     ap:drawGroup("pistol")
 end
 
 
-return Pistol
+return Cannon

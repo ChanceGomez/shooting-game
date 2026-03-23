@@ -13,6 +13,7 @@ function InventorySlot:new(x,y,images)
     obj.y = y
     obj.width = images.background:getWidth()
     obj.height = images.background:getHeight()
+    obj.rightClicked = false
 
     obj.item = nil
 

@@ -38,7 +38,7 @@ function equipment:load()
             self.ids["fireRateCheck"] = game.Affector:remove("fireRateCheck",self.affectorID)
         end,
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Barrel: " .. "Increase Fire Rate by 25%",
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Barrel: " .. "/nIncrease Fire Rate by 25%",
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
@@ -57,7 +57,7 @@ function equipment:load()
             self.ids["dudCheck"] = game.Affector:remove("dudCheck",self.affectorID)
         end,
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Stabilizer: " .. "Decrease dud chance by 25%",
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Stabilizer: " .. "/nDecrease dud chance by 25%",
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
@@ -76,7 +76,7 @@ function equipment:load()
             self.ids["reloadRateCheck"] = game.Affector:remove("reloadRateCheck",self.ids["reloadRateCheck"])
         end,
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Reloader: " .. "Increase reload rate by 25%",
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Reloader: " .. "/nIncrease reload rate by 25%",
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
@@ -95,7 +95,7 @@ function equipment:load()
             self.ids["parachuteCheck"] = game.Affector:remove("parachuteCheck",self.affectorID)
         end,
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Antenna: " .. "Increase parachutes by 25%",
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Antenna: " .. "/nIncrease parachutes by 25%",
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
@@ -121,7 +121,7 @@ function equipment:load()
 
         end,
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Base: " .. "Increase reload rate by 10%, fire rate by 10%",
+            text = "{.2,.2,.5}Titanium {.2,.2,.5}Base: " .. "/nIncrease reload rate by 10%, fire rate by 10%",
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
@@ -147,7 +147,7 @@ function equipment:load()
 
         end,
         description = {
-            text = "{.2,.2,.5}Janky {.2,.2,.5}Base: " .. "Increase dud chance by 50%, increase dud damage by 50%",
+            text = "{.2,.2,.5}Janky {.2,.2,.5}Base: " .. "/nIncrease dud chance by 50%, increase dud damage by 50%",
         },
         image = al:getImage("equipment_barrelimprovement"),
     }

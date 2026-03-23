@@ -27,15 +27,19 @@ end
 --Function to get the transform the text into a word array
 local function getFormattedWords(text,defaultColor)
     local words = {}
+
     --Divide up the text into words seperated by whitespace
     for word in string.gmatch(text, "%S+") do
         --wrapper to insert into words
         local wrapper = {
             word = "",
             color = {1,1,1,1},
+            nextLine = false,
         }
         --boolean to tell system if it is inside a delimiter
         local isWord = true
+        local inEscapeSequence = false
+        local leavingEscapeSequence = false
 
         -- Boolean to tell system if current number is a decimal to check for period
         local isDecimal = false
@@ -62,10 +66,25 @@ local function getFormattedWords(text,defaultColor)
         end
         --Go through each letter of the word
         for letter in word:gmatch(".") do
+            leavingEscapeSequence = false
+            --Check to see if character has a '/'
+            if letter == "/" then
+                inEscapeSequence = true
+            end
+
+            --Check to see if in an escape sequence
+            if inEscapeSequence and letter ~= "/" then
+                if letter == 'n' then
+                    wrapper.nextLine = true
+                end
+
+                --Leave escape sequence
+                inEscapeSequence = false
+                leavingEscapeSequence = true
+            end
             --Check to see if delimter if true then switch isWord to false so that no letters are added
             if letter == "{" then
                 isWord = false
-
             --Check to see if inside delimiter and is on a number value
             elseif letter ~= "}" and letter ~= "," and isWord == false then
                 if letter == "." then
@@ -76,6 +95,7 @@ local function getFormattedWords(text,defaultColor)
                 end
                 --Check to see if inside a decimal but make sure its not the decimal
                 if isDecimal and letter ~= "." then
+                    
                     currentDecimal = currentDecimal .. letter
                 end
                 
@@ -90,18 +110,20 @@ local function getFormattedWords(text,defaultColor)
             end
 
             --if outside delimiter then add the letter to the word
-            if isWord then
+            if isWord and not inEscapeSequence and not leavingEscapeSequence then
                 wrapper.word = wrapper.word .. letter
             end
 
             --Check to see if letter is a comma (,) if so then no longer in decimal
             if letter == "," then
                 endDecimal()
+                currentDecimal = '.'
             end
 
             --Check to see if left delimiter if so then switch isWord to let system know
             if letter == "}" then
                 endDecimal()
+                currentDecimal = '.'
                 isWord = true
             end
 
@@ -127,7 +149,6 @@ local function getFormattedWords(text,defaultColor)
         --add wrapper to words
         table.insert(words, wrapper)
     end
-
     return words
 end
 
@@ -176,11 +197,16 @@ function customtext:getDimensions(arg1,arg2,arg3,arg4,arg5,arg6)
     
     --loop through to get width & height
     for i, word in ipairs(words) do
-        local word = word.word
-        if width + font:getWidth(word) > limit then
+        local text = word.word
+
+        if word.nextLine then
             Return()
         end
-        width = width + font:getWidth(word .. ' ')
+
+        if width + font:getWidth(text) > limit then
+            Return()
+        end
+        width = width + font:getWidth(text .. ' ')
         
         if width > limit then
             Return()
@@ -218,20 +244,25 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
     --Cycle through all the words to print them in the correct order
     for i, word in ipairs(words) do
         local color = word.color
-        local word = word.word
+        local text = word.word
 
-        --check to see if word will go over limit
-        if textX - x + font:getWidth(word) > limit then
+
+        if word.nextLine then
             Return()
         end
 
-        --print the word
+        --check to see if word will go over limit
+        if textX - x + font:getWidth(text) > limit then
+            Return()
+        end
+
+        --print the text
         love.graphics.setColor(color)
         love.graphics.setFont(font)
-        love.graphics.print(word,textX,textY)
+        love.graphics.print(text,textX,textY)
 
         --Increase the x position based on previous addition
-        textX = textX + font:getWidth(word .. ' ')
+        textX = textX + font:getWidth(text .. ' ')
 
         --Check to see if crossed limit
         if textX - x > limit then

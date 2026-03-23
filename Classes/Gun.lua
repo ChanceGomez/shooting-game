@@ -4,14 +4,27 @@ Gun.__index = Gun
 function Gun:new()
   local obj = setmetatable({}, Gun)
   
-    obj.damage = 0
-    obj.dudDamage = 0
+    obj.bullets = {
+        damage = 10,
+        fire = {
+            damage = 0,
+            duration = 0,
+        }
+    }
+    obj.duds = {
+        damage = 0,
+        fire = {
+            damage = 0,
+            duration = 0,
+        }
+    }
     obj.fireRate = 0    
     obj.fireRateTimer = 1000
     obj.ammo = {}
     obj.maxAmmo = 0
     obj.canReload = false
     obj.reloadRate = 2
+
 
   return obj
 end
@@ -48,7 +61,7 @@ function Gun:fire()
     if game.lookouts[1].isHoveringButton then
         return false
     end
-   game.lookouts[1].handler:checkHit(self.ammo[1].damage)
+   game.lookouts[1].handler:checkHit(self.ammo[1].properties)
    game.lookouts[1].Report:action("shotFired")
    table.remove(self.ammo,1)
 end

@@ -2,11 +2,12 @@ local Map = {}
 Map.__index = Map
 
 local function generateNodes(obj,generation,length)
-    local tbl = {}
+    local tbl = obj.nodes or {}
 
-
-    local function generateNode(nodeX,nodeY,node,isEnd)
+    --recursion functions
+    local function generateNode(nodeX,nodeY,node,isEndNode)
         local key = nodeX .. ' ' .. nodeY
+        local isEndNode = isEndNode or false
 
         local function linkNode()
             if node then
@@ -21,7 +22,7 @@ local function generateNodes(obj,generation,length)
             return tbl[key]
         end
         local x,y = (nodeX * obj.unitsBetweenX) + obj.midPointX,(-nodeY * obj.unitsBetweenY) + obj.midPointY
-        tbl[key] = Node:new(x,y,nodeX,nodeY,obj,obj.generator:random(1,1000),isEnd)
+        tbl[key] = Node:new(x,y,nodeX,nodeY,obj,obj.generator:random(1,1000),isEndNode)
 
         linkNode()
 
@@ -33,6 +34,7 @@ local function generateNodes(obj,generation,length)
         local iteration = iteration or 0
         if generation <= iteration then return end
         iteration = iteration + 1
+
         --Child 1 
         local nodeX,nodeY = node.nodeX - 1, node.nodeY + 1
         generateOutwardGeneration(generateNode(nodeX,nodeY,node),iteration)
@@ -66,39 +68,55 @@ local function generateNodes(obj,generation,length)
         if iteration >= length-(generation*2)-2 then
             return
         end
+
         iteration = iteration + 1
 
         local nodeX,nodeY = node.nodeX,node.nodeY + 1
         generateSingleGeneration(generateNode(nodeX,nodeY,node),iteration)
     end
 
-    --Create parent node
-    generateNode(0,0)
+
+    --Get start node
+    local nodeX,nodeY = 0,0
+    --look to see if there is an end node to build off of
+    for i, node in pairs(tbl) do
+        if node.isEndNode then
+            node.isEndNode = false
+            nodeX,nodeY = node.nodeX,node.nodeY
+        end
+    end
+
+
+    --Create parent node (doesn't make one if one was found before)
+    generateNode(nodeX,nodeY)
 
 
     --Generate all exterior children nodes
-    generateOutwardGeneration(tbl["0" .. " " .. "0"])
+    generateOutwardGeneration(tbl[nodeX .. ' ' .. nodeY])
 
     
     local endNodes = {}
     local extremeMin = -generation
     for i = 1, generation + 1 do
-        local key = (extremeMin+((i-1) * 2)) .. " " .. generation
+        local key = (extremeMin+((i-1) * 2)) .. " " .. generation + (nodeY)
         table.insert(endNodes,key)
     end
     
     for i, key in ipairs(endNodes) do
-        generateSingleGeneration(tbl[key],0,tbl[key])
+        generateSingleGeneration(tbl[key],0)
     end
 
     --generate end node and start downward generation
-    generateDownwardGeneration(generateNode(0,length-1,nil,true))
+    generateDownwardGeneration(generateNode(0,length-1+nodeY,nil,true))
 
     return tbl
 end
 
 function Map:new(seed,generation,length,handler)
     local obj = setmetatable({},Map)
+
+    local generation = generation or 3
+    local length = length or 8
 
     obj.midPointX = Width/2
     obj.midPointY = 300
@@ -109,7 +127,10 @@ function Map:new(seed,generation,length,handler)
     obj.handler = handler
 
     obj.generator = love.math.newRandomGenerator(seed or 1)
-    obj.nodes = generateNodes(obj,generation or 3,length or 8)
+
+    obj.nodes = {}
+    obj.nodes = generateNodes(obj,generation,length)
+    obj.nodes = generateNodes(obj,generation,length)
 
     obj.playerLocation = 0 .. ' ' .. 0
 
@@ -122,7 +143,15 @@ function Map:update(dt,camera)
     end
 end
 
-function Map:draw()
+function Map:draw(camera)
+    --draw grayed out lines
+    for i, node in pairs(self.nodes) do
+        for i, connectingNode in ipairs(node.nodes) do
+            love.graphics.setColor(.3,.3,.3,1)
+            love.graphics.line(node.x,node.y,connectingNode.x,connectingNode.y)
+        end
+    end
+
     --draw previous nodes lines
     for i, node in pairs(self.nodes) do
         if not node.enabled then
@@ -152,7 +181,7 @@ function Map:draw()
 
     for i, node in pairs(self.nodes) do
         if node.hovered then
-            infopanel:draw(node,128)
+            infopanel:draw(node,128,camera.x,camera.y)
         end
     end
 end

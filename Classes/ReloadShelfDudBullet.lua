@@ -4,7 +4,7 @@ ReloadShelfDudBullet.__index = ReloadShelfDudBullet
 function ReloadShelfDudBullet:new(ReloadShelf,x,y)
     local obj = setmetatable(ReloadShelfBullet:new(ReloadShelf,x,y),ReloadShelfDudBullet)
 
-    obj.damage = game.Affector:trigger("dudDamage",game.Player.gun.dudDamage)
+    obj.properties = game.Player.gun.duds-- = game.Affector:trigger("dudDamage",game.Player.gun.dudDamage)
     obj.color = {1,0,0,1}
 
     return obj

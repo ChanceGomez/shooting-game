@@ -190,6 +190,7 @@ function Inventory:new(x,y,col,row,functions)
     }
     obj.rightClickPanel.functions = generateFunctions(obj,functions)
 
+    obj.hoveredSlot = nil
     obj.heldItem = nil
     obj.heldItemOriginalSlot = nil
 
@@ -249,6 +250,10 @@ function Inventory:drag()
 
 
     for i, slot in pairs(self.slots) do
+        --If slot is being hovered and has an item then put item in hovered item
+        if slot.hovered and slot.item and not self.heldItem then
+            self.hoveredSlot = slot
+        end
         --See if slot meets requirements to be held
         if slot.hovered and love.mouse.isDown(1) and self.heldItem == nil then
             --Set helditem to the slots item
@@ -261,6 +266,7 @@ function Inventory:drag()
         if slot.hovered and rightClick and self.heldItem == nil and slot.item then
             self.isRightClick = true
             self.rightClickedSlot = slot
+            slot.rightClicked = true
         end
     end
 
@@ -275,7 +281,7 @@ end
 function Inventory:linkInventory(inventory)
     table.insert(self.inventories,inventory)
     table.insert(inventory.inventories,self)
-    link(self,inventory, {"heldItem","heldItemOriginalSlot"})
+    link(self,inventory, {"heldItem","heldItemOriginalSlot","hoveredSlot"})
 end
 
 function Inventory:unlinkInventory(inventory)
@@ -327,6 +333,8 @@ function Inventory:update(dt)
 
     if love.mouse.isDown(1) and self.isRightClick then
         self.isRightClick = false
+        self.rightClickedSlot.rightClicked = false
+        self.rightClickedSlot = nil
     end
 end
 
@@ -344,7 +352,7 @@ function Inventory:draw()
 
     --draw infopanels
     for i, slot in pairs(self.slots) do
-        if slot.hovered and slot.item and self.heldItem == nil then
+        if slot.hovered and slot.item and self.heldItem == nil and slot ~= self.rightClickedSlot then
             infopanel:draw(slot.item)
         end
     end

@@ -37,7 +37,7 @@ function gun:load()
         }})
 
     --debug
-    --self.Inventory:addItem(equipment:getEquipment("jankyBase"))
+    self.Inventory:addItem(equipment:getEquipment("jankyBase"))
 
     --Link the inventories
     self.EquipmentInventory:linkInventory(self.Inventory)
@@ -74,8 +74,9 @@ function gun:draw()
         slot:draw()
     end
 
-    self.Inventory:draw()
     self.EquipmentInventory:draw()
+    self.Inventory:draw()
+
 
     --tab
     tab:draw()

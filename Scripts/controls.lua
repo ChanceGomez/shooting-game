@@ -28,8 +28,8 @@ function controls:update()
     CursorX = CursorX/scale
     CursorY = CursorY/scale
 
-    CursorX = math.floor(CursorX)
-    CursorY = math.floor(CursorY)
+    CursorX = math.ceil(CursorX)
+    CursorY = math.ceil(CursorY)
 
     -- alphabet
     aClick = false
@@ -58,6 +58,10 @@ function controls:update()
     xClick = false
     yClick = false
     zClick = false
+
+    --wheel
+    wheelUp = false
+    wheelDown = false
 	
     --control keys
     escapeClick = false
@@ -158,6 +162,14 @@ function love.mousepressed(x, y, button)
 --        controls.dragging = true
 --        controls.dragStartX, controls.dragStartY = x, y
 --        controls.camStartX, controls.camStartY = camera.x, camera.y
+    end
+end
+
+function love.wheelmoved(x,y)
+    if y > 0 then
+        wheelUp = true
+    elseif y < 0 then
+        wheelDown = true
     end
 end
 

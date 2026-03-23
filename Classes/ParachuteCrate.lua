@@ -43,17 +43,8 @@ function ParachuteCrate:die()
     gun.Inventory:addItem(self.item)
 end
 
-function ParachuteCrate:hit(damage)
-    game.lookouts[1].Report:action("damageDealtBefore", damage)
-    local damage = damage or 0
-    self.health = self.health - damage
-    self.isHit = true
-    game.lookouts[1].Report:action("damageDealt", damage)
-    game.lookouts[1].Report:action("shotHit")
-    if self.health <= 0 then
-        self:die()
-        game.lookouts[1].Report:action("parachuteShotDown")
-    end
+function ParachuteCrate:hit(properties)
+    Enemy.hit(self,properties)
 end
 
 function ParachuteCrate:hitColor(dt)

@@ -4,7 +4,7 @@ Node.__index = Node
 function Node:new(x,y,nodeX,nodeY,map,seed,isEndNode)
     local obj = setmetatable({},Node)
 
-    obj.isEndNode = isEndNode or false
+    obj.isEndNode = isEndNode
     obj.x = x or 100
     obj.y = y or 100
     obj.nodeX = nodeX
@@ -12,18 +12,21 @@ function Node:new(x,y,nodeX,nodeY,map,seed,isEndNode)
     obj.key = nodeX .. ' ' .. nodeY
     obj.radius = 10
     obj.nodes = {}
-    obj.color = {1,1,1,1}
+    obj.tempColor = nil
     obj.map = map
     obj.isPlayer = false
     obj.enabled = true
     obj.seed = seed
+    obj.color = {1,1,1,1}
 
-    obj.enemies,obj.isArtifact = obj.map.handler:getEnemies(obj.nodeY,obj.seed)
-    obj.description = {
-        text = "Enemies: " .. #obj.enemies
-    }
-    if obj.isArtifact then
-        obj.description.text = obj.description.text .. " {.2,.2,.4,1}Artifact"
+    obj.variables = obj.map.handler:getVariables(obj)
+
+    --check to see if variables has a description
+    if obj.variables.description then
+        obj.description = obj.variables.description
+    end
+    if obj.variables.color then
+        obj.color = obj.variables.color
     end
 
     return obj
@@ -34,20 +37,15 @@ function Node:clicked()
         if self.map.playerLocation == node.key and node.nodeY < self.nodeY then
             self.map.playerLocation = self.key
             node.enabled = false
-            self.map.handler:nodeClicked(self.enemies,self.nodeY,self.isArtifact,self.isEndNode)
+            self.map.handler:nodeClicked(self.variables)
         end
     end
 end
 
 function Node:update(camera)
-    if self.isArtifact then
-        self.color = {.3,.3,.2,1}
-    else
-        self.color = {1,1,1,1}
-    end
-
+    self.tempColor = nil
     if collision.circle(self,camera.x,camera.y) then
-        self.color = {.3,.2,.2,1}
+        self.tempColor = {.3,.2,.2,1}
         self.hovered = true
         if leftClick then
             self:clicked()
@@ -57,7 +55,7 @@ function Node:update(camera)
     end
 
     if self.map.playerLocation == self.key then
-        self.color = {.2,.2,.3,1}
+        self.tempColor = {.2,.2,.3,1}
         self.isPlayer = true
     else
         self.isPlayer = false
@@ -69,8 +67,16 @@ function Node:update(camera)
 end
 
 function Node:draw()
-    love.graphics.setColor(self.color)
+    local color = self.color
+    if self.tempColor then
+        color = self.tempColor
+    end
+    love.graphics.setColor(color)
     love.graphics.circle("fill",self.x,self.y,self.radius)
+    if not self.enabled then
+        love.graphics.setColor(.1,.1,.1,1)
+        love.graphics.circle("fill",self.x,self.y,self.radius-2)
+    end
 end
 
 return Node

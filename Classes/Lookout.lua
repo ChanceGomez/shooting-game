@@ -4,10 +4,10 @@ Lookout.__index = Lookout
 local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
 crt_shader:send("screen_size", {love.graphics.getDimensions()})
 
-function Lookout:new(enemies,difficulty,isArtifact)
+function Lookout:new(enemies,difficulty,artifacts)
   local obj = setmetatable({}, Lookout)
 
-  obj.isArtifact = isArtifact or false
+  obj.artifacts = artifacts
   obj.difficulty = difficulty
   obj.enemyCount = #enemies
   obj.enemies = {}
@@ -97,7 +97,7 @@ function Lookout:update(dt)
     end
 
     if not self.handler.isRoundActive then
-        game:endRound(self.isArtifact)
+        game:endRound(self.artifacts)
     end
 
     --update reload shelf

@@ -12,27 +12,29 @@ local shop = {
 }
 
 
---Get the artifacts and insert them into the artifacts table
-function shop:getArtifact(amountOfArtifacts)
-    local amountOfArtifacts = amountOfArtifacts or 3 -- amount of artifacts to create
-
-    self.artifacts = {} -- reset table to empty just in case
-    self.isArtifact = true -- Shop is now in artifact selection
+function shop:displayArtifacts(artifacts)
+    self.artifacts = {}
+    self.isArtifact = true
     self.skipArtifactButton.visible = true
 
     --positioning variables
     local totalWidth = 0
     local margin = 16
 
-    -- Create all artifacts 
-    for i = 0, amountOfArtifacts-1 do
-        local artifact = deepCopy(artifacts:getRandomArtifact()) -- Create a deep copy to avoid references
+    for i = 1, #artifacts do
+        local artifact = deepCopy(artifacts[i])
         local width = artifact.width
-        
+
         totalWidth = totalWidth + width + margin
         --Change x to correct pos
         artifact.x = Width/2 - width/2 + ((width+margin) * i)
         artifact.y = Height/2 - width/2
+
+        --create clicked function
+        artifact.clicked = function()
+            artifact:event()
+            self:artifactClicked()
+        end
 
         --Insert artifact into the artifacts table
         table.insert(self.artifacts,artifact)
@@ -44,8 +46,6 @@ function shop:getArtifact(amountOfArtifacts)
     for i, artifact in ipairs(self.artifacts) do
         artifact.x = startPoint + ((i-1) * (artifact.width+margin))
     end
-
-
 end
 
 function shop:drawArtifactSelection()
@@ -92,6 +92,16 @@ function shop:upgradeClicked()
     self.buttons["increase_maxAmmo"].description = "Upgrade the max ammo of your gun, Cost: " .. self.maxAmmoCost
     self.buttons["increase_damage"].description = "Upgrade the damage of your gun, Cost: " .. self.damageCost
     self.buttons["increase_reloadRate"].description = "Upgrade the reload rate of your gun, Cost: " .. self.reloadRateCost
+
+    if self.maxAmmoLevel >= self.maxLevel then
+        self.buttons["increase_maxAmmo"].description = "Upgrade the max ammo of your gun, Cost: " .. "{.1,.1,.4,1}Maxed {.1,.1,.4,1}Out"
+    end
+    if self.damageLevel >= self.maxLevel then
+        self.buttons["increase_damage"].description = "Upgrade the damage of your gun, Cost: " .. "{.1,.1,.4,1}Maxed {.1,.1,.4,1}Out"
+    end
+    if self.reloadRateLevel >= self.maxLevel then
+        self.buttons["increase_reloadRate"].description = "Upgrade the reload rate of your gun, Cost: " .. "{.1,.1,.4,1}Maxed {.1,.1,.4,1}Out"
+    end
 end
 
 function shop:artifactClicked()
@@ -196,7 +206,7 @@ function shop:load()
     }
 
     if settings.loadShopOnStart then
-        self:loadShop()
+        self:displayArtifacts({artifacts:getRandomArtifact(),artifacts:getRandomArtifact()})
     end
 
 

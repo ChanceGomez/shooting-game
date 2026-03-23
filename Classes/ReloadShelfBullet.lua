@@ -13,7 +13,7 @@ function ReloadShelfBullet:new(ReloadShelf,x,y)
     obj.x = x or 0
     obj.y = y or 0
     obj.hovered = false
-    obj.damage = game.Player.gun.damage
+    obj.properties = game.Player.gun.bullets
     obj.inAnimation = false
     obj.ReloadShelf = ReloadShelf
     obj.color = {1,1,1,1}
@@ -59,7 +59,7 @@ end
 
 
 function ReloadShelfBullet:update()
-    
+
 end
 
 function ReloadShelfBullet:draw()

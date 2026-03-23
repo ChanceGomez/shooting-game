@@ -6,31 +6,31 @@
   
  
 --Scripts
-al = require("scripts/assetloader")
-drag = require("scripts/drag")
-collision = require("scripts/collision")
-controls = require("scripts/controls")
-tween = require("scripts/tween")
-array = require("scripts/array")
-button = require("scripts/buttons")
-zdraw = require("scripts/zdraw")
-event = require("scripts/events")
-infopanel = require("scripts/infopanel")
-popup = require("scripts/popup")
-ap = require("scripts/animationplayer")
-roundscript = require("scripts/roundscript")
-upgrades = require("scripts/upgrades")
-artifacts = require("scripts/artifacts")
-equipment = require("scripts/equipment")
-ct = require("scripts/customtext")
-statpanel = require("scripts/statpanel")
-tab = require("scripts/tab")
+al = require("Scripts/assetloader")
+drag = require("Scripts/drag")
+collision = require("Scripts/collision")
+controls = require("Scripts/controls")
+tween = require("Scripts/tween")
+array = require("Scripts/array")
+button = require("Scripts/buttons")
+zdraw = require("Scripts/zdraw")
+event = require("Scripts/events")
+infopanel = require("Scripts/infopanel")
+popup = require("Scripts/popup")
+ap = require("Scripts/animationplayer")
+roundscript = require("Scripts/roundscript")
+upgrades = require("Scripts/upgrades")
+artifacts = require("Scripts/artifacts")
+equipment = require("Scripts/equipment")
+ct = require("Scripts/customtext")
+statpanel = require("Scripts/statpanel")
+tab = require("Scripts/tab")
 
 --Preloaded classes
-Observer = require("classes/Observer")
-Affector = require("classes/Affector")
+Observer = require("Classes/Observer")
+Affector = require("Classes/Affector")
 Event = require("Classes/Event")
-Button = require("classes/Button")
+Button = require("Classes/Button")
 
 --Scenes  
   game = require("Scenes/game")
@@ -41,6 +41,7 @@ Button = require("classes/Button")
   difficultyselection = require("Scenes/difficultyselection")
   splashscreen = require("Scenes/splashscreen")
   map = require("Scenes/map")
+  testscene = require("Scenes/testscene")
 
 --Global vars
 Width,Height = 640,360
@@ -54,9 +55,9 @@ settings = {
   hitbox = false, -- Display hitboxes on enemies
   showHealth = false,
   showAlive = false,
-  debug = false,
+  debug = true,
   difficulty = 'easy',
-  loadShopOnStart = true,
+  loadShopOnStart = false,
   crt = false,
 }
 
@@ -102,8 +103,13 @@ Scenes = {
     load = function() map:load() end,
     update = function(dt) map:update(dt) end,
   },
+  testscene = {
+    draw = function() testscene:draw() end,
+    load = function() testscene:load() end,
+    update = function(dt) testscene:update(dt) end,
+  },
 }
-Scene = "title" -- Current scene
+Scene = "shop" -- Current scene
 
 --Global Observer
 GlobalObserver = nil
@@ -115,14 +121,14 @@ cosmeticRandom = love.math.newRandomGenerator(os.time())
 
 local function loadAssets()
   --images
-    al:loadImages("assets/Sprites")
-    al:loadAudios("assets/Audios")
+    al:loadImages("Assets/Sprites")
+    al:loadAudios("Assets/Audios")
   
     --perfect dos font
-    perfect_dos_12 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",12)
-    perfect_dos_16 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",16)
-    perfect_dos_20 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",28)
-    perfect_dos_32 = love.graphics.newFont("assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",32)
+    perfect_dos_12 = love.graphics.newFont("Assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",12)
+    perfect_dos_16 = love.graphics.newFont("Assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",16)
+    perfect_dos_20 = love.graphics.newFont("Assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",28)
+    perfect_dos_32 = love.graphics.newFont("Assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",32)
 
     --dogica font
     dogica_8 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",8)
@@ -152,34 +158,34 @@ function love.load()
   tab:load()
 
   --Load classes
-    Inventory = require("classes/Inventory")
-    InventorySlot = require("classes/InventorySlot")
-    Lookout = require("classes/Lookout")
-    Report = require("classes/Report")
-    BackgroundHandler = require("classes/BackgroundHandler")
-    ReloadShelf = require("classes/ReloadShelf")
-    ReloadShelfBullet = require("classes/ReloadShelfBullet")
-    ReloadShelfDudBullet = require("classes/ReloadShelfDudBullet")
-    EnemyHandler = require("classes/EnemyHandler")
-    Player = require("classes/Player")
-    Enemy = require("classes/Enemy")
+    Inventory = require("Classes/Inventory")
+    InventorySlot = require("Classes/InventorySlot")
+    Lookout = require("Classes/Lookout")
+    Report = require("Classes/Report")
+    BackgroundHandler = require("Classes/BackgroundHandler")
+    ReloadShelf = require("Classes/ReloadShelf")
+    ReloadShelfBullet = require("Classes/ReloadShelfBullet")
+    ReloadShelfDudBullet = require("Classes/ReloadShelfDudBullet")
+    EnemyHandler = require("Classes/EnemyHandler")
+    Player = require("Classes/Player")
+    Enemy = require("Classes/Enemy")
     Enemies = {
-        Bird = require("classes/Bird"),
-        InfectedBird = require("classes/InfectedBird"),
-        BigBird = require("classes/BigBird"),
-        BigInfectedBird = require("classes/BigInfectedBird"),
+        Bird = require("Classes/Bird"),
+        InfectedBird = require("Classes/InfectedBird"),
+        BigBird = require("Classes/BigBird"),
+        BigInfectedBird = require("Classes/BigInfectedBird"),
     }
-    Gun = require("classes/Gun")
+    Gun = require("Classes/Gun")
     Guns = {
-        pistol = require("classes/Pistol"),
+        pistol = require("Classes/Cannon"),
     }
-    EquipmentInventory = require("classes/EquipmentInventory")
-    EquipmentSlot = require("classes/EquipmentSlot")
-    ParachuteCrate = require("classes/ParachuteCrate")
-    Lazor = require("classes/Lazor")
-    Map = require("classes/MapNode/Map")
-    Node = require("classes/MapNode/Node")
-    DamagePopup = require("classes/DamagePopup")
+    EquipmentInventory = require("Classes/EquipmentInventory")
+    EquipmentSlot = require("Classes/EquipmentSlot")
+    ParachuteCrate = require("Classes/ParachuteCrate")
+    Lazor = require("Classes/Lazor")
+    Map = require("Classes/MapNode/Map")
+    Node = require("Classes/MapNode/Node")
+    DamagePopup = require("Classes/DamagePopup")
 
   
   --get global observer
