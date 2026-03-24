@@ -64,6 +64,7 @@ function Enemy:hit(properties)
     --Check to see if fire damage
     if fireDamage > 0 then
         table.insert(self.effects,{
+            type = "Fire",
             ticks = 0,
             interval = 1,
             timer = 0,
@@ -79,8 +80,10 @@ function Enemy:damage(damage,type)
     if not self.isAlive then return end
     local type = type or ""
 
+    self.isHit = true
+
     --Observer/Affector
-    local damage = game.Affector:trigger(type .. "Damage",damage)
+    local damage = game.Affector:trigger(type .. ' '.. "Damage",damage)
     game.lookouts[1].Report:action("damageDealt", damage)
 
     self.health = self.health - damage
@@ -130,7 +133,7 @@ function Enemy:update(dt)
         if effect.timer > 1 then
             effect.timer = 0
             effect.ticks = effect.ticks + 1
-            Enemy.damage(self,effect.damage,"fire")
+            Enemy.damage(self,effect.damage,effect.type)
             if effect.ticks >= effect.duration then
                 table.remove(self.effects,i)
             end

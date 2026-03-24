@@ -248,10 +248,10 @@ function Inventory:drag()
         self.heldItem = nil
     end
 
-
+    self.hoveredSlot = nil
     for i, slot in pairs(self.slots) do
         --If slot is being hovered and has an item then put item in hovered item
-        if slot.hovered and slot.item and not self.heldItem then
+        if slot.hovered and not self.heldItem then
             self.hoveredSlot = slot
         end
         --See if slot meets requirements to be held
@@ -281,7 +281,7 @@ end
 function Inventory:linkInventory(inventory)
     table.insert(self.inventories,inventory)
     table.insert(inventory.inventories,self)
-    link(self,inventory, {"heldItem","heldItemOriginalSlot","hoveredSlot"})
+    link(self,inventory, {"heldItem","heldItemOriginalSlot"})
 end
 
 function Inventory:unlinkInventory(inventory)
@@ -305,6 +305,12 @@ function Inventory:addItem(item,slot)
     slot = slot or self:getNextEmptySlot()
     slot:addItem(item)
 end
+
+function Inventory:addItems(tbl)
+    for i, item in pairs(tbl) do
+        Inventory.addItem(self,item)
+    end
+end 
 
 function Inventory:update(dt)
     --Deal with dragging

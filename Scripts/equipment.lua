@@ -26,17 +26,9 @@ function equipment:load()
     self.equipments.titaniumBarrel = {
         rarity = 1,
         type = "barrel",
-        ids = {},
-        add = function(self)
-            self.ids["fireRateCheck"] = game.Affector:add("fireRateCheck",
-                function(fireRate)
-                    return fireRate * .75
-                end
-            )
-        end,
-        remove = function(self)
-            self.ids["fireRateCheck"] = game.Affector:remove("fireRateCheck",self.affectorID)
-        end,
+        ids = {
+            {"Fire Rate","mult",.75},
+        },
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Barrel: " .. "/nIncrease Fire Rate by 25%",
         },
@@ -45,17 +37,9 @@ function equipment:load()
     self.equipments.titaniumStabalizer = {
         rarity = 1,
         type = "stabalizer",
-        ids = {},
-        add = function(self)
-            self.ids["dudCheck"] = game.Affector:add("dudCheck",
-                function(dud)
-                    return dud * .75
-                end
-            )
-        end,
-        remove = function(self)
-            self.ids["dudCheck"] = game.Affector:remove("dudCheck",self.affectorID)
-        end,
+        ids = {
+            {"Dud Chance","mult",.75},
+        },
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Stabilizer: " .. "/nDecrease dud chance by 25%",
         },
@@ -64,17 +48,9 @@ function equipment:load()
     self.equipments.titaniumReloader = {
         rarity = 1,
         type = "reloader",
-        ids = {},
-        add = function(self)
-            self.ids["reloadRateCheck"] = game.Affector:add("reloadRateCheck",
-                function(reload)
-                    return reload * .75
-                end
-            )
-        end,
-        remove = function(self)
-            self.ids["reloadRateCheck"] = game.Affector:remove("reloadRateCheck",self.ids["reloadRateCheck"])
-        end,
+        ids = {
+            {"Reload Rate","mult",.75},
+        },
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Reloader: " .. "/nIncrease reload rate by 25%",
         },
@@ -83,17 +59,9 @@ function equipment:load()
     self.equipments.titaniumAntenna = {
         rarity = 1,
         type = "antenna",
-        ids = {},
-        add = function(self)
-            self.ids["parachuteCheck"] = game.Affector:add("parachuteCheck",
-                function(parachute)
-                    return parachute * .75
-                end
-            )
-        end,
-        remove = function(self)
-            self.ids["parachuteCheck"] = game.Affector:remove("parachuteCheck",self.affectorID)
-        end,
+        ids = {
+            {"Parachute Chance","mult",1.25},
+        },
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Antenna: " .. "/nIncrease parachutes by 25%",
         },
@@ -102,24 +70,10 @@ function equipment:load()
     self.equipments.titaniumBase = {
         rarity = 1,
         type = "base",
-        ids = {},
-        add = function(self)
-            self.ids["reloadRateCheck"] = game.Affector:add("reloadRateCheck",
-                function(reload)
-                    return reload * .90
-                end
-            )
-            self.ids["fireRateCheck"] = game.Affector:add("fireRateCheck",
-                function(fireRate)
-                    return fireRate * .90
-                end
-            )
-        end,
-        remove = function(self)
-            self.ids["reloadRateCheck"] = game.Affector:remove("reloadRateCheck",self.ids["reloadRateCheck"])
-            self.ids["fireRateCheck"] = game.Affector:remove("fireRateCheck",self.ids["fireRateCheck"])
-
-        end,
+        ids = {
+            {"Reload Rate","mult",.90},
+            {"Fire Rate","mult",.90},
+        },
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Base: " .. "/nIncrease reload rate by 10%, fire rate by 10%",
         },
@@ -128,44 +82,52 @@ function equipment:load()
     self.equipments.jankyBase = {
         rarity = 1,
         type = "base",
-        ids = {},
-        add = function(self)
-            self.ids["dudCheck"] = game.Affector:add("dudCheck",
-                function(dud)
-                    return dud * 1.50
-                end
-            )
-            self.ids["dudDamage"] = game.Affector:add("dudDamage",
-                function(damage)
-                    return damage * 1.50
-                end
-            )
-        end,
-        remove = function(self)
-            self.ids["dudCheck"] = game.Affector:remove("dudCheck",self.ids["dudCheck"])
-            self.ids["dudDamage"] = game.Affector:remove("dudDamage",self.ids["dudDamage"])
-
-        end,
+        ids = {
+            {"Dud Chance","mult",1.50},
+            {"Dud Damage","mult",1.50},
+        },
         description = {
-            text = "{.2,.2,.5}Janky {.2,.2,.5}Base: " .. "/nIncrease dud chance by 50%, increase dud damage by 50%",
+            text = "{.2,.2,.5}Janky {.2,.2,.5}Base: " .. "/nIncrease dud chance by 50%, increase dud damage by 50%", 
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
 
 
-    --get count of how many artifacts and get there widths/heights aswell as add the fonts for description
+    --loop through to init variables/functions
     for i, equipment in pairs(self.equipments) do
+        --count up for total equipment
         self.equipmentCount = self.equipmentCount + 1
+        --get height/width
         equipment.width = equipment.image:getWidth()
         equipment.height = equipment.image:getHeight()
+
+        --set default font
         if not equipment.description.font then
-            equipment.description.font = perfect_dos_16
+            equipment.description.font = dogica_8
+        end
+
+        --create the add/remove functions
+        equipment.add = function(self)
+            game.Affector:addIDs(self.ids)
+        end
+        equipment.remove = function(self)
+            game.Affector:removeIDs(self.ids)
+        end
+
+        --Create the update text function
+        equipment.updateText = function(self)
+            local ids = self.ids
+            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end
     end
     --get keys
     for key in pairs(self.equipments) do
         self.keys[#self.keys+1] = key
     end
+end
+
+function equipment:getAllEquipment()
+    return deepCopy(self.equipments)
 end
 
 function equipment:getEquipment(name)

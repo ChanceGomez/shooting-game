@@ -37,7 +37,7 @@ function gun:load()
         }})
 
     --debug
-    self.Inventory:addItem(equipment:getEquipment("jankyBase"))
+    self.Inventory:addItems(equipment:getAllEquipment())
 
     --Link the inventories
     self.EquipmentInventory:linkInventory(self.Inventory)

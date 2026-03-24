@@ -24,36 +24,15 @@ function Gun:new()
     obj.maxAmmo = 0
     obj.canReload = false
     obj.reloadRate = 2
+    obj.fireDamage = 1
 
 
   return obj
 end
 
 function Gun:loadBullet(bullet)
-    if #self.ammo >= self.maxAmmo then return end
+    if #self.ammo >= game.Affector:trigger("Max Ammo",self.maxAmmo) then return end
     table.insert(self.ammo,bullet)
-end
-
-function Gun:increaseDamage(damage)
-    local damage = damage or 1
-    if damage >= 1 then
-        self.damage = self.damage + damage
-    end
-end
-
-function Gun:increaseReloadRate(amount)
-    local amount = amount or .10
-    amount = 1 - amount
-    if amount > 0 then
-        self.reloadRate = self.reloadRate*amount
-    end
-end
-
-function Gun:increaseMaxAmmo(ammo)
-    local ammo = ammo or 1
-    if ammo >= 1 then
-        self.maxAmmo = self.maxAmmo + ammo
-    end
 end
 
 function Gun:fire()
@@ -68,7 +47,7 @@ end
 
 function Gun:update(dt)
     --update canReload bool
-    self.canReload = #self.ammo < self.maxAmmo
+    self.canReload = #self.ammo < game.Affector:trigger("Max Ammo",self.maxAmmo)
     --update fire rate timer
     self.fireRateTimer = self.fireRateTimer + dt
 

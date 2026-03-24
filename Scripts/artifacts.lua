@@ -26,43 +26,33 @@ function artifacts:load()
     self.artifacts.autoReload = {
         rarity = 2,
         used = false,
-        event = function(self)
-            game.Observer:add("lookoutUpdate",{
-                event = function()
-                    game:getReloadShelf().autoReload = true
-                end,
-            })
-            artifacts.artifacts.autoReload.used = true
-            game.Player.gun.reloadRate = game.Player.gun.reloadRate * 1.25
-        end,
+        ids = {
+            {"Automatic Reloading","bool",true},
+            {"Reload Rate","mult",1.25}
+        },
         description = {
-            text = "start " .. getFormat("positive") .. "automatically reloading the chamber, " .. getFormat("negative") .. "-25% reload speed",
+            text = "start " .. getFormat("positive") .. "automatically reloading the chamber, " .. getFormat("negative") .. "-25% reload rate",
         },
         image = al:getImage("artifact_autoreload"),
     }
     self.artifacts.improvedAmmunition = {
         rarity = 2,
-        event = function(self)
-            --Improve the damage of the bullets
-            local bullet = game:getPlayerGun().bullets
-            bullet.damage = bullet.damage * 1.50
-            --Reduce amount of duds
-            game.Player.dudPercentage = game.Player.dudPercentage * .75
-        end,
+        ids = {
+            {"Dud Damage","mult",1.50},
+            {"Bullet Damage","mult",1.50},
+            {"Dud Chance","mult",.75},
+        },
         description = {
-            text = "Increase damage from bullet by " .. getFormat("positive") .. "50% aswell as " .. getFormat("positive") .. "-25% duds",
+            text = "Increase damage from all bullets by " .. getFormat("positive") .. "50% aswell as " .. getFormat("positive") .. "-25% duds",
         },
         image = al:getImage("upgrademaxammo_shop_icon"),
     }
     self.artifacts.railGun = {
         rarity = 1,
-        event = function(self)
-            --Add damage multiplier
-            local bullet = game:getPlayerGun().bullets
-            bullet.damage = bullet.damage * 5
-            --Add the firerate penalty
-            game.Player.gun.fireRate = game.Player.gun.fireRate * 3.0
-        end,
+        ids = {
+            {"Bullet Damage","mult",5},
+            {"Fire Rate","mult",3},
+        },
         description = {
             text = "Increase bullet damage by " .. getFormat("positive") .. "500% but fire rate is increased by " .. getFormat("negative") .. "300%",
         },
@@ -70,9 +60,9 @@ function artifacts:load()
     }
     self.artifacts.extendedMagazine = {
         rarity = 1,
-        event = function(self)
-            game:getPlayerGun().maxAmmo = game:getPlayerGun().maxAmmo *3.0
-        end,
+        ids = {
+            {"Max Ammo","mult",3},
+        },
         description = {
             text = "Increase ammo capacity by " .. getFormat("positive") .. "300%",
         },
@@ -80,14 +70,11 @@ function artifacts:load()
     }
     self.artifacts.increasedFireRate = {
         rarity = 1,
-        event = function(self)
-            game:getPlayerGun().fireRate = game:getPlayerGun().fireRate / 2.0
-
-            local dud = game:getPlayerGun().duds
-            dud.damage = dud.damage * .50
-            local bullet = game:getPlayerGun().bullets
-            bullet.damage = bullet.damage * .50
-        end,
+        ids = {
+            {"Fire Rate","mult",.50},
+            {"Bullet Damage","mult",.50},
+            {"Dud Damage","mult",.50},
+        },
         description = {
             text = "Increase fire rate by " .. getFormat("positive") .. "200% but reduce damage of all bullets by " .. getFormat("negative") .. "50%",  
         },
@@ -95,12 +82,10 @@ function artifacts:load()
     }
     self.artifacts.halfLifeDuds = {
         rarity = 1,
-        event = function(self)
-            local dud = game:getPlayerGun().duds
-            dud.damage = dud.damage + 5
-
-            game.Player.dudPercentage = game.Player.dudPercentage * 1.10
-        end,
+        ids = {
+            {"Dud Damage","add",5},
+            {"Dud Chance","mult",1.10},
+        },
         description = {
             text = "Increase dud bullet damage by " .. getFormat("positive") .. "5 but increase duds by " .. getFormat("negative") .. "10%",
         },
@@ -108,15 +93,10 @@ function artifacts:load()
     }
     self.artifacts.lighterBullets = {
         rarity = 1,
-        event = function(self)
-            local dud = game:getPlayerGun().duds
-            dud.damage = dud.damage * .75
-            local bullet = game:getPlayerGun().bullets
-            bullet.damage = bullet.damage * .75
-
-
-            game.Player.gun.reloadRate = game.Player.gun.reloadRate * .55
-        end,
+        ids = {
+            {"Bullet Damage","mult",.75},
+            {"Reload Rate","mult",.55},
+        },
         description = {
             text = "Increase reload rate by " .. getFormat("positive") .. "45% but reduce damage of all bullets by " .. getFormat("negative") .. "25%"
         },
@@ -124,11 +104,10 @@ function artifacts:load()
     }   
     self.artifacts.flamingDuds = {
         rarity = 1,
-        event = function(self) 
-            local dud = game:getPlayerGun().duds.fire
-            dud.damage = dud.damage + 5
-            dud.duration = dud.duration + 3
-        end,
+        ids = {
+            {"Dud Fire Damage","add",5},
+            {"Dud Fire Duration","add",3},
+        },
         description = {
             text = "Duds now inflame enemies for " .. getFormat("positive") .. "+5 damage every second for " .. getFormat("positive") .. "+3 seconds"
         },
@@ -136,18 +115,13 @@ function artifacts:load()
     }
     self.artifacts.methaneAir = {
         rarity = 2,
-        event = function(self)
-            local dud = game:getPlayerGun().duds.fire
-            dud.damage = dud.damage + 3
-            dud.duration = dud.duration + 2
-            local bullet = game:getPlayerGun().bullets.fire
-            bullet.damage = bullet.damage + 3
-            bullet.duration = bullet.duration + 2
-
-            game.Affector:add("fireDamage",function(damage)
-                return damage * 2
-            end)
-        end,
+        ids = {
+            {"Dud Fire Damage","add",3},
+            {"Dud Fire Duration","add",2},
+            {"Bullet Fire Damage","add",3},
+            {"Bullet Fire Duration","add",2},
+            {"Fire Damage","mult",2},
+        },
         description = {
             text = "All bullets now do " .. getFormat("positive") .. "+3 fire damage every second for " .. getFormat("positive") .. "+2 seconds, and increase fire damage " .. 
                 getFormat("positive") .. "200%"
@@ -172,13 +146,32 @@ function artifacts:load()
         image = al:getImage("upgrademaxammo_shop_icon")
     }
         ]]
+
+
     --get count of how many artifacts and get there widths/heights aswell as add the fonts for description
     for i, artifact in pairs(self.artifacts) do
+        --Get the artifact count
         self.artifactsCount = self.artifactsCount + 1
+        --Get dimensions
         artifact.width = artifact.image:getWidth()
         artifact.height = artifact.image:getHeight()
+        --get default font
         if not artifact.description.font then
-            artifact.description.font = perfect_dos_16
+            artifact.description.font = dogica_8
+        end
+
+
+        artifact.add = function(self)
+            game.Affector:addIDs(self.ids)
+        end
+        artifact.remove = function(self)
+            game.Affector:removeIDs(self.ids)
+        end
+
+        --Create the update text function
+        artifact.updateText = function(self)
+            local ids = self.ids
+            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end
     end
     --get keys
@@ -191,6 +184,17 @@ function artifacts:activateArtifact(name)
     self.artifacts[name]:event()
 end
 
+function artifacts:getArtifact(name)
+    return self.artifacts[name]
+end
+
+function artifacts:getAllArtifacts()
+    local tbl = {}
+    for i, artifact in pairs(self.artifacts) do
+        table.insert(tbl,artifact)
+    end
+    return tbl
+end
 
 function artifacts:getRandomArtifact(rarity)
     local key = self.keys[math.random(#self.keys)]

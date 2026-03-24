@@ -27,9 +27,13 @@ end
 
 function BigInfectedBird:die()
     Enemies.Bird.die(self)
-    self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,1)
-    self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,-1)
-
+    game:getHandler().EventHandler:addQueue({
+        t = .5,
+        event = function()
+            self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,1)
+            self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,-1)
+        end
+    })
 end
 
 function BigInfectedBird:escape()

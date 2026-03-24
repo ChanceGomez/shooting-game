@@ -1,6 +1,9 @@
 local infopanel = {
 	defaultCursorOffsetX = 12,
 	defaultCursorOffsetY = 12,
+	margin = 8,
+	textOffsetX = 4,
+	textOffsetY = 4,
 }
 
 function infopanel:load()
@@ -26,6 +29,12 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY)
 			text = obj.description.text
 		end
 	end
+
+	--update text if there is an updateText function
+	if obj.updateText then
+		text = nil
+		text = obj:updateText()
+	end
 	
 	if text == nil then
 		return
@@ -34,12 +43,11 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY)
 		return
 	end
   
-
 	local width,height = ct:getDimensions(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
 
 	--figure out of panel would go over the border
-	if y > Height - height then
-		y = Height - height
+	if y > Height - height - self.margin then
+		y = Height - height - self.margin
 	end
 
 	if x > Width - width then
@@ -48,10 +56,9 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY)
 
 	
 	--draw panel and text
-	local margin = 8
   	love.graphics.setColor(.9,.9,.9,1)
-	love.graphics.rectangle("fill",x+cameraX,y+cameraY,width,height+margin)
-	ct:draw(text,font,x+4+cameraX,y+4+cameraY,panelMaxSize,{0,0,0,1})
+	love.graphics.rectangle("fill",x+cameraX,y+cameraY,width,height+self.margin)
+	ct:draw(text,font,x+self.textOffsetX+cameraX,y+self.textOffsetY+cameraY,panelMaxSize,{0,0,0,1})
 	
 end
 

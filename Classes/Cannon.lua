@@ -12,6 +12,7 @@ function Cannon:new()
   obj.crosshairImage = al:getImage("crosshair_pistol")
   obj.bulletAnimation = al:getAnimation("pistol_bullet_animation")
 
+
   return obj
 end
 
@@ -33,7 +34,7 @@ end
 
 function Cannon:fire()
     --Make sure gun can fire
-    if self.isReloading or self.fireRateTimer < game.Affector:trigger("fireRateCheck",self.fireRate) then
+    if self.isReloading or self.fireRateTimer < game.Affector:trigger("Fire Rate",self.fireRate) then
         return
     end
     --extract first frame and then get dimensions for adjustment on crosshair

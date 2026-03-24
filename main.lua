@@ -55,9 +55,9 @@ settings = {
   hitbox = false, -- Display hitboxes on enemies
   showHealth = false,
   showAlive = false,
-  debug = true,
+  debug = false,
   difficulty = 'easy',
-  loadShopOnStart = false,
+  loadShopOnStart = true,
   crt = false,
 }
 
@@ -109,7 +109,7 @@ Scenes = {
     update = function(dt) testscene:update(dt) end,
   },
 }
-Scene = "shop" -- Current scene
+Scene = "title" -- Current scene
 
 --Global Observer
 GlobalObserver = nil

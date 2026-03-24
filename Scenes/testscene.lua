@@ -1,11 +1,13 @@
  local testscene = {}
 
  function testscene:load()
+    self.Affector = Affector:new()
+    
 
  end
 
  function testscene:update(dt)
-
+    
  end
 
  function testscene:draw()

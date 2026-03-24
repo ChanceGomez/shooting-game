@@ -51,7 +51,7 @@ function ReloadShelf:reload()
     local random = math.random(1,100)
     local bullet = nil
     local x,y = -128,8
-    if random < game.Affector:trigger("dudCheck",game.Player.dudPercentage) then
+    if random < game.Affector:trigger("Dud Chance",game.Player.dudPercentage) then
         bullet = ReloadShelfDudBullet:new(self,x,y)
     else
         bullet = ReloadShelfBullet:new(self,x,y)
@@ -95,7 +95,7 @@ function ReloadShelf:update(dt)
     end
 
     --if autoreload
-    if self.autoReload then
+    if game.Affector:trigger("Automatic Reloading",game.Player.automaticReloading) then
         if self.bullet and not self.reloading then
             self:loadBullet()
         end
@@ -113,7 +113,7 @@ function ReloadShelf:update(dt)
     end
 
     if self.bullet and not self.bullet.held and not self.bullet.tweening then
-        tweenTo(self.bullet,game.Affector:trigger("reloadRateCheck",game.Player.gun.reloadRate),"linear",9,8,function() self.reloading = false end)
+        tweenTo(self.bullet,game.Affector:trigger("Reload Rate",game.Player.gun.reloadRate),"linear",9,8,function() self.reloading = false end)
     end
 end
 

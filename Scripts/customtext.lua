@@ -172,6 +172,20 @@ local function argumentHandler(self,arg1,arg2,arg3,arg4,arg5,arg6)
     return text,font,x,y,limit,defaultColor
 end
 
+function customtext:formatString(text,color)
+    local text = text
+
+    local c1,c2,c3,c4 = color[1] or 1, color[2] or 1, color[3] or 1, color[4] or 1
+    
+    local returnString = ""
+
+    for word in string.gmatch(text, "%S+") do
+        returnString = returnString .. " {".. c1 .. ',' .. c2 .. ',' .. c3 .. ',' .. c4 .. '}' .. word 
+    end
+
+    return returnString
+end
+
 --Gets the dimensions that a text will be
 function customtext:getDimensions(arg1,arg2,arg3,arg4,arg5,arg6)
     local words = {} -- Contains all the words that will be rendered to screen
@@ -184,6 +198,7 @@ function customtext:getDimensions(arg1,arg2,arg3,arg4,arg5,arg6)
     ]]
 
     local width = 0
+    local maxWidth = 0
     local height = font:getHeight() -- get the initial height
     
     --Get the formatted words into an array
@@ -208,12 +223,17 @@ function customtext:getDimensions(arg1,arg2,arg3,arg4,arg5,arg6)
         end
         width = width + font:getWidth(text .. ' ')
         
+        if width > maxWidth then
+            maxWidth = width
+        end
+
         if width > limit then
+            maxWidth = limit
             Return()
         end
     end
 
-    return limit,height
+    return maxWidth,height
 end
 
 --[[

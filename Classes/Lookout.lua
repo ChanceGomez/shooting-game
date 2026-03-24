@@ -171,10 +171,33 @@ function Lookout:draw()
 
     love.graphics.setColor(1,1,1,1)
     love.graphics.setFont(perfect_dos_16)
-    love.graphics.print("ammo: " .. #game.Player.gun.ammo .. "/" .. game.Player.gun.maxAmmo,10,270)
+    
+    --make max ammo background
+    local x,y = 4,296
+    local width,height = 24,8
+    local margin = 4
+    for i = 1, game.Affector:trigger("Max Ammo",game.Player.gun.maxAmmo) do
+        local color = {.4,.4,.4,.7}
+        love.graphics.setColor(color)
+        love.graphics.rectangle("fill",x,y-(i*(height+margin)),width,height)
+    end
 
-    love.graphics.print("enemies: " .. self.enemyCount, 10,230)
-    love.graphics.print("reloadrate: " .. math.floor(game.Affector:trigger("reloadRateCheck",game.Player.gun.reloadRate)*100)/100, 10,210) 
+    --show current ammo
+    local x,y = 4,296
+    local width,height = 24,8
+    local margin = 4
+    for i, bullet in ipairs(game.Player.gun.ammo) do
+        local color = {1,1,1,1}
+        if bullet.isDud then
+            color = {.6,0,0,1}
+        end
+        love.graphics.setColor(color)
+        love.graphics.rectangle("fill",x,y-(i*(height+margin)),width,height)
+    end
+
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.print("enemies: " .. self.enemyCount, 400,20)
+    --love.graphics.print("reloadrate: " .. math.floor(game.Affector:trigger("Reload Rate",game.Player.gun.reloadRate)*100)/100, 10,210) 
 
 
 

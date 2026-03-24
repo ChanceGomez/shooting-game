@@ -9,7 +9,6 @@ function upgrades:load()
     self.upgrades.upgradeMaxAmmo = {
         clicked = function()
             game.Player.gun:increaseMaxAmmo(1)
-            shop:upgradeClicked()
         end,
         image = al:getImage("upgrademaxammo_shop_icon"),
         description = "Increase max ammo by 1",
@@ -19,7 +18,6 @@ function upgrades:load()
     self.upgrades.upgradeDamage = {
         clicked = function()
             game.Player.gun:increaseDamage(10)
-            shop:upgradeClicked()
         end,
         image = al:getImage("upgradedamage_shop_icon"),
         description = "Increase damage by 10",

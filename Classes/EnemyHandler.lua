@@ -15,7 +15,7 @@ function EnemyHandler:new(lookout,enemies,difficulty)
   
     local difficulty = difficulty or 1 -- Difficulty for the round
 
-    obj.isParachute = math.random(1,100) < game.Affector:trigger("parachuteCheck",game.Player.parachuteOdds)
+    obj.isParachute = math.random(1,100) < game.Affector:trigger("Prachute Chance",game.Player.parachuteOdds)
 
     obj.lookout = lookout
 
