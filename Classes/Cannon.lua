@@ -6,7 +6,7 @@ function Cannon:new()
   
   obj.damage = 10
   obj.fireRate = 0.4
-  obj.maxAmmo = 4
+  obj.maxAmmo = 2
   obj.reloadRate = 1
   obj.isReloading = false
   obj.crosshairImage = al:getImage("crosshair_pistol")

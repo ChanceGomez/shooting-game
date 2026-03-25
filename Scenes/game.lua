@@ -24,10 +24,50 @@ function game:getPlayerGun()
     return self.Player.gun
 end
 
+--Charter system
+function game:getVariable(name)
+    local player = self.Player
+    local gun = player.gun
+
+    if name == "Dud Damage" then
+        return player.gun.duds.damage
+    elseif name == "Bullet Damage" then
+        return player.gun.bullets.damage
+    elseif name == "Dud Chance" then 
+        return player.dudPercentage
+    elseif name == "Fire Rate" then
+        return player.gun.fireRate
+    elseif name == "Parachute Chance" then
+        return player.parachuteOdds
+    elseif name == "Reload Rate" then
+        return player.gun.reloadRate
+    elseif name == "Dud Fire Damage" then
+        return player.gun.duds.fire.damage
+    elseif name == "Dud Fire Duration" then
+        return player.gun.duds.fire.duration
+    elseif name == "Bullet Fire Damage" then
+        return player.gun.bullets.fire.damage
+    elseif name == "Bullet Fire Duration" then
+        return player.gun.bullets.fire.duration
+    elseif name == "Automatic Reloading" then
+        return player.automaticReloading
+    elseif name == "Max Ammo" then
+        return player.gun.maxAmmo
+    elseif name == "Fire Damage" then
+        return player.gun.fireDamageMult
+    elseif name == "Fire Duration" then
+        return player.gun.fireDurationMult
+    elseif name == "Parachute Equipment Rarity" then
+        return player.parachuteEquipmentRarity
+    end
+
+    return -1
+end
+
 
 ----------
-function game:createLookout(enemies,difficulty,artifacts)
-    self.lookouts[1] = Lookout:new(enemies,difficulty,artifacts)
+function game:createLookout(enemies,difficulty,artifacts,background)
+    self.lookouts[1] = Lookout:new(enemies,difficulty,artifacts,background)
 end
 
 
@@ -41,6 +81,7 @@ function game:load()
   self.Player = Player:new()
   self.Player:ChangeGun("pistol")
 
+  -- artifacts:activateAllArtifacts()
   -- artifacts:activateArtifact("methaneAir")
   -- artifacts:activateArtifact("flamingDuds")
 end

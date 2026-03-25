@@ -4,9 +4,10 @@ Lookout.__index = Lookout
 local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
 crt_shader:send("screen_size", {love.graphics.getDimensions()})
 
-function Lookout:new(enemies,difficulty,artifacts)
+function Lookout:new(enemies,difficulty,artifacts,background)
   local obj = setmetatable({}, Lookout)
 
+  obj.background = background
   obj.artifacts = artifacts
   obj.difficulty = difficulty
   obj.enemyCount = #enemies
@@ -152,7 +153,7 @@ function Lookout:draw()
 
 
         love.graphics.setColor(1,1,1,1)
-        love.graphics.draw(al:getImage("background_night_level"))
+        love.graphics.draw(self.background)
         self.handler:draw()
 
 

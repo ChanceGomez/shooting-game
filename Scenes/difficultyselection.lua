@@ -12,7 +12,7 @@ function difficultyselction:load()
         clicked = function()
             settings.difficulty = 'easy'
             Scene = "map"
-            game.round = 1
+            map:activateCurrentNode()
         end,
         description = {
             text = "Easy mode",

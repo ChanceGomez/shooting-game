@@ -91,15 +91,71 @@ function equipment:load()
         },
         image = al:getImage("equipment_barrelimprovement"),
     }
+    self.equipments.greasedBarrel = {
+        rarity = 1,
+        type = "barrel",
+        ids = {
+            {"Fire Rate","mult",.85},
+            {"Reload Rate","mult",.85},
+        },
+        description = {
+            text = ct:formatString("Greased Barrel:",{.2,.2,.5,1}) .. " /nIncrease fire rate and reload rate by 15%",
+        }
+    }
+    self.equipments.igniterStabilizer = {
+        rarity = 2,
+        type = "stabalizer",
+        ids = {
+            {"Fire Damage","add",5},
+            {"Fire Duration","mult",2},
+        },
+        description = {
+            text = ct:formatString("Igniter Stabilizer:",{.2,.2,.5,1}) .. " /nIncrease fire damage by +5, and double fire duration"
+        }
+    }
+    self.equipments.railgunBase = {
+        rarity = 2,
+        type = "base",
+        ids = {
+            {"Bullet Damage","add",10},
+            {"Dud Damage","add",10},
+            {"Reload Rate","mult",2},
+        },
+        description = {
+            text = ct:formatString("Railgun Base:",{.2,.2,.5,1}) .. " /nIncrease all bullet damage by + 10, but -50% reload rate"
+        }
+    }
+    self.equipments.higheffieciencyReloader = {
+        rarity = 2,
+        type = "reloader",
+        ids = {
+            {"Reload Rate","mult",.33},
+            {"Fire Rate","mult",.75},
+            {"Bullet Damage","mult",.70},
+            {"Dud Damage","mult",.70},
+            {"Fire Damage","mult",.5},
+        },
+        description = {
+            text = ct:formatString("High Effieciency Reloader:",{.2,.2,.5,1}) .. " /nDecrease reload rate by 66%, and decrease fire rate by 25%, but -30% damage, -50% fire damage"
+        }
+    }
 
 
     --loop through to init variables/functions
     for i, equipment in pairs(self.equipments) do
         --count up for total equipment
         self.equipmentCount = self.equipmentCount + 1
+
+        if equipment.image == nil then
+            equipment.image = al:getImage("equipment_barrelimprovement")
+        end
+
         --get height/width
         equipment.width = equipment.image:getWidth()
         equipment.height = equipment.image:getHeight()
+
+        --default vars
+        equipment.active = false
 
         --set default font
         if not equipment.description.font then
@@ -108,15 +164,18 @@ function equipment:load()
 
         --create the add/remove functions
         equipment.add = function(self)
+            self.active = true
             game.Affector:addIDs(self.ids)
         end
         equipment.remove = function(self)
+            self.active = false
             game.Affector:removeIDs(self.ids)
         end
 
         --Create the update text function
         equipment.updateText = function(self)
             local ids = self.ids
+            if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
             return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end
     end

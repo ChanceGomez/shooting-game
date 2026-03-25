@@ -42,6 +42,8 @@ Button = require("Classes/Button")
   splashscreen = require("Scenes/splashscreen")
   map = require("Scenes/map")
   testscene = require("Scenes/testscene")
+  info = require("Scenes/info")
+  losescreen = require("Scenes/losescreen")
 
 --Global vars
 Width,Height = 640,360
@@ -57,7 +59,7 @@ settings = {
   showAlive = false,
   debug = false,
   difficulty = 'easy',
-  loadShopOnStart = true,
+  loadShopOnStart = false,
   crt = false,
 }
 
@@ -108,6 +110,16 @@ Scenes = {
     load = function() testscene:load() end,
     update = function(dt) testscene:update(dt) end,
   },
+  info = {
+    draw = function() info:draw() end,
+    load = function() info:load() end,
+    update = function(dt) info:update(dt) end,
+  },
+  losescreen = {
+    draw = function() losescreen:draw() end,
+    load = function() losescreen:load() end,
+    update = function(dt) losescreen:update(dt) end,
+  },
 }
 Scene = "title" -- Current scene
 
@@ -133,6 +145,8 @@ local function loadAssets()
     --dogica font
     dogica_8 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",8)
     dogica_16 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",16)
+    dogica_32 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",32)
+    dogica_64 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",64)
 end
 
 -- love functions

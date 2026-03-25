@@ -109,7 +109,7 @@ function shop:load()
         end,
     }
 
-    --max ammo
+    --upgrades
     self.buttons["increase_maxAmmo"] ={
         x = 70,
         y = 70,
@@ -126,7 +126,7 @@ function shop:load()
             if self.level >= self.maxLevel then return end
             if game.Player.resources >= self.cost then
                 game.Player.resources = game.Player.resources - self.cost
-                self.cost = self.cost + 5
+                self.cost = self.cost * 2
             else
                 return
             end
@@ -135,13 +135,15 @@ function shop:load()
         end,
         updateText = function(self)
             self.description.text = "Upgrade max ammo " 
+            local ids = self.ids
+            
             if self.level >= self.maxLevel then
                 self.description.text = self.description.text .. "/nCost: " .. "{.1,.1,.4,1}Maxed {.1,.1,.4,1}Out"
+                return self.description.text .. " /n " .. game.Affector:getStats(ids)
             else
                 self.description.text = self.description.text .. "/nCost: " .. self.cost
+                return self.description.text .. " /n " .. game.Affector:getDescription(ids)
             end
-            local ids = self.ids
-            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end,
     }
 
@@ -161,7 +163,7 @@ function shop:load()
             if self.level >= self.maxLevel then return end
             if game.Player.resources >= self.cost then
                 game.Player.resources = game.Player.resources - self.cost
-                self.cost = self.cost + 5
+                self.cost = self.cost * 2
             else
                 return
             end
@@ -170,13 +172,15 @@ function shop:load()
         end,
         updateText = function(self)
             self.description.text = "Upgrade bullet damage "
+            local ids = self.ids
+            
             if self.level >= self.maxLevel then
                 self.description.text = self.description.text .. "/nCost: " .. "{.1,.1,.4,1}Maxed {.1,.1,.4,1}Out"
+                return self.description.text .. " /n " .. game.Affector:getStats(ids)
             else
                 self.description.text = self.description.text .. "/nCost: " .. self.cost
+                return self.description.text .. " /n " .. game.Affector:getDescription(ids)
             end
-            local ids = self.ids
-            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end,
     }
 
@@ -187,7 +191,7 @@ function shop:load()
         visible = true,
         ids = {
             {"Reload Rate","mult",.90},
-        },
+    },
         level = 0,
         maxLevel = 5,
         cost = 5,
@@ -196,7 +200,7 @@ function shop:load()
             if self.level >= self.maxLevel then return end
             if game.Player.resources >= self.cost then
                 game.Player.resources = game.Player.resources - self.cost
-                self.cost = self.cost + 5
+                self.cost = self.cost * 2
             else
                 return
             end
@@ -205,13 +209,15 @@ function shop:load()
         end,
         updateText = function(self)
             self.description.text = "Upgrade the reload rate of your gun "  
+            local ids = self.ids
+
             if self.level >= self.maxLevel then
                 self.description.text = self.description.text .. "/nCost: " .. "{.1,.1,.4,1}Maxed {.1,.1,.4,1}Out"
+                return self.description.text .. " /n " .. game.Affector:getStats(ids)
             else
                 self.description.text = self.description.text .. "/nCost: " .. self.cost
+                return self.description.text .. " /n " .. game.Affector:getDescription(ids)
             end
-            local ids = self.ids
-            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end,
     }
 
@@ -231,7 +237,7 @@ function shop:load()
             if self.level >= self.maxLevel then return end
             if game.Player.resources >= self.cost then
                 game.Player.resources = game.Player.resources - self.cost
-                self.cost = self.cost + 5
+                self.cost = self.cost * 2
             else
                 return
             end
@@ -240,13 +246,15 @@ function shop:load()
         end,
         updateText = function(self)
             self.description.text = "Upgrade the fire rate of your gun "  
+            local ids = self.ids
+            
             if self.level >= self.maxLevel then
                 self.description.text = self.description.text .. "/nCost: " .. "{.1,.1,.4,1}Maxed {.1,.1,.4,1}Out"
+                return self.description.text .. " /n " .. game.Affector:getStats(ids)
             else
                 self.description.text = self.description.text .. "/nCost: " .. self.cost
+                return self.description.text .. " /n " .. game.Affector:getDescription(ids)
             end
-            local ids = self.ids
-            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end,
     }
 
@@ -304,7 +312,10 @@ function shop:draw()
     --draw resource count
     love.graphics.setColor(1,1,1,1)
     love.graphics.setFont(perfect_dos_16)
-    love.graphics.print("Resources: " .. game.Player.resources,640-128,28)
+    local text = "Resources: " .. game.Player.resources
+    local font = perfect_dos_16
+
+    love.graphics.print(text,Width-font:getWidth(text)-4,28)
 
     for i, button in pairs(self.buttons) do
         if button.description and collision.rect(button) and not self.isArtifact then

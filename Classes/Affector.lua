@@ -2,6 +2,16 @@ local Affector = {}
 Affector.__index = Affector
 
 
+local function checkTrigger(self,trigger)
+    if self.affectors[trigger] == nil then 
+        self.affectors[trigger] = {
+            add = {},
+            mult = {},
+            bool = {},
+        }
+    end
+end
+
 function Affector:new()
   local obj = setmetatable({}, self)
   
@@ -18,13 +28,28 @@ function Affector:getDescription(ids)
         local type = id[2]
         local variable = id[3]
         -- get before variable
-        desc = desc .. " /n" .. ct:formatString(trigger,{.2,.2,.4,1}) .. ": " .. tostring(self:trigger(trigger,game.Player:getVariable(trigger)))
+        desc = desc .. " /n" .. ct:formatString(trigger,{.2,.2,.4,1}) .. ": " .. tostring(self:trigger(trigger,game:getVariable(trigger)))
         -- get after
         self:add(trigger,type,variable)
-        desc = desc .. " -> " .. tostring(self:trigger(trigger,game.Player:getVariable(trigger)))
+        desc = desc .. " -> " .. tostring(self:trigger(trigger,game:getVariable(trigger)))
         self:remove(trigger,type,variable)
     end 
     return desc
+end
+
+function Affector:getStat(trigger)
+    return self:trigger(trigger,game:getVariable(trigger))
+end
+
+function Affector:getStats(ids)
+    local str = ""
+
+    for i, id in ipairs(ids) do
+        local trigger = id[1]
+        str = str .. ' /n'.. ct:formatString(trigger,{.2,.2,.4,1}) .. ': ' .. tostring(self:getStat(trigger))
+    end
+
+    return str
 end
 
 function Affector:addIDs(ids) 
@@ -62,16 +87,6 @@ function Affector:trigger(trigger,attribute)
     end 
   
     return returnAttribute
-end
-
-local function checkTrigger(self,trigger)
-    if self.affectors[trigger] == nil then 
-        self.affectors[trigger] = {
-            add = {},
-            mult = {},
-            bool = {},
-        }
-    end
 end
 
 function Affector:add(trigger,type,variable)

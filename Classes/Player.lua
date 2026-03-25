@@ -5,45 +5,31 @@ function Player:new()
   local obj = setmetatable({}, Player)
   
   obj.gun = nil
-  obj.resources = 11110
+  obj.resources = 0
   obj.parachuteOdds = 30
   obj.dudPercentage = 20
   obj.health = 3
   obj.automaticReloading = false
-  
+  obj.artifacts = {}
+  obj.parachuteEquipmentRarity = 1
+
+  if settings.debug then
+    obj.resources = 1000000
+  end
+
   return obj
 end
 
-function Player:getVariable(name)
-    if name == "Dud Damage" then
-        return self.gun.duds.damage
-    elseif name == "Bullet Damage" then
-        return self.gun.bullets.damage
-    elseif name == "Dud Chance" then 
-        return self.dudPercentage
-    elseif name == "Fire Rate" then
-        return self.gun.fireRate
-    elseif name == "Parachute Chance" then
-        return self.parachuteOdds
-    elseif name == "Reload Rate" then
-        return self.gun.reloadRate
-    elseif name == "Dud Fire Damage" then
-        return self.gun.duds.fire.damage
-    elseif name == "Dud Fire Duration" then
-        return self.gun.duds.fire.duration
-    elseif name == "Bullet Fire Damage" then
-        return self.gun.bullets.fire.damage
-    elseif name == "Bullet Fire Duration" then
-        return self.gun.bullets.fire.duration
-    elseif name == "Automatic Reloading" then
-        return self.automaticReloading
-    elseif name == "Max Ammo" then
-        return self.gun.maxAmmo
-    elseif name == "Fire Damage" then
-        return self.gun.fireDamage
-    end
+function Player:addArtifact(artifact)
+    table.insert(self.artifacts,artifact)
+end
 
-    return -1
+function Player:removeArtifact(artifact)
+    for i, instance in ipairs(self.artifacts) do
+        if instance == artifact then
+            table.remove(self.artifacts,i)
+        end
+    end
 end
 
 function Player:ChangeGun(gun)

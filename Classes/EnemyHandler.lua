@@ -44,13 +44,13 @@ function EnemyHandler:startRound()
 
     --check to see if parachute is true
     if self.isParachute then
-        table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
+        table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,game.Affector:trigger("Parachute Equipment Rarity",game:getVariable("Parachute Equipment Rarity")),self))
         --table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
     end
     
     --Spawn in enemies as a queue
     for i = 1, self.enemyCount do
-        local interval = math.random(1,math.max(10-self.difficulty,5))
+        local interval = math.random(2,math.max(8-self.difficulty,math.random(1,3)))
         self.EventHandler:addQueue({
             t = interval,
             event = function()

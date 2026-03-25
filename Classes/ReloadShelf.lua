@@ -101,9 +101,9 @@ function ReloadShelf:update(dt)
         end
     end
 
-    if up then
+    if love.keyboard.isDown("up") then
         self:loadBullet()  
-    elseif down then
+    elseif love.keyboard.isDown("down") then
         self:discardBullet()  
     end
 

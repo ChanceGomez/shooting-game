@@ -61,10 +61,10 @@ function artifacts:load()
     self.artifacts.extendedMagazine = {
         rarity = 1,
         ids = {
-            {"Max Ammo","mult",3},
+            {"Max Ammo","add",3},
         },
         description = {
-            text = "Increase ammo capacity by " .. getFormat("positive") .. "300%",
+            text = "Increase ammo capacity by " .. getFormat("positive") .. "+3",
         },
         image = al:getImage("upgrademaxammo_shop_icon")
     }
@@ -128,6 +128,18 @@ function artifacts:load()
         },
         image = al:getImage("upgrademaxammo_shop_icon")
     }
+    self.artifacts.extraSupplies = {
+        rarity = 1,
+        ids = {
+            {"Parachute Chance","mult",1.5},
+            {"Parachute Equipment Rarity","add",1},
+        },
+        description = {
+            text = "Increase parachute chances by " .. getFormat("positive") .. "50% " .. "Increase equipment rarity by " .. 
+                getFormat("positive") .. "1"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
     --[[
 
     self.artifacts.horizontalLazer = {
@@ -155,22 +167,31 @@ function artifacts:load()
         --Get dimensions
         artifact.width = artifact.image:getWidth()
         artifact.height = artifact.image:getHeight()
+        --default vars
+        artifact.active = false
         --get default font
         if not artifact.description.font then
             artifact.description.font = dogica_8
         end
 
-
-        artifact.add = function(self)
-            game.Affector:addIDs(self.ids)
+        if artifact.add == nil then
+            artifact.add = function(self)
+                self.active = true
+                game.Affector:addIDs(self.ids)
+                game.Player:addArtifact(self)
+            end
         end
-        artifact.remove = function(self)
-            game.Affector:removeIDs(self.ids)
+        if artifact.remove == nil then
+            artifact.remove = function(self)
+                self.active = false
+                game.Affector:removeIDs(self.ids)
+                game.Player:removeArtifact(self)
+            end
         end
-
         --Create the update text function
         artifact.updateText = function(self)
             local ids = self.ids
+            if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
             return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end
     end
@@ -181,7 +202,13 @@ function artifacts:load()
 end
 
 function artifacts:activateArtifact(name)
-    self.artifacts[name]:event()
+    local artifact = deepCopy(self.artifacts[name]:add())
+end
+
+function artifacts:activateAllArtifacts()
+    for name, artifact in pairs(self.artifacts) do
+        self:activateArtifact(name)
+    end
 end
 
 function artifacts:getArtifact(name)

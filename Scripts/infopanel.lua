@@ -57,7 +57,7 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY)
 	
 	--draw panel and text
   	love.graphics.setColor(.9,.9,.9,1)
-	love.graphics.rectangle("fill",x+cameraX,y+cameraY,width,height+self.margin)
+	love.graphics.rectangle("fill",x+cameraX,y+cameraY,width+8,height+self.margin)
 	ct:draw(text,font,x+self.textOffsetX+cameraX,y+self.textOffsetY+cameraY,panelMaxSize,{0,0,0,1})
 	
 end

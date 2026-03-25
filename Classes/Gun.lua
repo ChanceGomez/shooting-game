@@ -24,7 +24,8 @@ function Gun:new()
     obj.maxAmmo = 0
     obj.canReload = false
     obj.reloadRate = 2
-    obj.fireDamage = 1
+    obj.fireDamageMult = 1
+    obj.fireDurationMult = 1
 
 
   return obj

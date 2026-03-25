@@ -29,7 +29,7 @@ function BigBird:die()
     Enemies.Bird.die(self)
 
     game:getHandler().EventHandler:addQueue({
-        t = .5,
+        t = .2,
         event = function()
             self.handler:newEnemy("Bird",self.x+15,self.y,self.difficulty,1)
             self.handler:newEnemy("Bird",self.x+15,self.y,self.difficulty,-1)

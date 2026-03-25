@@ -37,8 +37,9 @@ function gun:load()
         }})
 
     --debug
-    self.Inventory:addItems(equipment:getAllEquipment())
-
+    if settings.debug then
+        self.Inventory:addItems(equipment:getAllEquipment())
+    end
     --Link the inventories
     self.EquipmentInventory:linkInventory(self.Inventory)
 end

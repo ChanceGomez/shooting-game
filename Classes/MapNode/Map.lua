@@ -118,6 +118,9 @@ function Map:new(seed,generation,length,handler)
     local generation = generation or 3
     local length = length or 8
 
+    obj.generation = generation
+    obj.length = length
+
     obj.midPointX = Width/2
     obj.midPointY = 300
 
@@ -130,11 +133,14 @@ function Map:new(seed,generation,length,handler)
 
     obj.nodes = {}
     obj.nodes = generateNodes(obj,generation,length)
-    obj.nodes = generateNodes(obj,generation,length)
 
     obj.playerLocation = 0 .. ' ' .. 0
 
     return obj
+end
+
+function Map:expand()
+    self.nodes = generateNodes(self,self.generation,self.length)
 end
 
 function Map:update(dt,camera)

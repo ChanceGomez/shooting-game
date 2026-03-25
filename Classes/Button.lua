@@ -41,8 +41,10 @@ function Button:update()
     end
     
     if self.description then
-        self.descriptionX = self.description.x + self.x
-        self.descriptionY = self.description.y + self.y
+        local x,y = self.description.x or 0,self.description.y or 0
+
+        self.descriptionX = x + self.x
+        self.descriptionY = y + self.y
     end
 end
 

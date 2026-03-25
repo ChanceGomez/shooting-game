@@ -1,6 +1,8 @@
 local map = {
     map = nil,
     camera = {x=0,y=0},
+    cameraYMax = 1000,
+    cameraYMin = 0,
 }
 
 function map:getVariables(node)
@@ -16,9 +18,14 @@ function map:getVariables(node)
         color = {1,1,1,1},
     }
 
+    --get background
+    local random = generator:random(1,#self.backgrounds)
+    returnTbl.background = self.backgrounds[random]
+
+
     --get a random check to see if it becomes a artifact node
     local random = math.random(1,10)
-    if random < 3 then 
+    if random < 2 then 
         table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(1))
         table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(1))
         table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(1))
@@ -35,12 +42,13 @@ function map:getVariables(node)
         local random = generator:random(1,100)
         local enemy = "Bird"
         
-        if random < 5 + (generation*5) then
-            enemy = "BigBird"
+        if random < -5 + (generation*5) then
+            table.insert(returnTbl,"BigBird")
         end
 
         if random < -20 + (generation*10) then
-            enemy = "InfectedBird"
+            
+            table.insert(returnTbl,"InfectedBird")
         end
 
         if random < -20 + (generation*5) then
@@ -74,22 +82,38 @@ function map:nodeClicked(variables)
     local enemies = variables.enemies
     local difficulty = variables.difficulty
     local artifacts = variables.artifacts
-    game:createLookout(enemies,difficulty,artifacts)
+    local background = variables.background
+
+    game:createLookout(enemies,difficulty,artifacts,background)
 
     Scene = "game"
 end
 
+function map:activateCurrentNode()
+    local node = self.map.nodes[self.map.playerLocation]
+    self:nodeClicked(node.variables)
+end
+
 function map:load()
+    self.backgrounds = {
+        [1] = al:getImage("background_night_level1"),
+        [2] = al:getImage("background_day_level2"),
+    }
     self.map = Map:new(0,3,9,self)
+    self.map:expand()
+    self.map:expand()
+    self.map:expand()
+    self.map:expand()
+    self.map:expand()
 end
 
 function map:update(dt)
     tab:update(dt)
 
     if love.keyboard.isDown("up") or wheelUp then
-        self.camera.y = self.camera.y - 5000 * dt
+        self.camera.y = math.min(self.camera.y - 5000 * dt,self.cameraYMax)
     elseif love.keyboard.isDown("down") or wheelDown then
-        self.camera.y = self.camera.y + 5000 * dt
+        self.camera.y = math.min(self.camera.y + 5000 * dt,self.cameraYMin)
     end
 
     self.map:update(dt,self.camera)
