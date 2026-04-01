@@ -27,10 +27,10 @@ statpanel = require("Scripts/statpanel")
 tab = require("Scripts/tab")
 
 --Preloaded classes
-Observer = require("Classes/Observer")
-Affector = require("Classes/Affector")
-Event = require("Classes/Event")
-Button = require("Classes/Button")
+Observer = require("Classes/Libraries/Observer")
+Affector = require("Classes/Libraries/Affector")
+Event = require("Classes/Libraries/Event")
+Button = require("Classes/Libraries/Button")
 
 --Scenes  
   game = require("Scenes/game")
@@ -57,9 +57,9 @@ settings = {
   hitbox = false, -- Display hitboxes on enemies
   showHealth = false,
   showAlive = false,
-  debug = false,
+  debug = true,
   difficulty = 'easy',
-  loadShopOnStart = false,
+  loadShopOnStart = true,
   crt = false,
 }
 
@@ -121,7 +121,7 @@ Scenes = {
     update = function(dt) losescreen:update(dt) end,
   },
 }
-Scene = "title" -- Current scene
+Scene = "map" -- Current scene
 
 --Global Observer
 GlobalObserver = nil
@@ -149,31 +149,9 @@ local function loadAssets()
     dogica_64 = love.graphics.newFont("Assets/Fonts/dogica/TTF/dogica.ttf",64)
 end
 
--- love functions
-
-function love.load()
-  --graphics
-  love.window.setVSync(false)
-  love.graphics.setDefaultFilter("nearest", "nearest")
-  love.mouse.setVisible(false) -- set cursor to invisible
-  
-  mainCanvas = love.graphics.newCanvas(Width,Height)
-
-  --load assets
-  loadAssets()
-  
-  --load scripts
-  upgrades:load()
-  artifacts:load()
-  equipment:load()
-  infopanel:load()
-  ct:load()
-  statpanel:load()
-  tab:load()
-
-  --Load classes
-    Inventory = require("Classes/Inventory")
-    InventorySlot = require("Classes/InventorySlot")
+local function loadClasses()
+    Inventory = require("Classes/Libraries/Inventory")
+    InventorySlot = require("Classes/Libraries/InventorySlot")
     Lookout = require("Classes/Lookout")
     Report = require("Classes/Report")
     BackgroundHandler = require("Classes/BackgroundHandler")
@@ -182,37 +160,69 @@ function love.load()
     ReloadShelfDudBullet = require("Classes/ReloadShelfDudBullet")
     EnemyHandler = require("Classes/EnemyHandler")
     Player = require("Classes/Player")
-    Enemy = require("Classes/Enemy")
+    ParachuteCrate = require("Classes/Entities/ParachuteCrate")
+    Enemy = require("Classes/Entities/Enemy")
     Enemies = {
-        Bird = require("Classes/Bird"),
-        InfectedBird = require("Classes/InfectedBird"),
-        BigBird = require("Classes/BigBird"),
-        BigInfectedBird = require("Classes/BigInfectedBird"),
+        Bird = require("Classes/Entities/Bird"),
+        InfectedBird = require("Classes/Entities/InfectedBird"),
+        BigBird = require("Classes/Entities/BigBird"),
+        BigInfectedBird = require("Classes/Entities/BigInfectedBird"),
+        FastBird = require("Classes/Entities/FastBird"),
+        ExplosionBird = require("Classes/Entities/ExplosionBird"),
+        Nest = require("Classes/Entities/Nest"),
+        NestArm = require("Classes/Entities/NestArm"),
+        NestBody = require("Classes/Entities/NestBody")
     }
     Gun = require("Classes/Gun")
     Guns = {
         pistol = require("Classes/Cannon"),
     }
-    EquipmentInventory = require("Classes/EquipmentInventory")
-    EquipmentSlot = require("Classes/EquipmentSlot")
-    ParachuteCrate = require("Classes/ParachuteCrate")
+    EquipmentInventory = require("Classes/Libraries/EquipmentInventory")
+    EquipmentSlot = require("Classes/Libraries/EquipmentSlot")
     Lazor = require("Classes/Lazor")
     Map = require("Classes/MapNode/Map")
     Node = require("Classes/MapNode/Node")
-    DamagePopup = require("Classes/DamagePopup")
+    DamagePopup = require("Classes/Libraries/DamagePopup")
+    Explosion = require("Classes/Explosion")
+end
 
-  
-  --get global observer
-  GlobalObserver = Observer:new()
-  
-  --load all scenes
-  for i, scene in pairs(Scenes) do
-    scene:load()
-  end
+-- love functions
+
+function love.load()
+    --graphics
+    love.window.setVSync(false)
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    love.mouse.setVisible(false) -- set cursor to invisible
+
+    mainCanvas = love.graphics.newCanvas(Width,Height)
+
+    --load assets
+    loadAssets()
+
+    --load scripts
+    upgrades:load()
+    artifacts:load()
+    equipment:load()
+    infopanel:load()
+    ct:load()
+    statpanel:load()
+    tab:load()
+
+    --Load classes
+    loadClasses()
 
 
-  --set global audio
-  love.audio.setVolume(settings.volume)
+    --get global observer
+    GlobalObserver = Observer:new()
+
+    --load all scenes
+    for i, scene in pairs(Scenes) do
+        scene:load()
+    end
+
+
+    --set global audio
+    love.audio.setVolume(settings.volume)
 end
 
 function love.update(dt)

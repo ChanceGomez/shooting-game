@@ -1,12 +1,14 @@
 local BigBird = {}
 BigBird.__index = BigBird
 
+setmetatable(BigBird,{__index = Bird})
+
 -- Static images
 local flyingAnimation = al:getAnimation("animation_bird_flying")
 local dyingAnimation = al:getAnimation("animation_bird_dying")
 
 function BigBird:new(x,y,handler,difficulty,facing)
-    local obj = setmetatable(Enemies.Bird:new(x,y,handler,difficulty,facing),BigBird)
+    local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 
 
     --Power scaling
     obj.difficulty = difficulty
@@ -28,13 +30,8 @@ end
 function BigBird:die()
     Enemies.Bird.die(self)
 
-    game:getHandler().EventHandler:addQueue({
-        t = .2,
-        event = function()
-            self.handler:newEnemy("Bird",self.x+15,self.y,self.difficulty,1)
-            self.handler:newEnemy("Bird",self.x+15,self.y,self.difficulty,-1)
-        end
-    })
+    game:getHandler():newEnemy("Bird",self.x+15,self.y,1)
+    game:getHandler():newEnemy("Bird",self.x+15,self.y,-1)
 end
 
 function BigBird:escape()

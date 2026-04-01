@@ -6,7 +6,7 @@ function Player:new()
   
   obj.gun = nil
   obj.resources = 0
-  obj.parachuteOdds = 30
+  obj.parachuteOdds = 100
   obj.dudPercentage = 20
   obj.health = 3
   obj.automaticReloading = false
@@ -37,19 +37,23 @@ function Player:ChangeGun(gun)
 end
 
 function Player:fireGun()
-    if self.gun then
+    if self.gun and love.mouse.isDown(1) then
         self.gun:fire()
     end
 end
 
 function Player:update(dt)
-   if love.mouse.isDown(1) then
-        self:fireGun()
-   end 
+    if self.health <= 0 and not settings.debug then
+        Scene = "losescreen"
+    end
 
-   if self.gun then
+    if leftHeld then
+        self:fireGun()
+    end 
+
+    if self.gun then
         self.gun:update(dt)
-   end
+    end
 end
 
 function Player:draw()

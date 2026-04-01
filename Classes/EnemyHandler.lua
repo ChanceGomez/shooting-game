@@ -15,11 +15,11 @@ function EnemyHandler:new(lookout,enemies,difficulty)
   
     local difficulty = difficulty or 1 -- Difficulty for the round
 
-    obj.isParachute = math.random(1,100) < game.Affector:trigger("Prachute Chance",game.Player.parachuteOdds)
+    obj.isParachute = math.random(1,100) < game.Affector:trigger("Parachute Chance",game.Player.parachuteOdds)
 
     obj.lookout = lookout
 
-    obj.enemyCount = #enemies
+    obj.enemyCount = 0
     obj.enemyList = enemies
     obj.difficulty = difficulty
     
@@ -32,6 +32,7 @@ function EnemyHandler:new(lookout,enemies,difficulty)
     obj.parachutes = {}
     obj.enemies = {}
     obj.damagePopups = {}
+    obj.Explosions = {}
 
   return obj
 end
@@ -47,9 +48,23 @@ function EnemyHandler:startRound()
         table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,game.Affector:trigger("Parachute Equipment Rarity",game:getVariable("Parachute Equipment Rarity")),self))
         --table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
     end
+
+    --[[
+    self.EventHandler:addQueue({
+            t = interval,
+            event = function()
+                local random = math.random(1,2)
+                local facing = 1 
+                if random == 2 then 
+                    facing = -1
+                end
+                self:newEnemy("Nest",math.random(200,Width-200),Height+30,self.difficulty,facing)
+            end
+         })
+    ]]
     
     --Spawn in enemies as a queue
-    for i = 1, self.enemyCount do
+    for i = 1, #self.enemyList do
         local interval = math.random(2,math.max(8-self.difficulty,math.random(1,3)))
         self.EventHandler:addQueue({
             t = interval,
@@ -59,7 +74,7 @@ function EnemyHandler:startRound()
                 if random == 2 then 
                     facing = -1
                 end
-                self:newEnemy(self.enemyList[i],math.random(200,Width-200),Height+30,self.difficulty,facing)
+                self:newEnemy(self.enemyList[i],math.random(200,Width-200),Height+30,facing)
             end
          })
     end
@@ -92,15 +107,20 @@ function EnemyHandler:checkHit(properties)
             parachute:hit(properties) 
         end
     end
+
+end
+
+function EnemyHandler:newExplosion(x,y,radius,damage,duration)
+    table.insert(self.Explosions,Explosion:new(self,x,y,radius,damage,duration))
 end
 
 -- Spawn in an enemy
-function EnemyHandler:newEnemy(enemy,x,y,difficulty,facing)
+function EnemyHandler:newEnemy(enemy,x,y,facing)
     local x = x or 320
     local y = y or 360
     local enemy = enemy or "Bird"
-    self.enemyCount = self.enemyCount - 1
-    table.insert(self.enemies, Enemies[enemy]:new(x,y,self,difficulty,facing))
+    self.enemyCount = self.enemyCount + 1
+    table.insert(self.enemies, Enemies[enemy]:new(x,y,self,self.difficulty,facing))
 end
 
 -- Removes enemy from lookouts
@@ -108,6 +128,15 @@ function EnemyHandler:removeEnemy(enemy)
     for i, e in pairs(self.enemies) do
         if e == enemy then
             table.remove(self.enemies, i)
+            return
+        end
+    end
+end
+
+function EnemyHandler:removeExplosion(explosion) 
+    for i, e in pairs(self.Explosions) do
+        if e == explosion then
+            table.remove(self.Explosions,i)
             return
         end
     end
@@ -126,10 +155,13 @@ function EnemyHandler:update(dt)
         for i, damagePopup in pairs(self.damagePopups) do
             damagePopup:update(dt)
         end
+        for i, explosion in pairs(self.Explosions) do
+            explosion:update(dt)
+        end
     end
 
     --Checks to see if round is over
-    if self.enemyCount <= 0 and self.isRoundActive and #self.enemyQueue == 0 and #self.enemies == 0 then
+    if #self.enemies <= 0 and self.enemyCount >= #self.enemyList then
         self.isRoundActive = false
     end 
 end
@@ -137,7 +169,8 @@ end
 function EnemyHandler:draw()
     love.graphics.setColor(1,1,1,1)
     if settings.debug then
-        love.graphics.print(tostring(self.isRoundActive) .. ' ' .. self.enemyCount,20,20)
+        local txt = tostring(self.isRoundActive) .. ' ' .. self.enemyCount .. ' ' .. #self.enemies .. ' ' .. #self.enemyQueue
+        love.graphics.print(txt,20,20)
     end
     for i, enemy in pairs(self.enemies) do
         enemy:draw()
@@ -148,6 +181,9 @@ function EnemyHandler:draw()
     for i, damagePopup in pairs(self.damagePopups) do
         damagePopup:draw()
     end
+    for i, explosion in pairs(self.Explosions) do
+            explosion:draw()
+        end
 end
 
 

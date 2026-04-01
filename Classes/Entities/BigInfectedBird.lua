@@ -1,12 +1,15 @@
 local BigInfectedBird = {}
 BigInfectedBird.__index = BigInfectedBird
 
+setmetatable(BigInfectedBird,{__index = Bird})
+
+
 -- Static images
 local flyingAnimation = al:getAnimation("animation_infectedbird_flying")
 local dyingAnimation = al:getAnimation("animation_infectedbird_dying")
 
 function BigInfectedBird:new(x,y,handler,difficulty,facing)
-    local obj = setmetatable(Enemies.Bird:new(x,y,handler,difficulty,facing),BigInfectedBird)
+    local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 
 
     --Power scaling
     obj.difficulty = difficulty
@@ -27,13 +30,8 @@ end
 
 function BigInfectedBird:die()
     Enemies.Bird.die(self)
-    game:getHandler().EventHandler:addQueue({
-        t = .2,
-        event = function()
-            self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,1)
-            self.handler:newEnemy("InfectedBird",self.x+15,self.y,self.difficulty,-1)
-        end
-    })
+    game:getHandler():newEnemy("InfectedBird",self.x+15,self.y,1)
+    game:getHandler():newEnemy("InfectedBird",self.x+15,self.y,-1)
 end
 
 function BigInfectedBird:escape()

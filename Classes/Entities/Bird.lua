@@ -20,7 +20,7 @@ function Bird:new(x,y,handler,difficulty,facing)
     local difficulty = difficulty or 1
 
     obj.health = 20 * (math.max(difficulty/3,1))
-    obj.speed = 25 * (math.max(difficulty/6,1))
+    obj.speed = math.min(25 * (math.max(difficulty/6,1)),game.maxSpeed)
 
     obj.resources = 5
 

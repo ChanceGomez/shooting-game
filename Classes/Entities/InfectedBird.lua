@@ -1,16 +1,18 @@
 local InfectedBird = {}
 InfectedBird.__index = InfectedBird
 
+setmetatable(InfectedBird,{__index = Bird})
+
 -- Static images
 local flyingAnimation = al:getAnimation("animation_infectedbird_flying")
 local dyingAnimation = al:getAnimation("animation_infectedbird_dying")
 
 function InfectedBird:new(x,y,handler,difficulty,facing)
-    local obj = setmetatable(Enemies.Bird:new(x,y,handler,difficulty,facing),InfectedBird)
+    local obj = Enemies.Bird:new(x,y,handler,difficulty,facing)
 
     --Power scaling
     obj.health = 30 * (math.max(difficulty/2,1))
-    obj.speed = 30 * (math.max(difficulty/6,1))
+    obj.speed = math.min(30 * (math.max(difficulty/6,1)),game.maxSpeed)
     obj.resources = 15
 
     obj.animations = {

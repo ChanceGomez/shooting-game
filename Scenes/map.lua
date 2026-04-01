@@ -16,55 +16,62 @@ function map:getVariables(node)
         enemies = {},
         difficulty = generation,
         color = {1,1,1,1},
+        images = {},
     }
 
     --get background
     local random = generator:random(1,#self.backgrounds)
-    returnTbl.background = self.backgrounds[random]
-
+    returnTbl.images.background = self.backgrounds[random]
+    returnTbl.images.clouds = self.clouds[random % 2]
 
     --get a random check to see if it becomes a artifact node
     local random = math.random(1,10)
-    if random < 2 then 
-        table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(1))
-        table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(1))
-        table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(1))
+    if random < 7 then 
+        returnTbl.artifacts = artifacts:getUniqueArtifacts(3,1)
         returnTbl.color = {.3,.3,.2,1}
     end
 
-    local enemyCount = generator:random(math.floor(5+(generation/2)),10+generation)
+    local enemyWeight = generator:random(math.floor(3+(generation/2)),5+generation)
+
 
     if node.isEndNode then
-        enemyCount = enemyCount * 2
+        enemyWeight = enemyWeight * 2
     end
 
-    for i = 1, enemyCount do
+    while enemyWeight > 0 do
         local random = generator:random(1,100)
-        local enemy = "Bird"
-        
-        if random < -5 + (generation*5) then
-            table.insert(returnTbl,"BigBird")
-        end
 
-        if random < -20 + (generation*10) then
-            
-            table.insert(returnTbl,"InfectedBird")
+        if random < math.min(100-(generation*5),10) then
+            table.insert(returnTbl.enemies,"Bird")
+            enemyWeight = enemyWeight - 1
         end
-
+        if random < math.min((generation*5)-15,10) then
+            table.insert(returnTbl.enemies,"FastBird")
+            enemyWeight = enemyWeight - 2
+        end
+        if random < math.min((generation*5)-30,10) then
+            table.insert(returnTbl.enemies,"ExplosionBird")
+        end
         if random < -20 + (generation*5) then
-            enemy = "BigInfectedBird"
+            table.insert(returnTbl.enemies,"BigBird")
+            enemyWeight = enemyWeight - 3
         end
-        table.insert(returnTbl.enemies,enemy)
+        if random < -30 + (generation*7) then
+            table.insert(returnTbl.enemies,"InfectedBird")
+            enemyWeight = enemyWeight - 3
+        end
+        if random < -30 + (generation*4) then
+            table.insert(returnTbl.enemies,"InfectedBird")
+            enemyWeight = enemyWeight - 5
+        end
     end
 
-    --if end node then get special artifact
-    if node.isEndNode then
-        --reset table
-        returnTbl.artifacts = {}
-        table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(2))
-        table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(2))
-        table.insert(returnTbl.artifacts,artifacts:getRandomArtifact(2))
 
+    --if end node then get special artifact and boss enemy
+    if node.isEndNode then
+        returnTbl.artifacts = artifacts:getUniqueArtifacts(3,2)
+        returnTbl.enemies = {}
+        table.insert(returnTbl.enemies,"Nest")
         returnTbl.color = {.3,.5,.2,1}
     end
 
@@ -82,9 +89,9 @@ function map:nodeClicked(variables)
     local enemies = variables.enemies
     local difficulty = variables.difficulty
     local artifacts = variables.artifacts
-    local background = variables.background
+    local images = variables.images
 
-    game:createLookout(enemies,difficulty,artifacts,background)
+    game:createLookout(enemies,difficulty,artifacts,images)
 
     Scene = "game"
 end
@@ -98,6 +105,10 @@ function map:load()
     self.backgrounds = {
         [1] = al:getImage("background_night_level1"),
         [2] = al:getImage("background_day_level2"),
+    }
+    self.clouds = {
+        [1] = al:getImage("background_clouds_night"),
+        [2] = al:getImage("background_clouds_layer1"),
     }
     self.map = Map:new(0,3,9,self)
     self.map:expand()

@@ -23,24 +23,6 @@ function ReloadShelf:new(x,y)
     obj.buttons = {}
     obj.deletedBullets = {}
     obj.autoReload = false
-    table.insert(obj.buttons, {
-        x = obj.x,
-        y = obj.y,
-        image = al:getImage("loadbullet_button"),
-        visible = true,
-        clicked = function()
-            obj:loadBullet()    
-        end,
-    })
-    table.insert(obj.buttons, {
-        x = 0,
-        y = 0,
-        image = al:getImage("discardbullet_button"),
-        visible = true,
-        clicked = function()
-            obj:discardBullet()
-        end
-    })
 
     return obj 
 end
@@ -81,15 +63,6 @@ function ReloadShelf:discardBullet()
 end
 
 function ReloadShelf:update(dt)
-    
-    
-    --update buttons
-    button:updateAll(self.buttons)
-    self.buttons[1].x = self.x + 59
-    self.buttons[1].y = self.y + 5
-    self.buttons[2].x = self.x + 59
-    self.buttons[2].y = self.y + 36
-
     if self.bullet == nil and not self.reloading then
         self:reload()
     end
@@ -148,9 +121,6 @@ function ReloadShelf:draw()
     love.graphics.setCanvas(oldCanvas)
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(self.canvas,self.x,self.y)
-
-    --draw buttons
-    button:drawAll(self.buttons)
 end
 
 

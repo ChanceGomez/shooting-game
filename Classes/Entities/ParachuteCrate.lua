@@ -60,7 +60,9 @@ function ParachuteCrate:isCollision()
 end
 
 function ParachuteCrate:update(dt)
-    self:hitColor(dt)
+    Enemy.hitColor(self,dt)
+    --check for effects
+    Enemy.effectUpdate(self,dt)
     self:deadColor()
     self.y = self.y + self.speed * dt
 

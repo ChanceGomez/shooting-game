@@ -3,7 +3,7 @@
 function love.conf(t)
 
 	t.console = true
-	t.window.fullscreen = false
+	t.window.fullscreen = true
 	t.window.width = 1920
 	t.window.title = "Don't Let them out"
 	t.window.height = 1080

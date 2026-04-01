@@ -9,6 +9,24 @@ function flatten(tbl)
 	return points
 end
 
+function trim(num,trimCount)
+	if type(num) ~= "number" then
+		return num
+	end
+	local returnNum = 0
+	local trimAmount = 1 * math.pow(10,trimCount)
+
+	--1.23
+	returnNum = num * 100
+	--102.3
+	returnNum = math.floor(returnNum)
+	--102
+	returnNum = returnNum/trimAmount
+	--1.2
+
+	return returnNum
+end
+
 function shuffle(tbl)
   for i = #tbl, 2, -1 do
       local j = math.random(i)

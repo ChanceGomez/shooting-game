@@ -1,6 +1,8 @@
 local Cannon = {}
 Cannon.__index = Cannon
 
+setmetatable(Cannon,{__index = Gun})
+
 function Cannon:new()
   local obj = setmetatable(Gun:new(), Cannon)
   
@@ -16,27 +18,12 @@ function Cannon:new()
   return obj
 end
 
-function Cannon:increaseMaxAmmo(ammo)
-    Gun.increaseMaxAmmo(self,ammo)
-end
-
-function Cannon:increaseReloadRate(amount)
-    Gun.increaseReloadRate(self,amount)
-end
-
-function Cannon:increaseDamage(damage)
-    Gun.increaseDamage(self,damage)
-end
-
-function Cannon:loadBullet(bullet)
-    Gun.loadBullet(self,bullet)
-end
-
 function Cannon:fire()
     --Make sure gun can fire
     if self.isReloading or self.fireRateTimer < game.Affector:trigger("Fire Rate",self.fireRate) then
         return
     end
+    
     --extract first frame and then get dimensions for adjustment on crosshair
     local extractionFrame = self.bulletAnimation[1]
     local w,h = extractionFrame:getDimensions()

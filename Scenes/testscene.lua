@@ -3,31 +3,23 @@
  function testscene:load()
     self.Affector = Affector:new()
     
+    self.collider = {
+        x = 100,
+        y = 100,
+        imageData = al:getImageData("animation_bird_dying1"),
+        image = al:getImage("animation_bird_dying1")
+    }
 
  end
 
  function testscene:update(dt)
-    
+    if collision.color(self.collider) then
+    end
  end
 
  function testscene:draw()
-    ct:draw({
-        text = "{.1,.2,.9,1}Maxed Out",
-        x = 100,
-        y = 100,
-    })
-    
-    ct:draw({
-        text = "{.0,.0,.9,1}Maxed Out",
-        x = 100,
-        y = 200,
-    })
-    ct:draw({
-        text = "{0.9,0,.9,1}Maxed Out",
-        x = 100,
-        y = 300,
-    })
-        
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(self.collider.image,self.collider.x,self.collider.y)
  end
 
  return testscene

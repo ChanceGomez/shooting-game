@@ -5,6 +5,7 @@ local game = {
     lookouts = {},
     round = 1,
     pause = false,
+    maxSpeed = 50,
 }
 
 --[[
@@ -66,8 +67,8 @@ end
 
 
 ----------
-function game:createLookout(enemies,difficulty,artifacts,background)
-    self.lookouts[1] = Lookout:new(enemies,difficulty,artifacts,background)
+function game:createLookout(enemies,difficulty,artifacts,images)
+    self.lookouts[1] = Lookout:new(enemies,difficulty,artifacts,images)
 end
 
 

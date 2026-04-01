@@ -47,13 +47,13 @@ end
 function collision.twoRect(obj1,obj2)
   local x1 = obj1.x
   local y1 = obj1.y
-  local w1 = obj1.width
-  local h1 = obj1.height
+  local w1 = obj1.width or obj1.image:getWidth()
+  local h1 = obj1.height or obj1.image:getHeight()
   
   local x2 = obj2.x
   local y2 = obj2.y
-  local w2 = obj2.width
-  local h2 = obj2.height
+  local w2 = obj2.width or obj2.image:getWidth()
+  local h2 = obj2.height or obj2.image:getHeight()
   
   return x1 < x2 + w2 and
          x1 + w1 > x2 and
@@ -104,6 +104,74 @@ function collision.circle(obj,x,y)
   
   
   return distance <= radius
+end
+
+function collision.color(obj,color)
+    if not collision.rect(obj) then
+        return false
+    end
+    if obj.imageData == nil then
+        return
+    end
+    local image = obj.imageData
+    local x = math.floor(CursorX - obj.x) or 0
+    local y = math.floor(CursorY - obj.y) or 0
+    
+    local r,g,b,a = image:getPixel(x,y)    
+    if color then
+        return color[1] == r and color[2] == g and color[3] == b and color[4] == a
+    else
+        return a ~= 0
+    end
+end
+
+function collision.circleRect(circle,rect)
+-- Find the closest point on the rect to the circle's center
+    local closestX = math.max(rect.x, math.min(circle.x, rect.x + rect.width))
+    local closestY = math.max(rect.y, math.min(circle.y, rect.y + rect.height))
+
+    -- Distance from circle center to that closest point
+    local dx = circle.x - closestX
+    local dy = circle.y - closestY
+    local distSq = dx * dx + dy * dy
+
+    if distSq >= circle.radius * circle.radius then
+        return false
+    end
+
+    -- Optionally compute separation data for physics response
+    local dist = math.sqrt(distSq)
+    local nx, ny, depth
+
+    if dist == 0 then
+        -- Circle center is inside the rect — push out on shortest axis
+        local overlapL = circle.x - rect.x
+        local overlapR = (rect.x + rect.w) - circle.x
+        local overlapT = circle.y - rect.y
+        local overlapB = (rect.y + rect.h) - circle.y
+        local minOverlap = math.min(overlapL, overlapR, overlapT, overlapB)
+
+        if minOverlap == overlapL then
+            nx, ny = -1, 0
+        elseif minOverlap == overlapR then
+            nx, ny =  1, 0
+        elseif minOverlap == overlapT then
+            nx, ny = 0, -1
+        else
+            nx, ny = 0,  1
+        end
+        depth = circle.r + minOverlap
+    else
+        nx   = dx / dist
+        ny   = dy / dist
+        depth = circle.radius - dist
+    end
+
+    return true, nx, ny, depth
+end
+
+function collision:rectCicle(rect,circle)
+    return collision:circleRect(circle,rect)
 end
 
 return collision

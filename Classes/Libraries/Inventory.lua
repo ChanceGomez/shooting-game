@@ -1,5 +1,5 @@
 local Inventory = {
-    margin = 4,
+    margin = 2,
 }
 Inventory.__index = Inventory
 

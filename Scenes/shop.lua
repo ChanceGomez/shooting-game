@@ -101,12 +101,29 @@ function shop:load()
     self.buttons["increase_health"] = {
         x = 500,
         y = 70,
+        level = 1,
+        maxLevel = 50,
+        cost = 10,
         image = al:getImage("add_button"),
         visible = true,
-        description = "Increase Health",
-        clicked = function()
-            
+        description = {text = ""},
+        clicked = function(self)
+            if game.Player.health >= 3 then
+                --return
+            end
+            if game.Player.resources >= self.cost then
+                game.Player.health = game.Player.health + 1
+                game.Player.resources = game.Player.resources - self.cost
+                self.cost = self.cost * 3
+            end            
         end,
+        updateText = function(self)
+            self.description.text = "Increase Health /n"
+            
+            self.description.text = self.description.text .. " /nCost: " .. self.cost
+
+            return self.description.text
+        end
     }
 
     --upgrades
@@ -119,7 +136,7 @@ function shop:load()
             {"Max Ammo","add",1},
         },
         level = 0,
-        maxLevel = 5,
+        maxLevel = 50,
         cost = 5,
         description = {text = ""},
         clicked = function(self)
@@ -157,7 +174,7 @@ function shop:load()
             {"Bullet Damage","add",1},
         },
         level = 0,
-        maxLevel = 5,
+        maxLevel = 50,
         cost = 5,
         clicked = function(self)
             if self.level >= self.maxLevel then return end
@@ -193,7 +210,7 @@ function shop:load()
             {"Reload Rate","mult",.90},
     },
         level = 0,
-        maxLevel = 5,
+        maxLevel = 50,
         cost = 5,
         description = {text = ""},
         clicked = function(self)
@@ -230,7 +247,7 @@ function shop:load()
             {"Fire Rate","mult",.90},
         },
         level = 0,
-        maxLevel = 5,
+        maxLevel = 50,
         cost = 5,
         description = {text = ""},
         clicked = function(self)

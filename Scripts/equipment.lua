@@ -139,6 +139,23 @@ function equipment:load()
             text = ct:formatString("High Effieciency Reloader:",{.2,.2,.5,1}) .. " /nDecrease reload rate by 66%, and decrease fire rate by 25%, but -30% damage, -50% fire damage"
         }
     }
+    self.equipments.advancedIntel = {
+        rarity = 1,
+        type = "antenna",
+        add = function()
+            self.active = true
+            settings.hitbox = true
+            settings.showHealth = true
+        end,
+        remove = function()
+            self.active = false
+            settings.hitboxe = false
+            settings.showHealth = false
+        end,
+        description = {
+            text = ct:formatString("Advanced Intel Antenna:",{.2,.2,.5,1}) .. " /nShow enemy health and hitboxes"
+        }
+    }
 
 
     --loop through to init variables/functions
@@ -163,17 +180,22 @@ function equipment:load()
         end
 
         --create the add/remove functions
-        equipment.add = function(self)
-            self.active = true
-            game.Affector:addIDs(self.ids)
+        if equipment.add == nil then
+            equipment.add = function(self)
+                self.active = true
+                game.Affector:addIDs(self.ids)
+            end
         end
-        equipment.remove = function(self)
-            self.active = false
-            game.Affector:removeIDs(self.ids)
+        if equipment.remove == nil then
+            equipment.remove = function(self)
+                self.active = false
+                game.Affector:removeIDs(self.ids)
+            end
         end
 
         --Create the update text function
         equipment.updateText = function(self)
+            if self.ids == nil then return self.description.text end
             local ids = self.ids
             if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
             return self.description.text .. " /n " .. game.Affector:getDescription(ids)
@@ -199,7 +221,7 @@ function equipment:getRandomEquipment(rarity)
     local key = self.keys[math.random(#self.keys)]
 
     if rarity then
-        if self.equipments[key].rarity == 1 then 
+        if self.equipments[key].rarity == rarity then 
             return self.equipments[key]
         else
             self:getRandomEquipment(rarity)

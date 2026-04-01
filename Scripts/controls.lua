@@ -151,8 +151,12 @@ function love.mousepressed(x, y, button)
     controls.keyboardClicked = true
     controls.mouse_lastClicked = button
 
+        
+
+
     if button == 1 then
         leftClick = true
+        leftHeld = true
     elseif button == 2 then
         rightClick = true
     end
@@ -173,7 +177,18 @@ function love.wheelmoved(x,y)
     end
 end
 
+function love.focus(focused)
+    if not focused then
+        leftHeld = false
+    end
+end
+
 function love.mousereleased(x,y,button)
+        
+
+    if button == 1 then
+        leftHeld = false
+    end
 	if button == 3 then
 		controls.dragging = false
 	end

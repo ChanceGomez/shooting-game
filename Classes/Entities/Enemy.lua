@@ -50,8 +50,9 @@ end
 
 function Enemy:hit(properties)
     local damage = properties.damage or 0
-    local fireDamage = properties.fire.damage or 0
-    local fireDuration = properties.fire.duration or 0
+    local fire = properties.fire or {damage = 0,duration = 0}
+    local fireDamage = fire.damage or 0
+    local fireDuration = fire.duration or 0
 
 
     self.isHit = true
@@ -124,9 +125,7 @@ function Enemy:deadColor()
     end
 end
 
-function Enemy:update(dt)
-    Enemy.hitColor(self,dt)
-
+function Enemy:effectUpdate(dt)
     --check for effects
     for i, effect in ipairs(self.effects) do
         effect.timer = effect.timer + dt
@@ -139,9 +138,21 @@ function Enemy:update(dt)
             end
         end
     end
+end
 
-    local sideMargin = 8
-    if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.lifeTimer > 5 then
+function Enemy:update(dt)
+    Enemy.hitColor(self,dt)
+
+    --check for effects
+    Enemy.effectUpdate(self,dt)
+
+    --clean up
+    if not self.isAlive and self.y > Height then
+        Enemy.delete(self)
+    end
+
+    local sideMargin = 32
+    if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.y < Height-40 and self.lifeTimer > 5 then
         Enemy.escape(self)
     end
 end
@@ -155,7 +166,7 @@ function Enemy:draw()
             love.graphics.print(self.isAlive and "alive" or "dead",self.x+self.width + 2, self.y)
         end
         if settings.showHealth then
-            love.graphics.print("health: " .. self.health,self.x+self.width + 2, self.y+6)
+            love.graphics.print("health: " .. math.floor(self.health),self.x+self.width + 2, self.y+6)
         end
     end
 end

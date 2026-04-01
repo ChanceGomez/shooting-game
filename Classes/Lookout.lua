@@ -4,61 +4,41 @@ Lookout.__index = Lookout
 local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
 crt_shader:send("screen_size", {love.graphics.getDimensions()})
 
-function Lookout:new(enemies,difficulty,artifacts,background)
-  local obj = setmetatable({}, Lookout)
+function Lookout:new(enemies,difficulty,artifacts,images)
+    local obj = setmetatable({}, Lookout)
 
-  obj.background = background
-  obj.artifacts = artifacts
-  obj.difficulty = difficulty
-  obj.enemyCount = #enemies
-  obj.enemies = {}
-  obj.canvas = love.graphics.newCanvas(Width,Height)
-  obj.handler = EnemyHandler:new(obj,enemies,difficulty)
-  obj.handler:startRound()
-  obj.x = 0
-  obj.y = 0
-  obj.roundTimer = 0
-  obj.cloudsTimer = 0
-  obj.Report = Report:new()
-  obj.buttons = {}
-  obj.isHoveringButton = false
-  obj.reloadShelfOpen = true
-  obj.ReloadShelf = ReloadShelf:new(-128,obj.y + Height - 64)
-  obj.BackgroundHandler = BackgroundHandler:new()
-  obj.outlineMargin = 0
-    --load buttons
-    table.insert(obj.buttons, {
-        x = obj.x + 4,
-        y = obj.y + Height - 64,
-        image = al:getImage("button_ammoreload"),
-        hoveredImage = al:getImage("button_ammoreload_hovered"),
-        width = al:getImage("button_ammoreload"):getWidth(),
-        height = al:getImage("button_ammoreload"):getHeight(),
-        visible = true,
-        clicked = function()
-            obj.reloadShelfOpen = not obj.reloadShelfOpen
-            if obj.reloadShelfOpen then
-                obj:openReloadShelf()
-            else
-                obj:closeReloadShelf()
-            end
-        end
-    })
+    obj.images = images
+    obj.artifacts = artifacts
+    obj.difficulty = difficulty
+    obj.enemyCount = #enemies
+    obj.enemies = {}
+    obj.canvas = love.graphics.newCanvas(Width,Height)
+    obj.handler = EnemyHandler:new(obj,enemies,difficulty)
+    obj.handler:startRound()
+    obj.x = 0
+    obj.y = 0
+    obj.roundTimer = 0
+    obj.cloudsTimer = 0
+    obj.Report = Report:new()
+    obj.buttons = {}
+    obj.isHoveringButton = false
+    obj.reloadShelfOpen = true
+    obj.ReloadShelf = ReloadShelf:new(-128,obj.y + Height - 64)
+    obj.BackgroundHandler = BackgroundHandler:new()
+    obj.outlineMargin = 0
 
     obj:openReloadShelf()
 
-  return obj
+    return obj
 end
 
 function Lookout:openReloadShelf()
     --animate button
-    tweenTo(self.buttons[1],.2,"linear",126,self.buttons[1].y)
     tweenTo(self.ReloadShelf,.2,"linear",-1,self.ReloadShelf.y)
 end
 
 function Lookout:closeReloadShelf()
     --animate button
-    tweenTo(self.buttons[1],.2,"linear",self.outlineMargin,self.buttons[1].y)
     tweenTo(self.ReloadShelf,.2,"linear",-128,self.ReloadShelf.y)
 end
 
@@ -118,43 +98,25 @@ function Lookout:draw()
     love.graphics.clear()
 
 
-    --background color
-        love.graphics.setColor(0.2,0.2,math.min(math.max(self.roundTimer/120+.25,.25),.40))
-        love.graphics.rectangle("fill",0,0,Width,Height)
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(self.images.background)
 
-    --clouds background
-        local img = al:getImage("background_clouds_layer1")
-        local speed = -(self.cloudsTimer * 1) % img:getWidth()
-        local sway = math.sin(love.timer.getTime()/4 * 1) * 1
+    --clouds 
 
-        love.graphics.setColor(.8,.8,.8,1)
-        love.graphics.draw(img,speed,sway)
-        love.graphics.draw(img,speed-img:getWidth(),sway)
-        if math.abs(speed) > img:getWidth() then
-            self.cloudsTimer = 0
-        end
-    --mountain background
-        love.graphics.setColor(.5,.5,.5,1)
-        love.graphics.draw(al:getImage("background_mountains_layer1"),0,0)
-        love.graphics.setColor(.4,.4,.4,1)
-        love.graphics.draw(al:getImage("background_mountains_layer2"),0,0)
+    --[[
+    local img = self.images.clouds
+    local speed = -(self.cloudsTimer * 1) % img:getWidth()
+    local sway = math.sin(love.timer.getTime()/4 * 1) * 1
 
-    --draw enemies
-        self.handler:draw()
+    love.graphics.setColor(.8,.8,.8,1)
+    love.graphics.draw(img,speed,sway)
+    love.graphics.draw(img,speed-img:getWidth(),sway)
+    if math.abs(speed) > img:getWidth() then
+        self.cloudsTimer = 0
+    end
 
-    
-    --vegetation background
-        love.graphics.setColor(.9,.9,.9,1)
-        love.graphics.draw(al:getImage("background_vegetation_layer3"),0,0)
-        love.graphics.setColor(.8,.8,.8,1)
-        love.graphics.draw(al:getImage("background_vegetation_layer2"),0,0)
-        love.graphics.setColor(.6,.6,.6,1)
-        love.graphics.draw(al:getImage("background_vegetation"),0,0)
-
-
-        love.graphics.setColor(1,1,1,1)
-        love.graphics.draw(self.background)
-        self.handler:draw()
+    ]]
+    self.handler:draw()
 
 
     --draw buttons

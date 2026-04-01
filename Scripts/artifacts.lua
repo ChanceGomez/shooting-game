@@ -9,6 +9,14 @@ local artifacts = {
 }
 
 local function getFormat(name)
+
+    local name = name
+
+    if name == 1 then
+        name = "positive"
+    elseif name == -1 then
+        name = "negative"
+    end
     local returnString = "{"
     for i, number in ipairs(artifacts.colorFormat[name]) do
         returnString = returnString .. number
@@ -23,6 +31,7 @@ end
 
 function artifacts:load()
     --load artifacts
+    --[[
     self.artifacts.autoReload = {
         rarity = 2,
         used = false,
@@ -33,8 +42,7 @@ function artifacts:load()
         description = {
             text = "start " .. getFormat("positive") .. "automatically reloading the chamber, " .. getFormat("negative") .. "-25% reload rate",
         },
-        image = al:getImage("artifact_autoreload"),
-    }
+    }]]
     self.artifacts.improvedAmmunition = {
         rarity = 2,
         ids = {
@@ -130,6 +138,7 @@ function artifacts:load()
     }
     self.artifacts.extraSupplies = {
         rarity = 1,
+        used = false,
         ids = {
             {"Parachute Chance","mult",1.5},
             {"Parachute Equipment Rarity","add",1},
@@ -137,6 +146,46 @@ function artifacts:load()
         description = {
             text = "Increase parachute chances by " .. getFormat("positive") .. "50% " .. "Increase equipment rarity by " .. 
                 getFormat("positive") .. "1"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.dudSurplus = {
+        rarity = 1,
+        ids = {
+            {"Dud Chance","add",1000},
+            {"Dud Damage","add",2},
+            {"Fire Rate","mult",.5},
+            {"Reload Rate","mult",.5},
+            {"Automatic Reloading","bool",true},
+        },
+        description = {
+            text = "Increase dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase dud damage by " .. 
+                getFormat("positive") .. "+2" .. " decrease fire rate & reload rate by ".. getFormat("positive") .. "50%" .. " and " .. getFormat("positive") .. "automatic loading"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.ammoInspection = {
+        rarity = 2,
+        ids = {
+            {"Dud Chance","add",-1000},
+            {"Bullet Damage","add",5},
+            {"Reload Rate","mult",.8},
+        },
+        description = {
+            text = "Decrease dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase bullet damage by " .. 
+                getFormat("positive") .. "+5" .. " Increase reload rate by ".. getFormat("positive") .. "20%"
+        },
+        image = al:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.incendiaryRounds = {
+        rarity = 2,
+        ids = {
+            {"Bullet Fire Damage","add",10},
+            {"Bullet Fire Duration","add",5},
+            {"Reload Rate","mult",.8},
+        },
+        description = {
+            text = "Increase Fire Damage by " .. getFormat(1) .. "+10" .. " Increase Fire Duration by " .. getFormat(1) .. "+5" .. " and increase Reload Rate by " .. getFormat(1) .. "20%"
         },
         image = al:getImage("upgrademaxammo_shop_icon")
     }
@@ -164,11 +213,17 @@ function artifacts:load()
     for i, artifact in pairs(self.artifacts) do
         --Get the artifact count
         self.artifactsCount = self.artifactsCount + 1
+
+        --check to see if image if not load default
+        if artifact.image == nil then
+            artifact.image = al:getImage("upgrademaxammo_shop_icon")
+        end
         --Get dimensions
         artifact.width = artifact.image:getWidth()
         artifact.height = artifact.image:getHeight()
         --default vars
         artifact.active = false
+        
         --get default font
         if not artifact.description.font then
             artifact.description.font = dogica_8
@@ -176,6 +231,9 @@ function artifacts:load()
 
         if artifact.add == nil then
             artifact.add = function(self)
+                if self.used == false then 
+                    self.used = true
+                end
                 self.active = true
                 game.Affector:addIDs(self.ids)
                 game.Player:addArtifact(self)
@@ -213,6 +271,32 @@ end
 
 function artifacts:getArtifact(name)
     return self.artifacts[name]
+end
+
+function artifacts:getUniqueArtifacts(amount,rarity)
+    local rarity = rarity or 1
+    local amount = amount or 1
+    local tbl = {}
+
+    table.insert(tbl,self:getRandomArtifact(rarity))
+
+    local recursiveCount = 0
+    while #tbl < amount and recursiveCount < 100 do
+        recursiveCount = recursiveCount + 1
+        local valid = true
+        local artifact = self:getRandomArtifact(rarity)
+        for i, instance in ipairs(tbl) do
+            if instance == artifact then
+                valid = false
+            end
+        end
+
+        if valid then 
+            table.insert(tbl,self:getRandomArtifact(rarity)) 
+        end
+    end
+
+    return tbl
 end
 
 function artifacts:getAllArtifacts()
