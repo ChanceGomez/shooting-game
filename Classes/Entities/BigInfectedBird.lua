@@ -5,8 +5,8 @@ setmetatable(BigInfectedBird,{__index = Bird})
 
 
 -- Static images
-local flyingAnimation = al:getAnimation("animation_infectedbird_flying")
-local dyingAnimation = al:getAnimation("animation_infectedbird_dying")
+local flyingAnimation = assetloader:getAnimation("animation_infectedbird_flying")
+local dyingAnimation = assetloader:getAnimation("animation_infectedbird_dying")
 
 function BigInfectedBird:new(x,y,handler,difficulty,facing)
     local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 
@@ -58,7 +58,7 @@ function BigInfectedBird:draw()
     local flipped = self.facing ~= -1
     love.graphics.setColor(self.color)
     local speed = 5/self.speed
-    ap:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped,2)
+    animationplayer:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped,2)
     Enemy.draw(self)
 end
 

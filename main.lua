@@ -6,31 +6,35 @@
   
  
 --Scripts
-al = require("Scripts/assetloader")
 drag = require("Scripts/drag")
-collision = require("Scripts/collision")
-controls = require("Scripts/controls")
-tween = require("Scripts/tween")
-array = require("Scripts/array")
-button = require("Scripts/buttons")
 zdraw = require("Scripts/zdraw")
 event = require("Scripts/events")
 infopanel = require("Scripts/infopanel")
 popup = require("Scripts/popup")
-ap = require("Scripts/animationplayer")
 roundscript = require("Scripts/roundscript")
 upgrades = require("Scripts/upgrades")
 artifacts = require("Scripts/artifacts")
 equipment = require("Scripts/equipment")
-ct = require("Scripts/customtext")
-statpanel = require("Scripts/statpanel")
 tab = require("Scripts/tab")
 
---Preloaded classes
-Observer = require("Classes/Libraries/Observer")
-Affector = require("Classes/Libraries/Affector")
-Event = require("Classes/Libraries/Event")
-Button = require("Classes/Libraries/Button")
+--Libraries
+Observer = require("Libraries/Observer")
+Affector = require("Libraries/Affector")
+Event = require("Libraries/Event")
+Button = require("Libraries/Button")
+customtext = require("Libraries/customtext")
+assetloader = require("Libraries/assetloader")
+collision = require("Libraries/collision")
+controls = require("Libraries/controls")
+tween = require("Libraries/tween")
+array = require("Libraries/array")
+animationplayer = require("Libraries/animationplayer")
+Inventory = require("Libraries/Inventory")
+InventorySlot = require("Libraries/InventorySlot")
+EquipmentInventory = require("Libraries/EquipmentInventory")
+EquipmentSlot = require("Libraries/EquipmentSlot")
+DamagePopup = require("Libraries/DamagePopup")
+
 
 --Scenes  
   game = require("Scenes/game")
@@ -133,8 +137,8 @@ cosmeticRandom = love.math.newRandomGenerator(os.time())
 
 local function loadAssets()
   --images
-    al:loadImages("Assets/Sprites")
-    al:loadAudios("Assets/Audios")
+    assetloader:loadImages("Assets/Sprites")
+    assetloader:loadAudios("Assets/Audios")
   
     --perfect dos font
     perfect_dos_12 = love.graphics.newFont("Assets/Fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf",12)
@@ -150,8 +154,6 @@ local function loadAssets()
 end
 
 local function loadClasses()
-    Inventory = require("Classes/Libraries/Inventory")
-    InventorySlot = require("Classes/Libraries/InventorySlot")
     Lookout = require("Classes/Lookout")
     Report = require("Classes/Report")
     BackgroundHandler = require("Classes/BackgroundHandler")
@@ -177,12 +179,10 @@ local function loadClasses()
     Guns = {
         pistol = require("Classes/Cannon"),
     }
-    EquipmentInventory = require("Classes/Libraries/EquipmentInventory")
-    EquipmentSlot = require("Classes/Libraries/EquipmentSlot")
+  
     Lazor = require("Classes/Lazor")
     Map = require("Classes/MapNode/Map")
     Node = require("Classes/MapNode/Node")
-    DamagePopup = require("Classes/Libraries/DamagePopup")
     Explosion = require("Classes/Explosion")
 end
 
@@ -204,8 +204,7 @@ function love.load()
     artifacts:load()
     equipment:load()
     infopanel:load()
-    ct:load()
-    statpanel:load()
+    customtext:load()
     tab:load()
 
     --Load classes
@@ -233,7 +232,7 @@ function love.update(dt)
   Scenes[Scene].update(dt)
   
   --update scripts
-  ap:update(dt)
+  animationplayer:update(dt)
   controls:update()
   event:update(dt)
   tween:update(dt)

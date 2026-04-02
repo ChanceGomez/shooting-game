@@ -7,8 +7,8 @@ local Bird = {}
 Bird.__index = Bird
 
 -- Static images
-local flyingAnimation = al:getAnimation("animation_bird_flying")
-local dyingAnimation = al:getAnimation("animation_bird_dying")
+local flyingAnimation = assetloader:getAnimation("animation_bird_flying")
+local dyingAnimation = assetloader:getAnimation("animation_bird_dying")
 
 -- Static ID
 local staticID = 1
@@ -31,8 +31,8 @@ function Bird:new(x,y,handler,difficulty,facing)
     dying = dyingAnimation
     }
     obj.sounds = {
-        hit = al:getAudio("birdhit"),
-        die = al:getAudio("birddie"),
+        hit = assetloader:getAudio("birdhit"),
+        die = assetloader:getAudio("birddie"),
     }
     obj.facing = facing or 1
     obj.width = obj.animations['flying'][1]:getWidth()
@@ -83,7 +83,7 @@ function Bird:draw()
     local flipped = self.facing ~= -1
     love.graphics.setColor(self.color)
     local speed = 5/self.speed
-    ap:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped)
+    animationplayer:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped)
     Enemy.draw(self)
 end
 

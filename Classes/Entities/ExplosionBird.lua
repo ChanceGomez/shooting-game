@@ -4,7 +4,7 @@ ExplosionBird.__index = ExplosionBird
 setmetatable(ExplosionBird,{__index = Bird})
 
 -- Static images
-local flyingAnimation = al:getAnimation("animation_explosionbird_flying")
+local flyingAnimation = assetloader:getAnimation("animation_explosionbird_flying")
 
 function ExplosionBird:new(x,y,handler,difficulty,facing)
     local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 

@@ -146,9 +146,9 @@ function collision.circleRect(circle,rect)
     if dist == 0 then
         -- Circle center is inside the rect — push out on shortest axis
         local overlapL = circle.x - rect.x
-        local overlapR = (rect.x + rect.w) - circle.x
+        local overlapR = (rect.x + rect.width) - circle.x
         local overlapT = circle.y - rect.y
-        local overlapB = (rect.y + rect.h) - circle.y
+        local overlapB = (rect.y + rect.height) - circle.y
         local minOverlap = math.min(overlapL, overlapR, overlapT, overlapB)
 
         if minOverlap == overlapL then
@@ -160,7 +160,7 @@ function collision.circleRect(circle,rect)
         else
             nx, ny = 0,  1
         end
-        depth = circle.r + minOverlap
+        depth = circle.radius + minOverlap
     else
         nx   = dx / dist
         ny   = dy / dist

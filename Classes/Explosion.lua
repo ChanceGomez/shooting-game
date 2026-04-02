@@ -27,10 +27,19 @@ function Explosion:update(dt)
         self:delete()
     end
 
+    --Check for enemies in explosion
     for i, enemy in ipairs(self.handler.enemies) do
         if collision.circleRect(self,enemy) and enemy.currentExplosionDamage ~= self then
             enemy.currentExplosionDamage = self
             enemy:hit({damage = self.damage})
+        end
+    end
+    --Check for parachutes
+    for i, parachute in ipairs(self.handler.parachutes) do
+        local crate = parachute.crate
+        if collision.circleRect(self,crate) and crate.currentExplosionDamage ~= self then
+            parachute.currentExplosionDamage = self
+            parachute:hit({damage = self.damage})
         end
     end
 end

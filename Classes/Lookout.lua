@@ -56,8 +56,6 @@ function Lookout:update(dt)
     self.roundTimer = self.roundTimer + dt
 
     self.isHoveringButton = false
-    --update buttons
-    button:updateAll(self.buttons)
 
     --check if cursor is hovering button
     for i, button in ipairs(self.buttons) do
@@ -66,12 +64,6 @@ function Lookout:update(dt)
         else
             self.isHoveringButton = false
         end
-    end
-    if collision.rect(statpanel.button) then
-        self.isHoveringButton = true
-    end
-    if collision.rect(statpanel) then
-        self.isHoveringButton = true
     end
     if collision.rect(self.ReloadShelf) then
         self.isHoveringButton = true
@@ -87,8 +79,6 @@ function Lookout:update(dt)
 
     self.handler:update(dt)
     self.cloudsTimer = self.cloudsTimer + dt
-
-    crt_shader:send("time", love.timer.getTime())
 end
 
 function Lookout:draw()
@@ -119,13 +109,6 @@ function Lookout:draw()
     self.handler:draw()
 
 
-    --draw buttons
-    button:drawAll(self.buttons)
-
-
-    --draw stat panel
-    statpanel:draw()
-
     --draw reloadshelf
     self.ReloadShelf:draw()
 
@@ -135,28 +118,7 @@ function Lookout:draw()
     love.graphics.setColor(1,1,1,1)
     love.graphics.setFont(perfect_dos_16)
     
-    --make max ammo background
-    local x,y = 4,296
-    local width,height = 24,8
-    local margin = 4
-    for i = 1, game.Affector:trigger("Max Ammo",game.Player.gun.maxAmmo) do
-        local color = {.4,.4,.4,.7}
-        love.graphics.setColor(color)
-        love.graphics.rectangle("fill",x,y-(i*(height+margin)),width,height)
-    end
-
-    --show current ammo
-    local x,y = 4,296
-    local width,height = 24,8
-    local margin = 4
-    for i, bullet in ipairs(game.Player.gun.ammo) do
-        local color = {1,1,1,1}
-        if bullet.isDud then
-            color = {.6,0,0,1}
-        end
-        love.graphics.setColor(color)
-        love.graphics.rectangle("fill",x,y-(i*(height+margin)),width,height)
-    end
+    
 
     love.graphics.setColor(1,1,1,1)
     love.graphics.print("enemies: " .. self.enemyCount, 400,20)
@@ -174,7 +136,7 @@ function Lookout:draw()
     love.graphics.setShader()
 
     love.graphics.setColor(.9,.9,.9,1)
-    love.graphics.draw(al:getImage("background_hud_layer1"),0,0)
+    love.graphics.draw(assetloader:getImage("background_hud_layer1"),0,0)
 
     love.graphics.setColor(1,1,1,1)
     local font = dogica_8

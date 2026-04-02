@@ -11,8 +11,8 @@ function Cannon:new()
   obj.maxAmmo = 2
   obj.reloadRate = 1
   obj.isReloading = false
-  obj.crosshairImage = al:getImage("crosshair_pistol")
-  obj.bulletAnimation = al:getAnimation("pistol_bullet_animation")
+  obj.crosshairImage = assetloader:getImage("crosshair_pistol")
+  obj.bulletAnimation = assetloader:getAnimation("pistol_bullet_animation")
 
 
   return obj
@@ -28,7 +28,7 @@ function Cannon:fire()
     local extractionFrame = self.bulletAnimation[1]
     local w,h = extractionFrame:getDimensions()
     if Gun.fire(self,CursorX,CursorY) == false then return end
-    ap:drawGroup("pistol",self.bulletAnimation,.05,CursorX - w/2,CursorY - h/2)
+    animationplayer:drawGroup("pistol",self.bulletAnimation,.05,CursorX - w/2,CursorY - h/2)
     self.fireRateTimer = 0
 end
 
@@ -37,7 +37,7 @@ function Cannon:update(dt)
 end
 
 function Cannon:draw()
-    ap:drawGroup("pistol")
+    animationplayer:drawGroup("pistol")
 end
 
 

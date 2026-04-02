@@ -19,6 +19,8 @@ function Button:new(tbl)
     obj.description = tbl.description or false
     obj.descriptionX = 0
     obj.descriptionY = 0
+    obj.isText = tbl.isText
+    if obj.isText == nil then obj.isText = true end
 
     obj.executable = tbl.clicked
 
@@ -66,12 +68,12 @@ function Button:draw()
     end
 
     --draw text
-    if self.description then
+    if self.description and self.isText then
         local desc = self.description
         local color = self.defaultColor or {1,1,1,1}
         if self.hovered then color = {0,0,0,1} end
         local text,font,x,y,limit,defaultColor = desc.text,desc.font,self.descriptionX,self.descriptionY,desc.limit,color
-        ct:draw(text,font,x,y,limit,defaultColor)
+        customtext:draw(text,font,x,y,limit,defaultColor)
     end
 end
 

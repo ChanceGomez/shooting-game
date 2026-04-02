@@ -2,22 +2,28 @@ local Player = {}
 Player.__index = Player
 
 function Player:new()
-  local obj = setmetatable({}, Player)
-  
-  obj.gun = nil
-  obj.resources = 0
-  obj.parachuteOdds = 100
-  obj.dudPercentage = 20
-  obj.health = 3
-  obj.automaticReloading = false
-  obj.artifacts = {}
-  obj.parachuteEquipmentRarity = 1
+    local obj = setmetatable({}, Player)
 
-  if settings.debug then
+    obj.gun = nil
+    obj.resources = 0
+    obj.parachuteOdds = 100
+    obj.dudPercentage = 20
+    obj.health = 3
+    obj.automaticReloading = false
+    obj.artifacts = {}
+    obj.parachuteEquipmentRarity = 1
+    obj.explosions = 3
+    obj.explosionProperties = {
+        damage = 20,
+        radius = 30,
+        duration = .5,
+    }
+
+    if settings.debug then
     obj.resources = 1000000
-  end
+    end
 
-  return obj
+    return obj
 end
 
 function Player:addArtifact(artifact)
@@ -42,6 +48,13 @@ function Player:fireGun()
     end
 end
 
+function Player:useExplosion()
+    if self.explosions <= 0 then return end
+    self.explosions = self.explosions - 1
+    local explosion = self.explosionProperties
+    game:getHandler():newExplosion(CursorX,CursorY,explosion.radius,explosion.damage,explosion.duration)
+end
+
 function Player:update(dt)
     if self.health <= 0 and not settings.debug then
         Scene = "losescreen"
@@ -50,6 +63,10 @@ function Player:update(dt)
     if leftHeld then
         self:fireGun()
     end 
+
+    if rightReleased then
+        self:useExplosion()
+    end
 
     if self.gun then
         self.gun:update(dt)
@@ -60,17 +77,23 @@ function Player:draw()
     --get easy access variables
     local x,y = CursorX,CursorY
 
+    --draw explosion area
+    if love.mouse.isDown(2) and self.explosions > 0 then
+        love.graphics.setColor(.7,.7,.7,.5)
+        love.graphics.circle("fill",CursorX,CursorY,self.explosionProperties.radius)   
+    end
+
     love.graphics.setColor(1,1,1,1)
     --draw the cursor if hovering over a button
     if game.lookouts[1].isHoveringButton then
-        local cursorImage = al:getImage("cursor")
+        local cursorImage = assetloader:getImage("cursor")
         local cursorWidth, crosshairHeight = cursorImage:getDimensions()
         love.graphics.draw(cursorImage,x,y)
     --draw the crosshair
     else
         --Ease of access vars
         local gun = self.gun
-        local crosshairImage = al:getImage("crosshair")
+        local crosshairImage = assetloader:getImage("crosshair")
         local crosshairWidth, crosshairHeight = crosshairImage:getDimensions()
         
         --Check to see if there is ammo in the gun, if not than gray out the crosshair
@@ -92,6 +115,41 @@ function Player:draw()
         love.graphics.rectangle("fill",x,y,width,height)
     end
 
+
+    --draw ammo count
+        --make max ammo background
+        local x,y = 4,296
+        local width,height = 24,8
+        local margin = 4
+        for i = 1, game.Affector:trigger("Max Ammo",game.Player.gun.maxAmmo) do
+            local color = {.4,.4,.4,.7}
+            love.graphics.setColor(color)
+            love.graphics.rectangle("fill",x,y-(i*(height+margin)),width,height)
+        end
+
+        --show current ammo
+        local x,y = 4,296
+        local width,height = 24,8
+        local margin = 4
+        for i, bullet in ipairs(game.Player.gun.ammo) do
+            local color = {1,1,1,1}
+            if bullet.isDud then
+                color = {.6,0,0,1}
+            end
+            love.graphics.setColor(color)
+            love.graphics.rectangle("fill",x,y-(i*(height+margin)),width,height)
+        end
+
+    --Draw explosion count
+        local x,y = 36,Height
+        local margin = 2
+        local image = assetloader:getImage("bomb_ammo")
+        
+        for i = 1, self.explosions do
+            local bombX,bombY = x, y - (i*(image:getWidth()+margin))
+            love.graphics.setColor(1,1,1,1)
+            love.graphics.draw(image,bombX,bombY)
+        end
 
 
     if self.gun then

@@ -43,7 +43,7 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY)
 		return
 	end
   
-	local width,height = ct:getDimensions(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
+	local width,height = customtext:getDimensions(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
 
 	--figure out of panel would go over the border
 	if y > Height - height - self.margin then
@@ -58,7 +58,7 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY)
 	--draw panel and text
   	love.graphics.setColor(.9,.9,.9,1)
 	love.graphics.rectangle("fill",x+cameraX,y+cameraY,width+8,height+self.margin)
-	ct:draw(text,font,x+self.textOffsetX+cameraX,y+self.textOffsetY+cameraY,panelMaxSize,{0,0,0,1})
+	customtext:draw(text,font,x+self.textOffsetX+cameraX,y+self.textOffsetY+cameraY,panelMaxSize,{0,0,0,1})
 	
 end
 

@@ -43,9 +43,9 @@ function Affector:getDescription(ids)
 
 
         -- get before variable
-        desc = desc .. " /n" .. ct:formatString(trigger,{.2,.2,.4,1}) .. ": " .. ct:formatString(tostring(beforeStat),self:getColor(type))
+        desc = desc .. " /n" .. customtext:formatString(trigger,{.2,.2,.4,1}) .. ": " .. customtext:formatString(tostring(beforeStat),self:getColor(type))
         -- get after
-        desc = desc .. " -> " .. ct:formatString(tostring(afterStat),self:getColor(type))
+        desc = desc .. " -> " .. customtext:formatString(tostring(afterStat),self:getColor(type))
         self:remove(trigger,type,variable)
     end 
     
@@ -108,7 +108,7 @@ function Affector:getStats(ids)
     for i, id in ipairs(ids) do
         local trigger = id[1]
         local type = id[2]
-        str = str .. ' /n'.. ct:formatString(trigger,{.2,.2,.4,1}) .. ': ' .. tostring(self:getStat(trigger,type))
+        str = str .. ' /n'.. customtext:formatString(trigger,{.2,.2,.4,1}) .. ': ' .. tostring(self:getStat(trigger,type))
     end
 
     return str

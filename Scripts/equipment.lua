@@ -32,7 +32,7 @@ function equipment:load()
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Barrel: " .. "/nIncrease Fire Rate by 25%",
         },
-        image = al:getImage("equipment_barrelimprovement"),
+        image = assetloader:getImage("equipment_barrelimprovement"),
     }
     self.equipments.titaniumStabalizer = {
         rarity = 1,
@@ -43,7 +43,7 @@ function equipment:load()
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Stabilizer: " .. "/nDecrease dud chance by 25%",
         },
-        image = al:getImage("equipment_barrelimprovement"),
+        image = assetloader:getImage("equipment_barrelimprovement"),
     }
     self.equipments.titaniumReloader = {
         rarity = 1,
@@ -54,7 +54,7 @@ function equipment:load()
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Reloader: " .. "/nIncrease reload rate by 25%",
         },
-        image = al:getImage("equipment_barrelimprovement"),
+        image = assetloader:getImage("equipment_barrelimprovement"),
     }
     self.equipments.titaniumAntenna = {
         rarity = 1,
@@ -65,7 +65,7 @@ function equipment:load()
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Antenna: " .. "/nIncrease parachutes by 25%",
         },
-        image = al:getImage("equipment_barrelimprovement"),
+        image = assetloader:getImage("equipment_barrelimprovement"),
     }
     self.equipments.titaniumBase = {
         rarity = 1,
@@ -77,7 +77,7 @@ function equipment:load()
         description = {
             text = "{.2,.2,.5}Titanium {.2,.2,.5}Base: " .. "/nIncrease reload rate by 10%, fire rate by 10%",
         },
-        image = al:getImage("equipment_barrelimprovement"),
+        image = assetloader:getImage("equipment_barrelimprovement"),
     }
     self.equipments.jankyBase = {
         rarity = 1,
@@ -89,7 +89,7 @@ function equipment:load()
         description = {
             text = "{.2,.2,.5}Janky {.2,.2,.5}Base: " .. "/nIncrease dud chance by 50%, increase dud damage by 50%", 
         },
-        image = al:getImage("equipment_barrelimprovement"),
+        image = assetloader:getImage("equipment_barrelimprovement"),
     }
     self.equipments.greasedBarrel = {
         rarity = 1,
@@ -99,7 +99,7 @@ function equipment:load()
             {"Reload Rate","mult",.85},
         },
         description = {
-            text = ct:formatString("Greased Barrel:",{.2,.2,.5,1}) .. " /nIncrease fire rate and reload rate by 15%",
+            text = customtext:formatString("Greased Barrel:",{.2,.2,.5,1}) .. " /nIncrease fire rate and reload rate by 15%",
         }
     }
     self.equipments.igniterStabilizer = {
@@ -110,7 +110,7 @@ function equipment:load()
             {"Fire Duration","mult",2},
         },
         description = {
-            text = ct:formatString("Igniter Stabilizer:",{.2,.2,.5,1}) .. " /nIncrease fire damage by +5, and double fire duration"
+            text = customtext:formatString("Igniter Stabilizer:",{.2,.2,.5,1}) .. " /nIncrease fire damage by +5, and double fire duration"
         }
     }
     self.equipments.railgunBase = {
@@ -122,7 +122,7 @@ function equipment:load()
             {"Reload Rate","mult",2},
         },
         description = {
-            text = ct:formatString("Railgun Base:",{.2,.2,.5,1}) .. " /nIncrease all bullet damage by + 10, but -50% reload rate"
+            text = customtext:formatString("Railgun Base:",{.2,.2,.5,1}) .. " /nIncrease all bullet damage by + 10, but -50% reload rate"
         }
     }
     self.equipments.higheffieciencyReloader = {
@@ -136,7 +136,7 @@ function equipment:load()
             {"Fire Damage","mult",.5},
         },
         description = {
-            text = ct:formatString("High Effieciency Reloader:",{.2,.2,.5,1}) .. " /nDecrease reload rate by 66%, and decrease fire rate by 25%, but -30% damage, -50% fire damage"
+            text = customtext:formatString("High Effieciency Reloader:",{.2,.2,.5,1}) .. " /nDecrease reload rate by 66%, and decrease fire rate by 25%, but -30% damage, -50% fire damage"
         }
     }
     self.equipments.advancedIntel = {
@@ -153,7 +153,7 @@ function equipment:load()
             settings.showHealth = false
         end,
         description = {
-            text = ct:formatString("Advanced Intel Antenna:",{.2,.2,.5,1}) .. " /nShow enemy health and hitboxes"
+            text = customtext:formatString("Advanced Intel Antenna:",{.2,.2,.5,1}) .. " /nShow enemy health and hitboxes"
         }
     }
 
@@ -164,7 +164,7 @@ function equipment:load()
         self.equipmentCount = self.equipmentCount + 1
 
         if equipment.image == nil then
-            equipment.image = al:getImage("equipment_barrelimprovement")
+            equipment.image = assetloader:getImage("equipment_barrelimprovement")
         end
 
         --get height/width

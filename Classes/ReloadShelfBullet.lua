@@ -2,7 +2,7 @@ local ReloadShelfBullet = {}
 ReloadShelfBullet.__index = ReloadShelfBullet
 
 --Static images
-local bulletImage = al:getImage("bullet")
+local bulletImage = assetloader:getImage("bullet")
 
 function ReloadShelfBullet:new(ReloadShelf,x,y)
     local obj = setmetatable({},ReloadShelfBullet)

@@ -4,7 +4,7 @@ local tab = {
 }
 
 function tab:load()
-    tab.images.background = al:getImage("background_tab")
+    tab.images.background = assetloader:getImage("background_tab")
 
     local height = 28
     local color = {.2,.2,.2,1}

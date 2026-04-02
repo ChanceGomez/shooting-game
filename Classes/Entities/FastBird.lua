@@ -2,8 +2,8 @@ local FastBird = {}
 FastBird.__index = FastBird
 
 -- Static images
-local flyingAnimation = al:getAnimation("animation_fastbird_flying")
-local dyingAnimation = al:getAnimation("animation_fastbird_dying")
+local flyingAnimation = assetloader:getAnimation("animation_fastbird_flying")
+local dyingAnimation = assetloader:getAnimation("animation_fastbird_dying")
 
 function FastBird:new(x,y,handler,difficulty,facing)
     local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 

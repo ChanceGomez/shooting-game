@@ -2,18 +2,18 @@ local Nest = {}
 Nest.__index = Nest
 
 local images = {
-    body = al:getImage("nest_body"),
-    arm1 = al:getImage("nest_arm1"),
-    arm2 = al:getImage("nest_arm2"),
-    arm3 = al:getImage("nest_arm3"),
-    arm4 = al:getImage("nest_arm4"),
+    body = assetloader:getImage("nest_body"),
+    arm1 = assetloader:getImage("nest_arm1"),
+    arm2 = assetloader:getImage("nest_arm2"),
+    arm3 = assetloader:getImage("nest_arm3"),
+    arm4 = assetloader:getImage("nest_arm4"),
 }
 local imageData = {
-    body = al:getImageData("nest_body"),
-    arm1 = al:getImageData("nest_arm1"),
-    arm2 = al:getImageData("nest_arm2"),
-    arm3 = al:getImageData("nest_arm3"),
-    arm4 = al:getImageData("nest_arm4"),
+    body = assetloader:getImageData("nest_body"),
+    arm1 = assetloader:getImageData("nest_arm1"),
+    arm2 = assetloader:getImageData("nest_arm2"),
+    arm3 = assetloader:getImageData("nest_arm3"),
+    arm4 = assetloader:getImageData("nest_arm4"),
 }
 
 function Nest:new(x,y,handler)

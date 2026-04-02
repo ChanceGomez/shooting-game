@@ -104,9 +104,6 @@ function game:update(dt)
     if not game.paused then
         self.lookouts[1]:update(dt)
     end
-
-    --Stat panel
-    statpanel:update(dt)
 end
 
 function game:draw()

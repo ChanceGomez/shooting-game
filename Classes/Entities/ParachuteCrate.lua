@@ -1,8 +1,8 @@
 local ParachuteCrate = {}
 ParachuteCrate.__index = ParachuteCrate
 
-local staticCrateImage = al:getImage("parachute_crate")
-local staticParachuteImage = al:getImage("parachute")
+local staticCrateImage = assetloader:getImage("parachute_crate")
+local staticParachuteImage = assetloader:getImage("parachute")
 
 function ParachuteCrate:new(x,y,rarity,handler)
     local obj = setmetatable(Enemy:new(x,y,handler),ParachuteCrate)

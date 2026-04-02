@@ -8,9 +8,9 @@ local gun = {
 }
 
 function gun:load()
-    self.images.background = al:getImage("background_gun")
-    self.images.gun = al:getImage("gun")
-    self.images.gunLines = al:getImage("gun_lines")
+    self.images.background = assetloader:getImage("background_gun")
+    self.images.gun = assetloader:getImage("gun")
+    self.images.gunLines = assetloader:getImage("gun_lines")
 
     --Create inventories
     self.EquipmentInventory = EquipmentInventory:new({
@@ -84,7 +84,7 @@ function gun:draw()
 
     --cursor
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(al:getImage("cursor"),CursorX,CursorY)
+    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
 end
 
 return gun

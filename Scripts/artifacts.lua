@@ -53,7 +53,7 @@ function artifacts:load()
         description = {
             text = "Increase damage from all bullets by " .. getFormat("positive") .. "50% aswell as " .. getFormat("positive") .. "-25% duds",
         },
-        image = al:getImage("upgrademaxammo_shop_icon"),
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
     self.artifacts.railGun = {
         rarity = 1,
@@ -64,7 +64,7 @@ function artifacts:load()
         description = {
             text = "Increase bullet damage by " .. getFormat("positive") .. "500% but fire rate is increased by " .. getFormat("negative") .. "300%",
         },
-        image = al:getImage("upgrademaxammo_shop_icon"),
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
     self.artifacts.extendedMagazine = {
         rarity = 1,
@@ -74,7 +74,7 @@ function artifacts:load()
         description = {
             text = "Increase ammo capacity by " .. getFormat("positive") .. "+3",
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.increasedFireRate = {
         rarity = 1,
@@ -86,7 +86,7 @@ function artifacts:load()
         description = {
             text = "Increase fire rate by " .. getFormat("positive") .. "200% but reduce damage of all bullets by " .. getFormat("negative") .. "50%",  
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.halfLifeDuds = {
         rarity = 1,
@@ -97,7 +97,7 @@ function artifacts:load()
         description = {
             text = "Increase dud bullet damage by " .. getFormat("positive") .. "5 but increase duds by " .. getFormat("negative") .. "10%",
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.lighterBullets = {
         rarity = 1,
@@ -108,7 +108,7 @@ function artifacts:load()
         description = {
             text = "Increase reload rate by " .. getFormat("positive") .. "45% but reduce damage of all bullets by " .. getFormat("negative") .. "25%"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }   
     self.artifacts.flamingDuds = {
         rarity = 1,
@@ -119,7 +119,7 @@ function artifacts:load()
         description = {
             text = "Duds now inflame enemies for " .. getFormat("positive") .. "+5 damage every second for " .. getFormat("positive") .. "+3 seconds"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.methaneAir = {
         rarity = 2,
@@ -134,7 +134,7 @@ function artifacts:load()
             text = "All bullets now do " .. getFormat("positive") .. "+3 fire damage every second for " .. getFormat("positive") .. "+2 seconds, and increase fire damage " .. 
                 getFormat("positive") .. "200%"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.extraSupplies = {
         rarity = 1,
@@ -147,7 +147,7 @@ function artifacts:load()
             text = "Increase parachute chances by " .. getFormat("positive") .. "50% " .. "Increase equipment rarity by " .. 
                 getFormat("positive") .. "1"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.dudSurplus = {
         rarity = 1,
@@ -162,7 +162,7 @@ function artifacts:load()
             text = "Increase dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase dud damage by " .. 
                 getFormat("positive") .. "+2" .. " decrease fire rate & reload rate by ".. getFormat("positive") .. "50%" .. " and " .. getFormat("positive") .. "automatic loading"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.ammoInspection = {
         rarity = 2,
@@ -175,7 +175,7 @@ function artifacts:load()
             text = "Decrease dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase bullet damage by " .. 
                 getFormat("positive") .. "+5" .. " Increase reload rate by ".. getFormat("positive") .. "20%"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     self.artifacts.incendiaryRounds = {
         rarity = 2,
@@ -187,7 +187,7 @@ function artifacts:load()
         description = {
             text = "Increase Fire Damage by " .. getFormat(1) .. "+10" .. " Increase Fire Duration by " .. getFormat(1) .. "+5" .. " and increase Reload Rate by " .. getFormat(1) .. "20%"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
     --[[
 
@@ -204,7 +204,7 @@ function artifacts:load()
         description = {
             text = "Every 5 seconds a horizontal lazer appears on the screen and lasts 3 seconds. deals 10 damage per tick"
         },
-        image = al:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
         ]]
 
@@ -216,7 +216,7 @@ function artifacts:load()
 
         --check to see if image if not load default
         if artifact.image == nil then
-            artifact.image = al:getImage("upgrademaxammo_shop_icon")
+            artifact.image = assetloader:getImage("upgrademaxammo_shop_icon")
         end
         --Get dimensions
         artifact.width = artifact.image:getWidth()

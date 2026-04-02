@@ -4,12 +4,9 @@ local Inventory = {
 Inventory.__index = Inventory
 
 
---Static images 
-local static_inventorySlotBackgroundImage = al:getImage("background_equipment")
-local static_inventorySlotBackgroundImageHovered = al:getImage("background_equipment_hovered")
 --Static width/heights
-local static_inventorySlotWidth = static_inventorySlotBackgroundImage:getWidth()
-local static_inventorySlotHeight = static_inventorySlotBackgroundImage:getHeight()
+local static_inventorySlotWidth = 40
+local static_inventorySlotHeight = 40
 
 
 
@@ -25,11 +22,7 @@ local function generateSlots(cols,rows,x,y,margin)
             local x = (col-1) * (static_inventorySlotWidth+margin) + x
             local y = (row-1) * (static_inventorySlotHeight+margin) + y
             
-            table.insert(tbl,InventorySlot:new(x,y,
-            {
-                background = static_inventorySlotBackgroundImage,
-                backgroundHovered = static_inventorySlotBackgroundImageHovered,
-            }))
+            table.insert(tbl,InventorySlot:new(x,y))
         end
     end
 

@@ -5,10 +5,10 @@ local difficultyselction = {
 
 function difficultyselction:load()
     self.buttons.easy = {
-        x = Width/2 - al:getImage("button_easy"):getWidth(),
+        x = Width/2 - assetloader:getImage("button_easy"):getWidth(),
         y = 128,
         visible = true,
-        image = al:getImage("button_easy"),
+        image = assetloader:getImage("button_easy"),
         clicked = function()
             settings.difficulty = 'easy'
             Scene = "map"
@@ -49,7 +49,7 @@ function difficultyselction:draw()
 
     --Cursor
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(al:getImage("cursor"),CursorX,CursorY)
+    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
 end
 
 

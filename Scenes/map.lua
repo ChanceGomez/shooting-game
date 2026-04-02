@@ -103,12 +103,12 @@ end
 
 function map:load()
     self.backgrounds = {
-        [1] = al:getImage("background_night_level1"),
-        [2] = al:getImage("background_day_level2"),
+        [1] = assetloader:getImage("background_night_level1"),
+        [2] = assetloader:getImage("background_day_level2"),
     }
     self.clouds = {
-        [1] = al:getImage("background_clouds_night"),
-        [2] = al:getImage("background_clouds_layer1"),
+        [1] = assetloader:getImage("background_clouds_night"),
+        [2] = assetloader:getImage("background_clouds_layer1"),
     }
     self.map = Map:new(0,3,9,self)
     self.map:expand()
@@ -145,7 +145,7 @@ function map:draw()
 
 
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(al:getImage("cursor"), math.floor(CursorX),math.floor(CursorY))
+    love.graphics.draw(assetloader:getImage("cursor"), math.floor(CursorX),math.floor(CursorY))
 end
 
 return map

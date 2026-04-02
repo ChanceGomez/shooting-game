@@ -37,7 +37,20 @@ function shop:displayArtifacts(artifacts)
         end
 
         --Insert artifact into the artifacts table
-        table.insert(self.artifacts,artifact)
+        table.insert(self.artifacts,Button:new({
+            x = artifact.x,
+            y = artifact.y,
+            width = artifact.width,
+            height = artifact.height,
+            image = artifact.image,
+            description = artifact.description,
+            isText = false,
+            color = {1,1,1,1},
+            clicked = function()
+                artifact:add()
+                self:artifactClicked()
+            end
+        }))
     end
 
     --change position accordingly
@@ -62,11 +75,13 @@ function shop:drawArtifactSelection()
         love.graphics.setFont(perfect_dos_32)
         love.graphics.print(text,Width/2-(font:getWidth(text)/2),64)
 
-        --Draw all the artifacts
-        button:drawAll(self.artifacts)
 
+        --draw artifacts
+         for i, artifact in ipairs(self.artifacts) do
+            artifact:draw()
+        end
         --draw skip button
-        button:draw(self.skipArtifactButton)
+        self.skipArtifactButton:draw()
         --Infopanel
         for i, artifact in ipairs(self.artifacts) do
             if collision.rect(artifact) then
@@ -88,23 +103,59 @@ function shop:artifactClicked()
 end
 
 function shop:load()
-    self.skipArtifactButton = {
-        x = Width/2 - al:getImage("skipartifact_button"):getWidth()/2,
+    --This button is seperate from other buttons so it can be drawn 
+    -- above the tint layer in artifact selection
+    self.skipArtifactButton = Button:new({
+        x = Width/2-64,
         y = 300,
-        image = al:getImage("skipartifact_button"),
-        visible = self.isArtifact,
+        width = 128,
+        height = 32,
+        description = {
+            text = "Skip"
+        },
         clicked = function()
             self:artifactClicked()
-        end
-    }
+        end,
+    })
 
+    --[[
+
+    self.buttons["increase_health"] = Button:new({
+        x = 500,
+        y = 70,
+        level = 1,
+        maxLevel = 50,
+        cost = 10,
+        image = assetloader:getImage("add_button"),
+        visible = true,
+        description = {text = ""},
+        clicked = function(self)
+            if game.Player.health >= 3 then
+                --return
+            end
+            if game.Player.resources >= self.cost then
+                game.Player.health = game.Player.health + 1
+                game.Player.resources = game.Player.resources - self.cost
+                self.cost = self.cost * 3
+            end            
+        end,
+        updateText = function(self)
+            self.description.text = "Increase Health /n"
+            
+            self.description.text = self.description.text .. " /nCost: " .. self.cost
+
+            return self.description.text
+        end 
+    })
+    ]]
+    --[[
     self.buttons["increase_health"] = {
         x = 500,
         y = 70,
         level = 1,
         maxLevel = 50,
         cost = 10,
-        image = al:getImage("add_button"),
+        image = assetloader:getImage("add_button"),
         visible = true,
         description = {text = ""},
         clicked = function(self)
@@ -130,7 +181,7 @@ function shop:load()
     self.buttons["increase_maxAmmo"] ={
         x = 70,
         y = 70,
-        image = al:getImage("add_button"),
+        image = assetloader:getImage("add_button"),
         visible = true,
         ids = {
             {"Max Ammo","add",1},
@@ -167,7 +218,7 @@ function shop:load()
     self.buttons["increase_damage"] = {
         x = 70,
         y = 70+32,
-        image = al:getImage("add_button"),
+        image = assetloader:getImage("add_button"),
         visible = true,
         description = {text = ""},
         ids = {
@@ -204,7 +255,7 @@ function shop:load()
     self.buttons["increase_reloadRate"] ={
         x = 70,
         y = 70+64,
-        image = al:getImage("add_button"),
+        image = assetloader:getImage("add_button"),
         visible = true,
         ids = {
             {"Reload Rate","mult",.90},
@@ -241,7 +292,7 @@ function shop:load()
     self.buttons["increase_fireRate"] ={
         x = 70,
         y = 70+96,
-        image = al:getImage("add_button"),
+        image = assetloader:getImage("add_button"),
         visible = true,
         ids = {
             {"Fire Rate","mult",.90},
@@ -275,25 +326,26 @@ function shop:load()
         end,
     }
 
+    ]]
+
     if settings.loadShopOnStart then
         self:displayArtifacts(artifacts:getAllArtifacts())
     end
 end
 
 function shop:update(dt)
-    if self.isArtifact then 
-        button:updateAll(self.artifacts)
-        button:update(self.skipArtifactButton)
-    else
-        button:updateAll(self.buttons)
-    end
     tab:update(dt)
+
+    self.skipArtifactButton:update()
+    if #self.artifacts > 0 then
+        for i, artifact in ipairs(self.artifacts) do
+            artifact:update()
+        end
+    end
 end
 
 function shop:draw()
     love.graphics.setBackgroundColor(.1,.1,.1,1)
-
-    button:drawAll(self.buttons)
 
     --Upgrade text
     love.graphics.setFont(perfect_dos_32)
@@ -347,7 +399,7 @@ function shop:draw()
     tab:draw()
 
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(al:getImage("cursor"),CursorX,CursorY)
+    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
 end
 
 

@@ -8,18 +8,18 @@ local title = {
 
 function title:load()
     --load background images
-    table.insert(self.backgroundImages,al:getImage("background_title_left"))
-    table.insert(self.backgroundImages,al:getImage("background_title_middle"))
-    table.insert(self.backgroundImages,al:getImage("background_title_right"))
+    table.insert(self.backgroundImages,assetloader:getImage("background_title_left"))
+    table.insert(self.backgroundImages,assetloader:getImage("background_title_middle"))
+    table.insert(self.backgroundImages,assetloader:getImage("background_title_right"))
 
     table.insert(self.buttons,{
         x = 24,
         y = 300,
         color = {1,1,1,1},
-        image = al:getImage("button_agree"),
-        hoveredImage = al:getImage("button_agree_hovered"),
-        width = al:getImage("button_agree"):getWidth(),
-        height = al:getImage("button_agree"):getHeight(),
+        image = assetloader:getImage("button_agree"),
+        hoveredImage = assetloader:getImage("button_agree_hovered"),
+        width = assetloader:getImage("button_agree"):getWidth(),
+        height = assetloader:getImage("button_agree"):getHeight(),
         visible = true,
         description = "Start the game",
         clicked = function()
@@ -46,7 +46,7 @@ function title:draw()
 
     
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(al:getImage("background_title_text"))
+    love.graphics.draw(assetloader:getImage("background_title_text"))
 
 
     button:drawAll(self.buttons)
@@ -54,7 +54,7 @@ function title:draw()
 
     --Cursor
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(al:getImage("cursor"),CursorX,CursorY)
+    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
 end
 
 return title

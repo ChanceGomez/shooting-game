@@ -1,6 +1,7 @@
 local EquipmentInventory = {}
 EquipmentInventory.__index = EquipmentInventory
 
+
 local function generateSlots(tbl)
     local returnTbl = {}
 

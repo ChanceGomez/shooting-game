@@ -1,8 +1,11 @@
 local InventorySlot = {}
 InventorySlot.__index = InventorySlot
 
+--Static width/heights
+local static_inventorySlotWidth = 40
+local static_inventorySlotHeight = 40
 
-function InventorySlot:new(x,y,images)
+function InventorySlot:new(x,y)
     local obj = setmetatable({},InventorySlot)
 
 
@@ -11,13 +14,18 @@ function InventorySlot:new(x,y,images)
 
     obj.x = x
     obj.y = y
-    obj.width = images.background:getWidth()
-    obj.height = images.background:getHeight()
+    obj.width = static_inventorySlotWidth
+    obj.height = static_inventorySlotHeight
     obj.rightClicked = false
 
+    obj.colors = {
+        normal = {.7,.7,.7,1},
+        available = {0,.6,0,1},
+        hovered = {.5,.5,.5,1},
+    }
+    obj.color = "normal"
     obj.item = nil
 
-    obj.images = images
 
     return obj
 end
@@ -41,10 +49,8 @@ function InventorySlot:update(dt)
 end
 
 function InventorySlot:draw()
-    love.graphics.setColor(1,1,1,1)
-    local image = self.images.background
-    if self.hovered then image = self.images.backgroundHovered end
-    love.graphics.draw(image,self.x,self.y)
+    love.graphics.setColor(self.colors[self.color])
+    love.graphics.rectangle("fill",self.x,self.y,self.width,self.height)
 
     if self.item then
         love.graphics.setColor(1,1,1,1)

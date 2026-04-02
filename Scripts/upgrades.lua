@@ -10,19 +10,19 @@ function upgrades:load()
         clicked = function()
             game.Player.gun:increaseMaxAmmo(1)
         end,
-        image = al:getImage("upgrademaxammo_shop_icon"),
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
         description = "Increase max ammo by 1",
-        width = al:getImage("upgrademaxammo_shop_icon"):getWidth(),
-        height = al:getImage("upgrademaxammo_shop_icon"):getHeight(),
+        width = assetloader:getImage("upgrademaxammo_shop_icon"):getWidth(),
+        height = assetloader:getImage("upgrademaxammo_shop_icon"):getHeight(),
     }
     self.upgrades.upgradeDamage = {
         clicked = function()
             game.Player.gun:increaseDamage(10)
         end,
-        image = al:getImage("upgradedamage_shop_icon"),
+        image = assetloader:getImage("upgradedamage_shop_icon"),
         description = "Increase damage by 10",
-        width = al:getImage("upgradedamage_shop_icon"):getWidth(),
-        height = al:getImage("upgradedamage_shop_icon"):getHeight(),
+        width = assetloader:getImage("upgradedamage_shop_icon"):getWidth(),
+        height = assetloader:getImage("upgradedamage_shop_icon"):getHeight(),
     }
     --get count of how many upgrades
     for i, upgrade in pairs(self.upgrades) do

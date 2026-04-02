@@ -6,8 +6,8 @@
     self.collider = {
         x = 100,
         y = 100,
-        imageData = al:getImageData("animation_bird_dying1"),
-        image = al:getImage("animation_bird_dying1")
+        imageData = assetloader:getImageData("animation_bird_dying1"),
+        image = assetloader:getImage("animation_bird_dying1")
     }
 
  end

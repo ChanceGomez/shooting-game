@@ -65,6 +65,7 @@ function controls:update()
 	
     --control keys
     escapeClick = false
+    tabClick = false
 
 	--arrow keys
 	up 		= false
@@ -87,6 +88,8 @@ function controls:update()
     -- mouse
     leftClick = false
     rightClick = false
+    leftReleased = false
+    rightReleased = false
 
     -- general flags
     controls.keyboardClicked = false
@@ -127,6 +130,8 @@ function love.keypressed(key)
     elseif key == "z" then zClick = true; controls.typeableClicked = true; controls.last_typable = "z"
 
     elseif key == "escape" then escapeClick = true; controls.typeableClicked = false;
+    elseif key == "tab" then tabClick = true; controls.typeableClicked = false;
+
 
 
     elseif key == "1" then oneClick = true; controls.numberClicked = true; controls.last_number = "1"
@@ -159,6 +164,7 @@ function love.mousepressed(x, y, button)
         leftHeld = true
     elseif button == 2 then
         rightClick = true
+        rightHeld = true
     end
 	
 	
@@ -188,8 +194,11 @@ function love.mousereleased(x,y,button)
 
     if button == 1 then
         leftHeld = false
-    end
-	if button == 3 then
+        leftReleased = true 
+    elseif button == 2 then
+        rightHeld = false
+        rightReleased = true
+	elseif button == 3 then
 		controls.dragging = false
 	end
 end

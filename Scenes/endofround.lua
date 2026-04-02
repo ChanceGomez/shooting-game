@@ -12,11 +12,15 @@ function endofround:getReport(report,artifacts)
 end
 
 function endofround:load()
-    local endshiftImage = al:getImage("endshift_button")
-    table.insert(self.buttons,{
-        x = Width/2-endshiftImage:getWidth()/2,
-        y = 360 - endshiftImage:getHeight() - 10,
-        image = endshiftImage,
+    local endshiftImage = assetloader:getImage("endshift_button")
+    self.endRoundButton = Button:new({
+        x = 0,
+        y = Height-32,
+        width = 128,
+        height = 32,
+        description = {
+            text = "End Round",
+        },
         visible = true,
         clicked = function()
             Scene = "shop"
@@ -29,7 +33,7 @@ function endofround:load()
 end
 
 function endofround:update()
-    button:updateAll(self.buttons)
+    self.endRoundButton:update()
 end
 
 function endofround:draw()
@@ -52,11 +56,11 @@ function endofround:draw()
 
     end
 
-    button:drawAll(self.buttons)
+    self.endRoundButton:draw()
 
 
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(al:getImage("cursor"),CursorX,CursorY)
+    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
 end
 
 
