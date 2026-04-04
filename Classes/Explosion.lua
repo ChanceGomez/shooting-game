@@ -6,11 +6,23 @@ function Explosion.new(handler,x,y,radius,damage,duration)
 
     obj.x = x or 0
     obj.y = y or 0
-    obj.radius = radius or 5
     obj.damage = damage or 5
     obj.duration = duration or 1
     obj.handler = handler
     obj.timer = 0 
+    obj.radius = radius or 5
+    obj.properties = {
+        damage = {
+        type = "Explosion",
+        radius = obj.radius,
+        damage = obj.damage,
+        interval = 0,
+        duration = 0,
+        executable = function(self,enemy)
+            enemy:damage(obj.damage)
+        end
+        },
+    }
 
     return obj
 end
@@ -31,15 +43,7 @@ function Explosion:update(dt)
     for i, enemy in ipairs(self.handler.enemies) do
         if collision.circleRect(self,enemy) and enemy.currentExplosionDamage ~= self then
             enemy.currentExplosionDamage = self
-            enemy:hit({damage = self.damage})
-        end
-    end
-    --Check for parachutes
-    for i, parachute in ipairs(self.handler.parachutes) do
-        local crate = parachute.crate
-        if collision.circleRect(self,crate) and crate.currentExplosionDamage ~= self then
-            parachute.currentExplosionDamage = self
-            parachute:hit({damage = self.damage})
+            enemy:hit(self.properties)
         end
     end
 end

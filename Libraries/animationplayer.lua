@@ -1,125 +1,81 @@
-local animationplayer = {
-  animations = {},
-  groupedAmimations = {},
-}
+local AnimationPlayer = {}
+AnimationPlayer.__index = AnimationPlayer
 
-function animationplayer:update(dt)
-  for i, animation in pairs(self.animations) do
-    animation.timer = animation.timer + dt
-    if animation.timer >= animation.timeBetweenFrames then
-      animation.timer = 0
-      animation.frame = animation.frame + 1
-      if animation.frame > #animation.images and animation.looping then
-        animation.frame = 1
-      elseif animation.frame > #animation.images and not animation.looping then
-        animation.frame = #animation.images
-        self.animations[animation] = nil
-      end
-    end
-  end
+function AnimationPlayer:new(images,animation,timeBetweenFrames,isLooped,flipped,scale)
+    local obj = setmetatable({},AnimationPlayer)
 
-  for i, group in pairs(self.groupedAmimations) do
-    for j, animation in pairs(group) do
-      animation.timer = animation.timer + dt
-      if animation.timer >= animation.timeBetweenFrames then
-        animation.timer = 0
-        animation.frame = animation.frame + 1
-        if animation.frame > #animation.images and animation.looping then
-          animation.frame = 1
-        elseif animation.frame > #animation.images and not animation.looping then
-          animation.frame = #animation.images
-          table.remove(group, j)
-        end
-      end
-    end
-  end
+    obj.isPaued = false
+    obj.animation = animation
+    obj.images = images
+    obj.x = 0
+    obj.y = 0
+    obj.isFlipped = flipped or false
+    obj.timeBetweenFrames = timeBetweenFrames or .5 
+    obj.scale = scale or 1
+    obj.isLooped = isLooped or false
+
+    obj.timer = 0
+    obj.frame = 1
+
+    return obj
 end
 
-function animationplayer:draw(name,images,timeBetweenFrames,x,y,looping,flipped,size)
-  local looping = looping or false
-  local flipped = flipped or false
-  local size = size or 1
-  local name = name or "default"
+function AnimationPlayer:setTimeBetweenFrames(time)
+    self.timeBetweenFrames = time
+end
 
+function AnimationPlayer:setIsLooped(isLooped)
+    self.isLooped = isLooped
+end
 
-  if self.animations[name] then
-    --get the animation
-    local animation = self.animations[name]
+function AnimationPlayer:setImages(images)
+    self.images = images
+end
 
-    --Check to see if there is new data to update
-      local oldX,oldY = animation.x, animation.y
-      if oldX ~= x then
-        animation.x = x
+function AnimationPlayer:setScale(scale)
+    self.scale = scale
+end
+
+function AnimationPlayer:setAnimation(animation)
+    if self.images[animation] == nil then return end
+    self.animation = animation
+    self.frame = 1
+end
+
+function AnimationPlayer:play()
+    self.isPaused = false
+end
+
+function AnimationPlayer:pause()
+    self.isPaused = true
+end
+
+function AnimationPlayer:update(dt)
+    self.timer = self.timer + dt
+    if self.timer >= self.timeBetweenFrames then
+      self.timer = 0
+      self.frame = self.frame + 1
+      if self.frame > #self.images[self.animation] and self.isLooped then
+        self.frame = 1
+      elseif self.frame > #self.images[self.animation] and not self.isLooped then
+        self.frame = #self.images[self.animation]
       end
-      if oldY ~= y then
-        animation.y = y
-      end
-      if images[1] ~= animation.images[1] then
-        animation.images = images
-        animation.frame = 1
-      end
-      if looping ~= animation.looping then
-        animation.looping = looping
-      end
-      if flipped ~= animation.flipped then
-        animation.flipped = flipped
-      end
+    end
+end
+
+function AnimationPlayer:draw(x,y)
+    if self.images == nil then return end
     
-    --draw the animation
-    if flipped then
-      local oX, oY = animation.images[animation.frame]:getDimensions()
-      love.graphics.draw(animation.images[animation.frame],animation.x,animation.y,0,-size,size,oX)
+
+    local frameImage = self.images[self.animation][self.frame]
+    if frameImage == nil then error("Bad frame, bad animation",self.animation,self.frame) end
+    local oX, oY = frameImage:getDimensions()
+    
+    if self.isFlipped then
+        love.graphics.draw(frameImage,x,y,0,-self.scale,self.scale,oX)
     else
-      love.graphics.draw(animation.images[animation.frame],animation.x,animation.y,0,size,size)
+        love.graphics.draw(frameImage,x,y,0,self.scale,self.scale)
     end
-    return
-  end
-
-  if images == nil then
-    return
-  end
-
-  self.animations[name] = {
-    looping = looping,
-    images = images,
-    timeBetweenFrames = timeBetweenFrames,
-    timer = 0,
-    x = x,
-    y = y,
-    frame = 1,
-  }  
 end
 
-function animationplayer:drawGroup(group,images,timeBetweenFrames,x,y,looping)
-  local looping = looping or false
-  local group = group or "default"
-  
-  if self.groupedAmimations[group] and images == nil then
-    for i, animation in pairs(self.groupedAmimations[group]) do
-      love.graphics.setColor(1,1,1,1)
-      love.graphics.draw(animation.images[animation.frame],animation.x,animation.y)
-    end
-    return
-  end
-
-  if images == nil then
-    return
-  end
-
-  local animation = {
-    looping = looping,
-    images = images,
-    timeBetweenFrames = timeBetweenFrames,
-    timer = 0,
-    x = x,
-    y = y,
-    frame = 1,
-  }
-
-  if not self.groupedAmimations[group] then
-    self.groupedAmimations[group] = {}
-  end
-  table.insert(self.groupedAmimations[group], animation)
-end
-
-return animationplayer
+return AnimationPlayer

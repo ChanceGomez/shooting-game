@@ -28,7 +28,7 @@ function Cannon:fire()
     local extractionFrame = self.bulletAnimation[1]
     local w,h = extractionFrame:getDimensions()
     if Gun.fire(self,CursorX,CursorY) == false then return end
-    animationplayer:drawGroup("pistol",self.bulletAnimation,.05,CursorX - w/2,CursorY - h/2)
+    --animationplayer:drawGroup("pistol",self.bulletAnimation,.05,CursorX - w/2,CursorY - h/2)
     self.fireRateTimer = 0
 end
 
@@ -37,7 +37,7 @@ function Cannon:update(dt)
 end
 
 function Cannon:draw()
-    animationplayer:drawGroup("pistol")
+   --animationplayer:drawGroup("pistol")
 end
 
 

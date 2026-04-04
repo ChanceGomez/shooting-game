@@ -82,7 +82,6 @@ end
 function Affector:getMult(trigger,attribute)
     if self.affectors[trigger] == nil then return attribute end
     local returnAttribute = attribute 
-    if returnAttribute == 0 then returnAttribute = 1 end
     if returnAttribute == nil then returnAttribute = 0 end
 
     for i, mult in ipairs(self.affectors[trigger].mult) do

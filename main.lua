@@ -23,7 +23,7 @@
   controls = require("Libraries/controls")
   tween = require("Libraries/tween")
   array = require("Libraries/array")
-  animationplayer = require("Libraries/animationplayer")
+  AnimationPlayer = require("Libraries/AnimationPlayer")
   Inventory = require("Libraries/Inventory")
   InventorySlot = require("Libraries/InventorySlot")
   EquipmentInventory = require("Libraries/EquipmentInventory")
@@ -55,8 +55,8 @@ Scale = 3
 mainCanvas = nil
 settings = {
   volume = .6, -- Global volume
-  hitbox = false, -- Display hitboxes on enemies
-  showHealth = false,
+  hitbox = true, -- Display hitboxes on enemies
+  showHealth = true,
   showAlive = false,
   debug = true,
   difficulty = 'easy',
@@ -178,6 +178,7 @@ local function loadClasses()
     Map = require("Classes/MapNode/Map")
     Node = require("Classes/MapNode/Node")
     Explosion = require("Classes/Explosion")
+    GrenadeExplosion = require("Classes/GrenadeExplosion")
 end
 
 -- love functions
@@ -221,7 +222,6 @@ function love.update(dt)
 	Scenes[Scene].update(dt)
 
 	--update scripts
-	animationplayer:update(dt)
 	controls:update()
 	event:update(dt)
 	tween:update(dt)

@@ -31,7 +31,7 @@ function game:getVariable(name)
     local gun = player.gun
 
     if name == "Dud Damage" then
-        return player.gun.duds.damage
+        return player.gun.duds.bullet.damage
     elseif name == "Bullet Damage" then
         return player.gun.bullets.bullet.damage
     elseif name == "Dud Chance" then 

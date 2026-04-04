@@ -35,6 +35,8 @@ function ParachuteCrate.new(x,y,rarity,handler)
         x = 0,
         y = 0,
     }
+    obj.width = obj.crate.width
+    obj.height = obj.crate.height
 
     return setmetatable(obj,ParachuteCrate)
 end
@@ -62,6 +64,10 @@ function ParachuteCrate:update(dt)
 
     self.crate.x = self.x + ((self.parachute.width-self.crate.width)/2)
     self.crate.y = self.y + self.parachute.height
+
+    if self.y > Height then 
+        self:delete()
+    end
 end
 
 function ParachuteCrate:draw()

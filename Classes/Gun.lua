@@ -11,7 +11,6 @@ function Gun.new()
             damage = 10,
             duration = 0,
             executable = function(self,enemy)
-                print("big damage")
                 enemy:damage(self.damage,self.type)
             end,
         },
@@ -28,28 +27,39 @@ function Gun.new()
             type = "Stun",
             interval = 0,
             damage = 0,
-            duration = 5,
+            duration = 0,
             executable = function(self,enemy)
                 enemy:stun()
             end
         },
     }
     obj.duds = {
-        damage = {
+        bullet = {
             type = "Dud",
             interval = 0,
             damage = 0,
-            duration = 1,
+            duration = 0,
             executable = function(self,enemy)
-                enemy:damage(self.type,self.damage)
+                enemy:damage(self.damage,self.type)
             end,
         },
         fire = {
+            type = "Fire",
+            interval = 1,
             damage = 0,
             duration = 0,
+            executable = function(self,enemy)
+                enemy:damage(self.damage,self.type)
+            end
         },
         stun = {
-            duration = 0
+            type = "Stun",
+            interval = 0,
+            damage = 0,
+            duration = 0,
+            executable = function(self,enemy)
+                enemy:stun()
+            end
         },
     }
     obj.fireRate = 0    

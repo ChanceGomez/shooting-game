@@ -14,13 +14,20 @@ function Player.new()
     obj.parachuteEquipmentRarity = 1
     obj.explosions = 3
     obj.explosionProperties = {
-        damage = 20,
-        radius = 30,
-        duration = .5,
+        explosion = {
+            type = "Explosion",
+            interval = 0,
+            damage = 20,
+            radius = 30,
+            duration = 0,
+            executable = function(self,enemy)
+                enemy:damage(self.damage) 
+            end
+        }
     }
 
     if settings.debug then
-    obj.resources = 1000000
+        obj.resources = 1000000
     end
 
     return obj
@@ -88,7 +95,7 @@ function Player:draw()
     --draw explosion area
     if love.mouse.isDown(2) and self.explosions > 0 then
         love.graphics.setColor(.7,.7,.7,.5)
-        love.graphics.circle("fill",CursorX,CursorY,self.explosionProperties.radius)   
+        love.graphics.circle("fill",CursorX,CursorY,self.explosionProperties.explosion.radius)   
     end
 
     love.graphics.setColor(1,1,1,1)

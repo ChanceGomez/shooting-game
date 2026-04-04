@@ -17,10 +17,12 @@ function BigInfectedBird.new(x,y,handler,difficulty,facing)
     obj.speed = 20 * (math.max(difficulty/8,1))
     obj.resources = 15
 
-    obj.animations = {
+    local animations = {
         flying = flyingAnimation,
         dying = dyingAnimation,
     }
+    obj.AnimationPlayer:setImages(animations)
+    obj.AnimationPlayer:setScale(2)
 
     obj.width = flyingAnimation[1]:getWidth()*2
     obj.height = flyingAnimation[1]:getHeight()*2
@@ -30,15 +32,14 @@ end
 
 function BigInfectedBird:die()
     Enemies.Bird.die(self)
-    game:getHandler():newEnemy("InfectedBird",self.x+15,self.y,1)
-    game:getHandler():newEnemy("InfectedBird",self.x+15,self.y,-1)
+    game:getHandler():newEnemy("InfectedBird",self.x+15,self.y,true)
+    game:getHandler():newEnemy("InfectedBird",self.x+15,self.y,false)
 end
 
 function BigInfectedBird:draw()
     local flipped = self.facing ~= -1
     local speed = 5/self.speed
     Enemy.Draw(self)
-    animationplayer:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped,2)
 end
 
 return BigInfectedBird

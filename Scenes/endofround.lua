@@ -24,7 +24,6 @@ function endofround:load()
         visible = true,
         clicked = function()
             Scene = "shop"
-            shop:loadShop()
             if #self.artifacts > 0 then
                 shop:displayArtifacts(self.artifacts)
             end

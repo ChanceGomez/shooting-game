@@ -45,7 +45,7 @@ function EnemyHandler:startRound()
 
     --check to see if parachute is true
     if self.isParachute then
-        table.insert(self.parachutes,ParachuteCrate.new(math.random(100,540),0,game.Affector:trigger("Parachute Equipment Rarity",game:getVariable("Parachute Equipment Rarity")),self))
+        table.insert(self.enemies,ParachuteCrate.new(math.random(100,540),0,game.Affector:trigger("Parachute Equipment Rarity",game:getVariable("Parachute Equipment Rarity")),self))
         --table.insert(self.parachutes,ParachuteCrate.new(math.random(100,540),0,1,self))
     end
 
@@ -70,9 +70,9 @@ function EnemyHandler:startRound()
             t = interval,
             event = function()
                 local random = math.random(1,2)
-                local facing = 1 
+                local facing = true 
                 if random == 2 then 
-                    facing = -1
+                    facing = false
                 end
                 self:newEnemy(self.enemyList[i],math.random(200,Width-200),Height+30,facing)
             end
@@ -111,7 +111,7 @@ function EnemyHandler:checkHit(properties)
 end
 
 function EnemyHandler:newExplosion(x,y,radius,damage,duration)
-    table.insert(self.Explosions,Explosion.new(self,x,y,radius,damage,duration))
+    table.insert(self.Explosions,GrenadeExplosion.new(self,x,y))
 end
 
 -- Spawn in an enemy

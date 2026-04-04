@@ -28,6 +28,7 @@ function Enemy.new(x,y,handler)
   obj.isAlive = true
   obj.resources = 0
   obj.effects = {}
+  obj.AnimationPlayer = AnimationPlayer:new()
 
   return obj
 end
@@ -37,10 +38,11 @@ function Enemy:die()
     self.isAlive = false
     self.color = "dead"
     self.handler:enemyDied()
+    self.isStunned = false
     game.lookouts[1].Report:action("resources",self.resources)
-    if self.animation then
-        self.animation = "dying"
-    end
+    self.AnimationPlayer:setAnimation("dying")
+    self.AnimationPlayer:setIsLooped(false)
+    
 end
 
 function Enemy:escape()
@@ -60,7 +62,7 @@ function Enemy:hit(properties)
     --Insert effects 
     for i, effect in pairs(properties) do
         table.insert(self.effects,{
-            type = effect.type,
+            type = effect.type or "",
             ticks = 0,
             interval = effect.interval or 1,
             timer = 0,
@@ -76,17 +78,21 @@ function Enemy:hit(properties)
 end
 
 function Enemy:damage(damage,type)
-    print(damage,type)
     if not self.isAlive then return end
     local type = type or ""
 
-    self.isHit = true
-
     --Observer/Affector
+    print(damage,type)
     local damage = game.Affector:trigger(type .. ' '.. "Damage",damage)
+    print(damage,type)
+
+    if damage == 0 then return end
+
+    self.isHit = true
     game.lookouts[1].Report:action("damageDealt", damage)
 
     self.health = self.health - damage
+    
 
     if self.health <= 0 then
         self:die()
@@ -140,18 +146,38 @@ end
 
 function Enemy:effectUpdate(dt)
     --check for effects
-    for i, effect in ipairs(self.effects) do
+    for i = #self.effects, 1, -1 do 
+        local effect = self.effects[i]
         effect.timer = effect.timer + dt
-        if effect.timer > 1 then
+
+        --Tick system based off of 1 second
+        if effect.timer >= 1 then
             effect.timer = 0
             effect.ticks = effect.ticks + 1
             effect.executable(self)
+            
             if effect.ticks >= effect.duration then
                 table.remove(self.effects,i)
             end
-        elseif effect.interval == 0 and effect.ticks == 0 then
+        --[[elseif effect.interval == 0 and effect.ticks == 0 then
             effect.ticks = effect.ticks + 1
+            effect.executable(self)]]
+        end
+
+        --Tick system based off of instant effects
+        if effect.interval == 0 and effect.duration > 0 then
             effect.executable(self)
+        end
+
+        --Instant effect but instant removal check
+        if effect.interval == 0 and effect.duration == 0 then
+            effect.executable(self)
+            table.remove(self.effects,i)
+        end
+
+        --remove instant execute effects at the end of loop
+        if effect.interval == 0 and effect.ticks >= effect.duration then
+            table.remove(self.effects,i)
         end
     end
 end
@@ -159,9 +185,12 @@ end
 function Enemy:update(dt)
     Enemy.hitColor(self,dt)
 
-    --check for effects
-    Enemy.effectUpdate(self,dt)
+    self.AnimationPlayer:update(dt)
 
+    self.isStunned = false
+    --check for effects
+    self:effectUpdate(dt)
+    
     --clean up
     if not self.isAlive and self.y > Height then
         Enemy.delete(self)
@@ -169,14 +198,15 @@ function Enemy:update(dt)
 
     local sideMargin = 32
     if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.y < Height-40 and self.lifeTimer > 5 then
-        Enemy.escape(self)
+        self:escape()
     end
 end
 
 function Enemy:draw()
     if settings.hitbox then
         love.graphics.setLineWidth(1)
-        love.graphics.rectangle("line",self.x-1,self.y-1,self.width+2,self.height+2)
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.rectangle("line",self.x-1,self.y-1,math.floor(self.width+2),math.floor(self.height+2))
         love.graphics.setFont(dogica_8)
         if settings.showAlive then
             love.graphics.print(self.isAlive and "alive" or "dead",self.x+self.width + 2, self.y)
@@ -187,6 +217,7 @@ function Enemy:draw()
     end
 
     love.graphics.setColor(self.colors[self.color])
+    self.AnimationPlayer:draw(math.floor(self.x),math.floor(self.y))
 end
 
 return Enemy
