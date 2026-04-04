@@ -1,7 +1,7 @@
  local testscene = {}
 
  function testscene:load()
-    self.Affector = Affector:new()
+    self.Affector = Affector.new()
     
     self.collider = {
         x = 100,

@@ -6,14 +6,14 @@ local function generateSlots(tbl)
     local returnTbl = {}
 
     for i, slot in pairs(tbl) do
-        returnTbl[i] = EquipmentSlot:new(slot[1],slot[2])
+        returnTbl[i] = EquipmentSlot.new(slot[1],slot[2])
     end
 
     return returnTbl 
 end
 
-function EquipmentInventory:new(tbl,functions)
-    local obj = setmetatable(Inventory:new(nil,nil,nil,nil,functions),EquipmentInventory)
+function EquipmentInventory.new(tbl,functions)
+    local obj = setmetatable(Inventory.new(nil,nil,nil,nil,functions),EquipmentInventory)
 
     obj.slots = generateSlots(tbl)
 
@@ -45,7 +45,8 @@ end
 
 function EquipmentInventory:update(dt)
     Inventory.update(self,dt)
-    --Check to see if hoveredSlot has an item and goes into a slot
+    --Check to see if own hoveredSlot has an item and goes into a slot
+
     if self.hoveredSlot then
         if self.hoveredSlot.item then
             for i, slot in pairs(self.slots) do
@@ -55,6 +56,8 @@ function EquipmentInventory:update(dt)
             end
         end
     end
+
+    --Check other inventories hovered slot and rightclickedslot
     for i, inventory in ipairs(self.inventories) do
         if inventory.hoveredSlot then
             if inventory.hoveredSlot.item then
@@ -65,7 +68,17 @@ function EquipmentInventory:update(dt)
                 end
             end
         end
+        if inventory.rightClickedSlot then
+            if inventory.rightClickedSlot.item then
+                for i, slot in pairs(self.slots) do
+                    if inventory.rightClickedSlot.item.type == i then
+                        slot.available = true
+                    end
+                end
+            end
+        end
     end
+    
     --Check to see if helditem can go in any slots
     if self.heldItem then
         for i, slot in pairs(self.slots) do

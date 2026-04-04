@@ -1,7 +1,7 @@
 local Node = {}
 Node.__index = Node
 
-function Node:new(x,y,nodeX,nodeY,map,seed,isEndNode)
+function Node.new(x,y,nodeX,nodeY,map,seed,isEndNode)
     local obj = setmetatable({},Node)
 
     obj.isEndNode = isEndNode

@@ -6,6 +6,8 @@
 local Bird = {}
 Bird.__index = Bird
 
+setmetatable(Bird,{__index = Enemy})
+
 -- Static images
 local flyingAnimation = assetloader:getAnimation("animation_bird_flying")
 local dyingAnimation = assetloader:getAnimation("animation_bird_dying")
@@ -13,8 +15,8 @@ local dyingAnimation = assetloader:getAnimation("animation_bird_dying")
 -- Static ID
 local staticID = 1
 
-function Bird:new(x,y,handler,difficulty,facing)
-    local obj = setmetatable(Enemy:new(x,y,handler), Bird)
+function Bird.new(x,y,handler,difficulty,facing)
+    local obj = Enemy.new(x,y,handler)
 
     if difficulty == nil then error() end
     local difficulty = difficulty or 1
@@ -24,13 +26,12 @@ function Bird:new(x,y,handler,difficulty,facing)
 
     obj.resources = 5
 
-    obj.passive = true
     obj.animation = "flying"
     obj.animations = {
-    flying = flyingAnimation,
-    dying = dyingAnimation
+        flying = flyingAnimation,
+        dying = dyingAnimation
     }
-    obj.sounds = {
+    obj.sounds = { 
         hit = assetloader:getAudio("birdhit"),
         die = assetloader:getAudio("birddie"),
     }
@@ -43,7 +44,7 @@ function Bird:new(x,y,handler,difficulty,facing)
     --increase static id
     staticID = staticID + 1
 
-  return obj
+    return setmetatable(obj,Bird)
 end
 
 function Bird:die()
@@ -56,35 +57,26 @@ function Bird:hit(damage)
     love.audio.play(self.sounds.hit:clone())
 end
 
-function Bird:hitColor(dt)
-    Enemy.hitColor(self,dt)
-end
-
-function Bird:isCollision()
-    return Enemy.isCollision(self)
-end
-
 function Bird:update(dt)
     Enemy.update(self, dt)
     --update position
-    if self.isAlive then
+    if self.isAlive and not self.isStunned then
         local speed = self.speed
         if self.isHit then
             speed = speed/2
         end
         self.x = self.x + speed * self.facing * dt
         self.y = self.y - (speed + (math.sin(love.timer.getTime() * 5) * 20)) * dt
-    else
+    elseif not self.isAlive then
         self.y = self.y + 55 * dt
     end
 end
 
 function Bird:draw()
     local flipped = self.facing ~= -1
-    love.graphics.setColor(self.color)
     local speed = 5/self.speed
-    animationplayer:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped)
     Enemy.draw(self)
+    animationplayer:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped)
 end
 
 return Bird

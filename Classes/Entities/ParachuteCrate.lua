@@ -1,11 +1,14 @@
 local ParachuteCrate = {}
 ParachuteCrate.__index = ParachuteCrate
 
+setmetatable(ParachuteCrate,{__index = Enemy})
+
+
 local staticCrateImage = assetloader:getImage("parachute_crate")
 local staticParachuteImage = assetloader:getImage("parachute")
 
-function ParachuteCrate:new(x,y,rarity,handler)
-    local obj = setmetatable(Enemy:new(x,y,handler),ParachuteCrate)
+function ParachuteCrate.new(x,y,rarity,handler)
+    local obj = Enemy.new(x,y,handler)
 
     obj.x = x or 0
     obj.y = y or 0
@@ -33,7 +36,7 @@ function ParachuteCrate:new(x,y,rarity,handler)
         y = 0,
     }
 
-    return obj
+    return setmetatable(obj,ParachuteCrate)
 end
 
 function ParachuteCrate:die()
@@ -41,18 +44,6 @@ function ParachuteCrate:die()
     self.speed = 150
     self.isAlive = false
     gun.Inventory:addItem(self.item)
-end
-
-function ParachuteCrate:hit(properties)
-    Enemy.hit(self,properties)
-end
-
-function ParachuteCrate:hitColor(dt)
-    Enemy.hitColor(self,dt)
-end
-
-function ParachuteCrate:deadColor()
-    Enemy.deadColor(self)
 end
 
 function ParachuteCrate:isCollision()
@@ -76,7 +67,7 @@ end
 function ParachuteCrate:draw()
     local x,y = self.x,self.y
 
-    love.graphics.setColor(self.color)
+    Enemy.draw(self)
     local parachute = self.parachute
     love.graphics.draw(parachute.image,parachute.x,parachute.y)
     local crate = self.crate

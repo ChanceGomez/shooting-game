@@ -4,7 +4,7 @@ ReloadShelfBullet.__index = ReloadShelfBullet
 --Static images
 local bulletImage = assetloader:getImage("bullet")
 
-function ReloadShelfBullet:new(ReloadShelf,x,y)
+function ReloadShelfBullet.new(ReloadShelf,x,y)
     local obj = setmetatable({},ReloadShelfBullet)
 
     obj.isDud = false
@@ -14,13 +14,7 @@ function ReloadShelfBullet:new(ReloadShelf,x,y)
     obj.x = x or 0
     obj.y = y or 0
     obj.hovered = false
-    obj.properties = {
-        damage = game.Affector:trigger("Bullet Damage",game.Player.gun.bullets.damage),
-        fire = {
-            damage = game.Affector:trigger("Bullet Fire Damage",game.Player.gun.bullets.fire.damage),
-            duration = game.Affector:trigger("Bullet Fire Duration",game.Player.gun.bullets.fire.duration),
-        },
-    }
+    obj.properties = game.Player.gun.bullets
     obj.inAnimation = false
     obj.ReloadShelf = ReloadShelf
     obj.color = {1,1,1,1}

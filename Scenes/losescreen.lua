@@ -3,7 +3,7 @@ local losescreen = {
 }
 
 function losescreen:load()
-    table.insert(self.buttons,Button:new({
+    table.insert(self.buttons,Button.new({
         visible = true,
         clicked = function()
             Scene = "title"

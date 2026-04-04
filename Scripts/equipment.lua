@@ -122,7 +122,7 @@ function equipment:load()
             {"Reload Rate","mult",2},
         },
         description = {
-            text = customtext:formatString("Railgun Base:",{.2,.2,.5,1}) .. " /nIncrease all bullet damage by + 10, but -50% reload rate"
+            text = customtext:formatString("Railgun Base:",{.2,.2,.5,1}) .. " /nIncrease all bullet damage by +10, but -50% reload rate"
         }
     }
     self.equipments.higheffieciencyReloader = {
@@ -197,6 +197,8 @@ function equipment:load()
         equipment.updateText = function(self)
             if self.ids == nil then return self.description.text end
             local ids = self.ids
+
+            
             if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
             return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end

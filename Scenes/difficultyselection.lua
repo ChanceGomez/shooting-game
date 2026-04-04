@@ -4,7 +4,7 @@ local difficultyselction = {
 
 
 function difficultyselction:load()
-    self.buttons.easy = {
+    self.buttons.easy = Button.new({
         x = Width/2 - assetloader:getImage("button_easy"):getWidth(),
         y = 128,
         visible = true,
@@ -14,14 +14,11 @@ function difficultyselction:load()
             Scene = "map"
             map:activateCurrentNode()
         end,
-        description = {
-            text = "Easy mode",
-        },
-    }
+    })
 end
 
 function difficultyselction:update(dt)
-    button:updateAll(self.buttons)
+    Button.updateAll(self.buttons)
 
     if escapeClick then 
         Scene = "title"
@@ -39,7 +36,7 @@ function difficultyselction:draw()
     love.graphics.print(text,Width/2-(font:getWidth(text)/2),48)
 
     --draw buttons
-    button:drawAll(self.buttons)
+    Button.drawAll(self.buttons)
     --infopanel for buttons
     for i, button in pairs(self.buttons) do
         if collision.rect(button) then

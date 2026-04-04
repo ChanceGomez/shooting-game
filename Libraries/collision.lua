@@ -82,8 +82,8 @@ function collision.rect(obj,x,y)
     height = obj.image:getHeight()
   end
   
-  return x1 > x2 and x1 < x2 + width
-    and y1 > y2 and y1 < y2 + height
+  return x1 >= x2 and x1 <= x2 + width
+    and y1 >= y2 and y1 <= y2 + height
 end
 
 function collision.circle(obj,x,y)

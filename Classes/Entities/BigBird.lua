@@ -7,8 +7,8 @@ setmetatable(BigBird,{__index = Bird})
 local flyingAnimation = assetloader:getAnimation("animation_bird_flying")
 local dyingAnimation = assetloader:getAnimation("animation_bird_dying")
 
-function BigBird:new(x,y,handler,difficulty,facing)
-    local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 
+function BigBird.new(x,y,handler,difficulty,facing)
+    local obj = Enemies.Bird.new(x,y,handler,difficulty,facing) 
 
     --Power scaling
     obj.difficulty = difficulty
@@ -24,7 +24,7 @@ function BigBird:new(x,y,handler,difficulty,facing)
     obj.width = flyingAnimation[1]:getWidth()*2
     obj.height = flyingAnimation[1]:getHeight()*2
 
-    return obj
+    return setmetatable(obj,BigBird)
 end
 
 function BigBird:die()
@@ -56,10 +56,9 @@ end
 
 function BigBird:draw()
     local flipped = self.facing ~= -1
-    love.graphics.setColor(self.color)
     local speed = 5/self.speed
-    animationplayer:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped,2)
     Enemy.draw(self)
+    animationplayer:draw("bird" .. self.id,self.animations[self.animation],speed,math.floor(self.x),math.floor(self.y),self.isAlive,flipped,2)
 end
 
 return BigBird

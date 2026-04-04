@@ -1,7 +1,7 @@
 local Report = {}
 Report.__index = Report
 
-function Report:new()
+function Report.new()
     local obj = setmetatable({},Report)
 
     obj.enemyKilled = 0

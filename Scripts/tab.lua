@@ -8,11 +8,11 @@ function tab:load()
 
     local height = 28
     local color = {.2,.2,.2,1}
-    local y = -1
+    local y = 0
     local textY = 8
     local textX = 90
 
-    tab.buttons.shop = Button:new({
+    tab.buttons.shop = Button.new({
         x = 0,
         y = y,
         width = 640/3,
@@ -21,8 +21,7 @@ function tab:load()
         description = {
             font = dogica_16,
             text = "Shop",
-            x = textX,
-            y = textY,
+            format = "center",
         },
         clicked = function()
             if Scene ~= "shop" then
@@ -30,7 +29,7 @@ function tab:load()
             end
         end,   
     })
-    tab.buttons.gun = Button:new({
+    tab.buttons.gun = Button.new({
         x = Width - (Width/3)*2,
         y = y,
         width = 640/3,
@@ -39,8 +38,7 @@ function tab:load()
         description = {
             font = dogica_16,
             text = "Gun",
-            x = textX,
-            y = textY,
+            format = "center",
         },
         clicked = function()
             if Scene ~= "gun" then
@@ -48,7 +46,7 @@ function tab:load()
             end
         end,   
     })
-    tab.buttons.map = Button:new({
+    tab.buttons.map = Button.new({
         x = Width - Width/3,
         y = y,
         width = 640/3,
@@ -56,9 +54,8 @@ function tab:load()
         color = color,
         description = {
             font = dogica_16,
-            text = "Map",
-            x = textX,
-            y = textY,
+            text = "Map",            
+            format = "center",
         },
         clicked = function()
             if Scene ~= "map" then

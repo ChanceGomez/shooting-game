@@ -6,8 +6,8 @@ setmetatable(ExplosionBird,{__index = Bird})
 -- Static images
 local flyingAnimation = assetloader:getAnimation("animation_explosionbird_flying")
 
-function ExplosionBird:new(x,y,handler,difficulty,facing)
-    local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 
+function ExplosionBird.new(x,y,handler,difficulty,facing)
+    local obj = Enemies.Bird.new(x,y,handler,difficulty,facing) 
 
     --Power scaling
     obj.health = 30 * (math.max(difficulty/2,1))
@@ -21,37 +21,13 @@ function ExplosionBird:new(x,y,handler,difficulty,facing)
         flying = flyingAnimation,
     }
 
-    return obj
-end
-
-function ExplosionBird:escape()
-    Enemy.escape(self)
+    return setmetatable(obj,ExplosionBird)
 end
 
 function ExplosionBird:die()
     Enemy.die(self)
     game:getHandler():newExplosion(self.x+self.width/2,self.y+self.height/2,self.explosionRadius,self.explosionDamage,self.explosionDuration)
     Enemy.delete(self)
-end
-
-function ExplosionBird:hit(damage)
-    Enemies.Bird.hit(self, damage)
-end
-
-function ExplosionBird:hitColor(dt)
-    Enemies.Bird.hitColor(self,dt)
-end
-
-function ExplosionBird:isCollision()
-    return Enemies.Bird.isCollision(self)
-end
-
-function ExplosionBird:update(dt)
-    Enemies.Bird.update(self,dt)
-end
-
-function ExplosionBird:draw()
-    Enemies.Bird.draw(self)
 end
 
 return ExplosionBird

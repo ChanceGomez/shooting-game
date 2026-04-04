@@ -13,16 +13,16 @@ function gun:load()
     self.images.gunLines = assetloader:getImage("gun_lines")
 
     --Create inventories
-    self.EquipmentInventory = EquipmentInventory:new({
+    self.EquipmentInventory = EquipmentInventory.new({
         barrel = {328+self.offsetX,240+self.offsetY},
         stabalizer = {376+self.offsetX,32+self.offsetY},
         antenna = {136+self.offsetX,24+self.offsetY},
         reloader = {56+self.offsetX,224+self.offsetY},
         base = {160+self.offsetX,264+self.offsetY},
     })
-    self.Inventory = Inventory:new(14,40,3,7,{
+    self.Inventory = Inventory.new(14,40,3,7,{
         [1] = {
-            clicked = function(slot) 
+            clicked = function(self,slot) 
                 if slot.item == nil then return end
                 local rarity = slot.item.rarity or 1
                 game.Player.resources = game.Player.resources + (rarity * 50)
@@ -33,7 +33,12 @@ function gun:load()
                 y = 1,
                 text = "sell",
                 font = dogica_8,
-            }
+            },
+            updateText = function(self,slot)
+                if slot.item == nil then return end
+                if slot.item.rarity == nil then return end
+                self.description.text = "sell: " .. slot.item.rarity * 50
+            end,
         }})
 
     --debug

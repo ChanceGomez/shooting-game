@@ -10,7 +10,7 @@
 local EnemyHandler = {}
 EnemyHandler.__index = EnemyHandler
 
-function EnemyHandler:new(lookout,enemies,difficulty)
+function EnemyHandler.new(lookout,enemies,difficulty)
     local obj = setmetatable({}, EnemyHandler)
   
     local difficulty = difficulty or 1 -- Difficulty for the round
@@ -23,7 +23,7 @@ function EnemyHandler:new(lookout,enemies,difficulty)
     obj.enemyList = enemies
     obj.difficulty = difficulty
     
-    obj.EventHandler = Event:new()
+    obj.EventHandler = Event.new()
 
     obj.isRoundActive = false
     obj.enemySpawnTimer = 0
@@ -45,8 +45,8 @@ function EnemyHandler:startRound()
 
     --check to see if parachute is true
     if self.isParachute then
-        table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,game.Affector:trigger("Parachute Equipment Rarity",game:getVariable("Parachute Equipment Rarity")),self))
-        --table.insert(self.parachutes,ParachuteCrate:new(math.random(100,540),0,1,self))
+        table.insert(self.parachutes,ParachuteCrate.new(math.random(100,540),0,game.Affector:trigger("Parachute Equipment Rarity",game:getVariable("Parachute Equipment Rarity")),self))
+        --table.insert(self.parachutes,ParachuteCrate.new(math.random(100,540),0,1,self))
     end
 
     --[[
@@ -111,7 +111,7 @@ function EnemyHandler:checkHit(properties)
 end
 
 function EnemyHandler:newExplosion(x,y,radius,damage,duration)
-    table.insert(self.Explosions,Explosion:new(self,x,y,radius,damage,duration))
+    table.insert(self.Explosions,Explosion.new(self,x,y,radius,damage,duration))
 end
 
 -- Spawn in an enemy
@@ -120,7 +120,7 @@ function EnemyHandler:newEnemy(enemy,x,y,facing)
     local y = y or 360
     local enemy = enemy or "Bird"
     self.enemyCount = self.enemyCount + 1
-    table.insert(self.enemies, Enemies[enemy]:new(x,y,self,self.difficulty,facing))
+    table.insert(self.enemies, Enemies[enemy].new(x,y,self,self.difficulty,facing))
 end
 
 -- Removes enemy from lookouts

@@ -197,7 +197,7 @@ function artifacts:load()
             game.Observer:add("lookoutUpdate",{event = function(self,wrapper)
                 artifacts.artifacts.horizontalLazer.timer = artifacts.artifacts.horizontalLazer.timer + wrapper.dt
                 if artifacts.artifacts.horizontalLazer.timer > 3 then
-                    table.insert(game.lookouts[1].lazors,Lazor:new(0,math.random(40,320),3))
+                    table.insert(game.lookouts[1].lazors,Lazor.new(0,math.random(40,320),3))
                 end
             end,})
         end,

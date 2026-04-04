@@ -1,8 +1,11 @@
 local NestArm = {}
 NestArm.__index = NestArm
 
-function NestArm:new(image,imageData,nest)
-    local obj = setmetatable(Enemy:new(0,0,nest.handler),NestArm)
+setmetatable(NestArm,{__index = Enemy})
+
+
+function NestArm.new(image,imageData,nest)
+    local obj = Enemy.new(0,0,nest.handler)
 
     obj.image = image
     obj.imageData = imageData
@@ -10,7 +13,7 @@ function NestArm:new(image,imageData,nest)
     obj.health = 40
     obj.nest = nest
 
-    return obj
+    return setmetatable(obj,NestArm)
 end
 
 function NestArm:die()

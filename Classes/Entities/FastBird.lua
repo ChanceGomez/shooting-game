@@ -5,8 +5,8 @@ FastBird.__index = FastBird
 local flyingAnimation = assetloader:getAnimation("animation_fastbird_flying")
 local dyingAnimation = assetloader:getAnimation("animation_fastbird_dying")
 
-function FastBird:new(x,y,handler,difficulty,facing)
-    local obj = Enemies.Bird:new(x,y,handler,difficulty,facing) 
+function FastBird.new(x,y,handler,difficulty,facing)
+    local obj = Enemies.Bird.new(x,y,handler,difficulty,facing) 
 
     --Power scaling
     obj.health = 10 * (math.max(difficulty/2,1))
@@ -18,35 +18,7 @@ function FastBird:new(x,y,handler,difficulty,facing)
         dying = dyingAnimation,
     }
 
-    return obj
-end
-
-function FastBird:escape()
-    Enemy.escape(self)
-end
-
-function FastBird:die()
-    Enemies.Bird.die(self)
-end
-
-function FastBird:hit(damage)
-    Enemies.Bird.hit(self, damage)
-end
-
-function FastBird:hitColor(dt)
-    Enemies.Bird.hitColor(self,dt)
-end
-
-function FastBird:isCollision()
-    return Enemies.Bird.isCollision(self)
-end
-
-function FastBird:update(dt)
-    Enemies.Bird.update(self,dt)
-end
-
-function FastBird:draw()
-    Enemies.Bird.draw(self)
+    return setmetatable(obj,FastBird)
 end
 
 return FastBird

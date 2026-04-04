@@ -13,7 +13,7 @@ end
 
 function endofround:load()
     local endshiftImage = assetloader:getImage("endshift_button")
-    self.endRoundButton = Button:new({
+    self.endRoundButton = Button.new({
         x = 0,
         y = Height-32,
         width = 128,

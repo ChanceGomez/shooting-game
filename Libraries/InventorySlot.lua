@@ -5,7 +5,7 @@ InventorySlot.__index = InventorySlot
 local static_inventorySlotWidth = 40
 local static_inventorySlotHeight = 40
 
-function InventorySlot:new(x,y)
+function InventorySlot.new(x,y)
     local obj = setmetatable({},InventorySlot)
 
 
@@ -19,7 +19,7 @@ function InventorySlot:new(x,y)
     obj.rightClicked = false
 
     obj.colors = {
-        normal = {.7,.7,.7,1},
+        normal = {.5,.5,.5,1},
         available = {0,.6,0,1},
         hovered = {.5,.5,.5,1},
     }
@@ -40,7 +40,7 @@ function InventorySlot:removeItem()
     self.item = nil
 end
 
-function InventorySlot:update(dt)
+function InventorySlot:update()
     if collision.rect(self) then
         self.hovered = true
     else

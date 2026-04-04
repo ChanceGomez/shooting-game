@@ -1,22 +1,56 @@
 local Gun = {}
 Gun.__index = Gun
 
-function Gun:new()
+function Gun.new()
   local obj = setmetatable({}, Gun)
   
     obj.bullets = {
-        damage = 10,
+        bullet = {
+            type = "Bullet",
+            interval = 0,
+            damage = 10,
+            duration = 0,
+            executable = function(self,enemy)
+                print("big damage")
+                enemy:damage(self.damage,self.type)
+            end,
+        },
         fire = {
+            type = "Fire",
+            interval = 1,
             damage = 0,
             duration = 0,
-        }
+            executable = function(self,enemy)
+                enemy:damage(self.damage,self.type)
+            end
+        },
+        stun = {
+            type = "Stun",
+            interval = 0,
+            damage = 0,
+            duration = 5,
+            executable = function(self,enemy)
+                enemy:stun()
+            end
+        },
     }
     obj.duds = {
-        damage = 0,
+        damage = {
+            type = "Dud",
+            interval = 0,
+            damage = 0,
+            duration = 1,
+            executable = function(self,enemy)
+                enemy:damage(self.type,self.damage)
+            end,
+        },
         fire = {
             damage = 0,
             duration = 0,
-        }
+        },
+        stun = {
+            duration = 0
+        },
     }
     obj.fireRate = 0    
     obj.fireRateTimer = 1000

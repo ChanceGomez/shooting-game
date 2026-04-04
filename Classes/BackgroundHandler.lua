@@ -1,7 +1,7 @@
 local BackgroundHandler = {}
 BackgroundHandler.__index = BackgroundHandler
 
-function BackgroundHandler:new()
+function BackgroundHandler.new()
     local obj = setmetatable({},BackgroundHandler)
 
     return obj

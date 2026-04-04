@@ -1,8 +1,11 @@
 local NestBody = {}
 NestBody.__index = NestBody 
 
-function NestBody:new(image,imageData,nest)
-    local obj = setmetatable(Enemy:new(0,0,nest.handler),NestBody)
+setmetatable(NestBody,{__index = Enemy})
+
+
+function NestBody.new(image,imageData,nest)
+    local obj = Enemy.new(0,0,nest.handler)
 
     obj.image = image
     obj.imageData = imageData
@@ -12,7 +15,7 @@ function NestBody:new(image,imageData,nest)
     obj.centerX = obj.image:getWidth()/2
     obj.centerY = obj.image:getHeight()/2
 
-    return obj
+    return setmetatable(obj,NestBody)
 end
 
 function NestBody:die()

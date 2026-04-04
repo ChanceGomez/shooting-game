@@ -6,34 +6,31 @@
   
  
 --Scripts
-drag = require("Scripts/drag")
-zdraw = require("Scripts/zdraw")
-event = require("Scripts/events")
-infopanel = require("Scripts/infopanel")
-popup = require("Scripts/popup")
-roundscript = require("Scripts/roundscript")
-upgrades = require("Scripts/upgrades")
-artifacts = require("Scripts/artifacts")
-equipment = require("Scripts/equipment")
-tab = require("Scripts/tab")
+  event = require("Scripts/events")
+  popup = require("Scripts/popup")
+  artifacts = require("Scripts/artifacts")
+  equipment = require("Scripts/equipment")
+  tab = require("Scripts/tab")
 
 --Libraries
-Observer = require("Libraries/Observer")
-Affector = require("Libraries/Affector")
-Event = require("Libraries/Event")
-Button = require("Libraries/Button")
-customtext = require("Libraries/customtext")
-assetloader = require("Libraries/assetloader")
-collision = require("Libraries/collision")
-controls = require("Libraries/controls")
-tween = require("Libraries/tween")
-array = require("Libraries/array")
-animationplayer = require("Libraries/animationplayer")
-Inventory = require("Libraries/Inventory")
-InventorySlot = require("Libraries/InventorySlot")
-EquipmentInventory = require("Libraries/EquipmentInventory")
-EquipmentSlot = require("Libraries/EquipmentSlot")
-DamagePopup = require("Libraries/DamagePopup")
+  Observer = require("Libraries/Observer")
+  Affector = require("Libraries/Affector")
+  Event = require("Libraries/Event")
+  Button = require("Libraries/Button")
+  customtext = require("Libraries/customtext")
+  assetloader = require("Libraries/assetloader")
+  collision = require("Libraries/collision")
+  controls = require("Libraries/controls")
+  tween = require("Libraries/tween")
+  array = require("Libraries/array")
+  animationplayer = require("Libraries/animationplayer")
+  Inventory = require("Libraries/Inventory")
+  InventorySlot = require("Libraries/InventorySlot")
+  EquipmentInventory = require("Libraries/EquipmentInventory")
+  EquipmentSlot = require("Libraries/EquipmentSlot")
+  DamagePopup = require("Libraries/DamagePopup")
+  infopanel = require("Libraries/infopanel")
+
 
 
 --Scenes  
@@ -48,14 +45,14 @@ DamagePopup = require("Libraries/DamagePopup")
   testscene = require("Scenes/testscene")
   info = require("Scenes/info")
   losescreen = require("Scenes/losescreen")
+  buyequipment = require("Scenes/buyequipment")
+  upgradebullet = require("Scenes/upgradebullet")
+  upgradedud = require("Scenes/upgradedud")
 
 --Global vars
 Width,Height = 640,360
 Scale = 3
 mainCanvas = nil
-GameSpeed = 1
-
---Game setting
 settings = {
   volume = .6, -- Global volume
   hitbox = false, -- Display hitboxes on enemies
@@ -125,10 +122,7 @@ Scenes = {
     update = function(dt) losescreen:update(dt) end,
   },
 }
-Scene = "map" -- Current scene
-
---Global Observer
-GlobalObserver = nil
+Scene = "shop" -- Current scene
 
 -- Independant random for cosmetic purposes
 cosmeticRandom = love.math.newRandomGenerator(os.time())
@@ -162,8 +156,8 @@ local function loadClasses()
     ReloadShelfDudBullet = require("Classes/ReloadShelfDudBullet")
     EnemyHandler = require("Classes/EnemyHandler")
     Player = require("Classes/Player")
-    ParachuteCrate = require("Classes/Entities/ParachuteCrate")
     Enemy = require("Classes/Entities/Enemy")
+    ParachuteCrate = require("Classes/Entities/ParachuteCrate")
     Enemies = {
         Bird = require("Classes/Entities/Bird"),
         InfectedBird = require("Classes/Entities/InfectedBird"),
@@ -194,13 +188,13 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.mouse.setVisible(false) -- set cursor to invisible
 
+    --Get main canvas
     mainCanvas = love.graphics.newCanvas(Width,Height)
 
     --load assets
     loadAssets()
 
     --load scripts
-    upgrades:load()
     artifacts:load()
     equipment:load()
     infopanel:load()
@@ -210,58 +204,47 @@ function love.load()
     --Load classes
     loadClasses()
 
-
-    --get global observer
-    GlobalObserver = Observer:new()
-
     --load all scenes
     for i, scene in pairs(Scenes) do
         scene:load()
     end
-
 
     --set global audio
     love.audio.setVolume(settings.volume)
 end
 
 function love.update(dt)
-  --debug exit
-  if qClick and settings.debug then love.event.quit() end
-  
-  --update scene
-  Scenes[Scene].update(dt)
-  
-  --update scripts
-  animationplayer:update(dt)
-  controls:update()
-  event:update(dt)
-  tween:update(dt)
-  zdraw:update()
+	--debug exit
+	if qClick and settings.debug then love.event.quit() end
+
+	--update scene
+	Scenes[Scene].update(dt)
+
+	--update scripts
+	animationplayer:update(dt)
+	controls:update()
+	event:update(dt)
+	tween:update(dt)
 end
 
 function love.draw()
-  love.graphics.setCanvas(mainCanvas)
-  love.graphics.clear()
-  
-  
-  --scenes
-  Scenes[Scene]:draw()
-  
+	love.graphics.setCanvas(mainCanvas)
+	love.graphics.clear()
 
-  
-  love.graphics.setCanvas()
-  love.graphics.setColor(1,1,1,1)
-  love.graphics.draw(mainCanvas,0,0,0,Scale)
-  
-  
-  --gui debug
-  if not settings.debug then return end
-  love.graphics.setColor(1,1,1,1)
-  love.graphics.setFont(perfect_dos_16)
-  love.graphics.print(math.floor(love.timer.getFPS()),640-32,22)
-  love.graphics.print(CursorX .. ' ' .. CursorX, 640-32,33)
-  love.graphics.print("round: " .. game.round, 640-32,43)
-  
+	--scenes
+	Scenes[Scene]:draw()
+
+	love.graphics.setCanvas()
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.draw(mainCanvas,0,0,0,Scale)
+
+
+	--gui debug
+	if not settings.debug then return end
+	love.graphics.setColor(1,1,1,1)
+	love.graphics.setFont(perfect_dos_16)
+	love.graphics.print(math.floor(love.timer.getFPS()),4,24)
+	love.graphics.print(CursorX .. ' ' .. CursorY, 4,4)
 end
 
 

@@ -2,8 +2,8 @@ local Observer = {}
 Observer.__index = Observer
 
 
-function Observer:new()
-  local obj = setmetatable({}, self)
+function Observer.new()
+  local obj = setmetatable({}, Observer)
   
   obj.events = {}
 

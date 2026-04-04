@@ -6,7 +6,7 @@ local backgroundImage = assetloader:getImage("reloadshelf_background")
 local outlineImage = assetloader:getImage("reloadshelf_outline")
 
 
-function ReloadShelf:new(x,y)
+function ReloadShelf.new(x,y)
     local obj = setmetatable({}, ReloadShelf)
 
     obj.canvas = love.graphics.newCanvas(backgroundImage:getWidth(),backgroundImage:getHeight())
@@ -34,9 +34,9 @@ function ReloadShelf:reload()
     local bullet = nil
     local x,y = -128,8
     if random < game.Affector:trigger("Dud Chance",game.Player.dudPercentage) then
-        bullet = ReloadShelfDudBullet:new(self,x,y)
+        bullet = ReloadShelfDudBullet.new(self,x,y)
     else
-        bullet = ReloadShelfBullet:new(self,x,y)
+        bullet = ReloadShelfBullet.new(self,x,y)
     end
     self.bullet = bullet
 end

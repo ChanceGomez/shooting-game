@@ -4,7 +4,7 @@ Lookout.__index = Lookout
 local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
 crt_shader:send("screen_size", {love.graphics.getDimensions()})
 
-function Lookout:new(enemies,difficulty,artifacts,images)
+function Lookout.new(enemies,difficulty,artifacts,images)
     local obj = setmetatable({}, Lookout)
 
     obj.images = images
@@ -13,18 +13,18 @@ function Lookout:new(enemies,difficulty,artifacts,images)
     obj.enemyCount = #enemies
     obj.enemies = {}
     obj.canvas = love.graphics.newCanvas(Width,Height)
-    obj.handler = EnemyHandler:new(obj,enemies,difficulty)
+    obj.handler = EnemyHandler.new(obj,enemies,difficulty)
     obj.handler:startRound()
     obj.x = 0
     obj.y = 0
     obj.roundTimer = 0
     obj.cloudsTimer = 0
-    obj.Report = Report:new()
+    obj.Report = Report.new()
     obj.buttons = {}
     obj.isHoveringButton = false
     obj.reloadShelfOpen = true
-    obj.ReloadShelf = ReloadShelf:new(-128,obj.y + Height - 64)
-    obj.BackgroundHandler = BackgroundHandler:new()
+    obj.ReloadShelf = ReloadShelf.new(-128,obj.y + Height - 64)
+    obj.BackgroundHandler = BackgroundHandler.new()
     obj.outlineMargin = 0
 
     obj:openReloadShelf()

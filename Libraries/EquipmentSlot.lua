@@ -5,8 +5,8 @@ local staticBackground = assetloader:getImage("background_equipment")
 local staticBackgroundHovered = assetloader:getImage("background_equipment_hovered")
 local staticBackgroundAvailable = assetloader:getImage("background_equipment_available")
 
-function EquipmentSlot:new(x,y)
-    local obj = setmetatable(InventorySlot:new(x,y),EquipmentSlot)
+function EquipmentSlot.new(x,y)
+    local obj = setmetatable(InventorySlot.new(x,y),EquipmentSlot)
 
     return obj
 end

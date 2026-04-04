@@ -1,7 +1,7 @@
 local Player = {}
 Player.__index = Player
 
-function Player:new()
+function Player.new()
     local obj = setmetatable({}, Player)
 
     obj.gun = nil
@@ -39,7 +39,7 @@ function Player:removeArtifact(artifact)
 end
 
 function Player:ChangeGun(gun)
-    self.gun = Guns[gun]:new()
+    self.gun = Guns[gun].new()
 end
 
 function Player:fireGun()
@@ -53,6 +53,14 @@ function Player:useExplosion()
     self.explosions = self.explosions - 1
     local explosion = self.explosionProperties
     game:getHandler():newExplosion(CursorX,CursorY,explosion.radius,explosion.damage,explosion.duration)
+end
+
+function Player:purchase(cost)
+    if self.resources >= cost then
+        self.resources = self.resources - cost
+        return true
+    end
+    return false
 end
 
 function Player:update(dt)

@@ -16,7 +16,7 @@ local imageData = {
     arm4 = assetloader:getImageData("nest_arm4"),
 }
 
-function Nest:new(x,y,handler)
+function Nest.new(x,y,handler)
     local obj = setmetatable({},Nest)
 
 
@@ -30,11 +30,11 @@ function Nest:new(x,y,handler)
     obj.spawnTimer = 0
     obj.spawnInterval = 5
     obj.arms = {}
-    table.insert(obj.arms,Enemies.NestArm:new(obj.images.arm1,obj.imageData.arm1,obj))
-    table.insert(obj.arms,Enemies.NestArm:new(obj.images.arm2,obj.imageData.arm2,obj))
-    table.insert(obj.arms,Enemies.NestArm:new(obj.images.arm3,obj.imageData.arm3,obj))
-    table.insert(obj.arms,Enemies.NestArm:new(obj.images.arm4,obj.imageData.arm4,obj))
-    obj.body = Enemies.NestBody:new(obj.images.body,obj.imageData.body,obj)
+    table.insert(obj.arms,Enemies.NestArm.new(obj.images.arm1,obj.imageData.arm1,obj))
+    table.insert(obj.arms,Enemies.NestArm.new(obj.images.arm2,obj.imageData.arm2,obj))
+    table.insert(obj.arms,Enemies.NestArm.new(obj.images.arm3,obj.imageData.arm3,obj))
+    table.insert(obj.arms,Enemies.NestArm.new(obj.images.arm4,obj.imageData.arm4,obj))
+    obj.body = Enemies.NestBody.new(obj.images.body,obj.imageData.body,obj)
 
 
     return obj

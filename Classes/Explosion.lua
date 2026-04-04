@@ -1,7 +1,7 @@
 local Explosion = {}
 Explosion.__index = Explosion
 
-function Explosion:new(handler,x,y,radius,damage,duration)
+function Explosion.new(handler,x,y,radius,damage,duration)
     local obj = setmetatable({},Explosion)
 
     obj.x = x or 0

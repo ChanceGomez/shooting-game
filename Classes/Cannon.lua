@@ -3,8 +3,8 @@ Cannon.__index = Cannon
 
 setmetatable(Cannon,{__index = Gun})
 
-function Cannon:new()
-  local obj = setmetatable(Gun:new(), Cannon)
+function Cannon.new()
+  local obj = setmetatable(Gun.new(), Cannon)
   
   obj.damage = 10
   obj.fireRate = 0.4

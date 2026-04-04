@@ -1,7 +1,7 @@
 local game = {
     Player = nil,
-    Observer = Observer:new(),
-    Affector = Affector:new(),
+    Observer = Observer.new(),
+    Affector = nil,
     lookouts = {},
     round = 1,
     pause = false,
@@ -33,23 +33,23 @@ function game:getVariable(name)
     if name == "Dud Damage" then
         return player.gun.duds.damage
     elseif name == "Bullet Damage" then
-        return player.gun.bullets.damage
+        return player.gun.bullets.bullet.damage
     elseif name == "Dud Chance" then 
-        return player.dudPercentage
+        return player.dudPercentage, "%"
     elseif name == "Fire Rate" then
-        return player.gun.fireRate
+        return player.gun.fireRate, " /sec"
     elseif name == "Parachute Chance" then
-        return player.parachuteOdds
+        return player.parachuteOdds, "%"
     elseif name == "Reload Rate" then
-        return player.gun.reloadRate
+        return player.gun.reloadRate, " /sec"
     elseif name == "Dud Fire Damage" then
         return player.gun.duds.fire.damage
     elseif name == "Dud Fire Duration" then
-        return player.gun.duds.fire.duration
+        return player.gun.duds.fire.duration, " /sec"
     elseif name == "Bullet Fire Damage" then
         return player.gun.bullets.fire.damage
     elseif name == "Bullet Fire Duration" then
-        return player.gun.bullets.fire.duration
+        return player.gun.bullets.fire.duration, " /sec"
     elseif name == "Automatic Reloading" then
         return player.automaticReloading
     elseif name == "Max Ammo" then
@@ -57,18 +57,29 @@ function game:getVariable(name)
     elseif name == "Fire Damage" then
         return player.gun.fireDamageMult
     elseif name == "Fire Duration" then
-        return player.gun.fireDurationMult
+        return player.gun.fireDurationMult, " /sec"
     elseif name == "Parachute Equipment Rarity" then
         return player.parachuteEquipmentRarity
+    elseif name == "Bullet Stun Duration" then
+        return player.gun.bullets.stun.duration
+    elseif name == "Dud Stun Duration" then
+        return player.gun.duds.stun.duration
     end
 
     return -1
 end
 
+function game:getUnit(trigger)
+    local ignore,unit = game:getVariable(trigger)
+    unit = unit or ""
+
+    return unit
+end
+
 
 ----------
 function game:createLookout(enemies,difficulty,artifacts,images)
-    self.lookouts[1] = Lookout:new(enemies,difficulty,artifacts,images)
+    self.lookouts[1] = Lookout.new(enemies,difficulty,artifacts,images)
 end
 
 
@@ -79,8 +90,10 @@ end
 
 function game:load()
   self.canvas = love.graphics.newCanvas(Width,Height)
-  self.Player = Player:new()
+  self.Player = Player.new()
   self.Player:ChangeGun("pistol")
+
+  self.Affector = Affector.new(self)
 
   -- artifacts:activateAllArtifacts()
   -- artifacts:activateArtifact("methaneAir")

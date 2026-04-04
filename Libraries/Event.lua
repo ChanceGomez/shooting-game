@@ -3,7 +3,7 @@
 local Event = {}
 Event.__index = Event
 
-function Event:new()
+function Event.new()
     local obj = setmetatable({},Event)
 
     obj.queueEvents = {}

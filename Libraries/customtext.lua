@@ -79,6 +79,9 @@ local function getFormattedWords(text,defaultColor)
                 end
 
                 --Leave escape sequence
+                if not wrapper.nextLine then
+                    wrapper.word = wrapper.word .. "/" .. letter
+                end
                 inEscapeSequence = false
                 leavingEscapeSequence = true
             end

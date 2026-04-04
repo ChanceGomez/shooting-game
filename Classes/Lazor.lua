@@ -1,7 +1,7 @@
 local Lazor = {}
 Lazor.__index = Lazor
 
-function Lazor:new(x,y,time,size)
+function Lazor.new(x,y,time,size)
     local obj = setmetatable({},Lazor)
 
     obj.aliveTimer = time or 1

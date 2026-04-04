@@ -5,7 +5,7 @@ DamagePopup.__index = DamagePopup
 
 
 
-function DamagePopup:new(handler,x,y,damage)
+function DamagePopup.new(handler,x,y,damage)
     local obj = setmetatable({},DamagePopup)
 
     obj.timer = 0

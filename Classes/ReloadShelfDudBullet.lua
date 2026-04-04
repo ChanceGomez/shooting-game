@@ -1,17 +1,12 @@
 local ReloadShelfDudBullet = {}
 ReloadShelfDudBullet.__index = ReloadShelfDudBullet
 
-function ReloadShelfDudBullet:new(ReloadShelf,x,y)
-    local obj = setmetatable(ReloadShelfBullet:new(ReloadShelf,x,y),ReloadShelfDudBullet)
+function ReloadShelfDudBullet.new(ReloadShelf,x,y)
+    local obj = setmetatable(ReloadShelfBullet.new(ReloadShelf,x,y),ReloadShelfDudBullet)
 
     obj.isDud = true
-    obj.properties = {
-        damage = game.Affector:trigger("Dud Damage",game.Player.gun.duds.damage),
-        fire = {
-            damage = game.Affector:trigger("Dud Fire Damage",game.Player.gun.duds.fire.damage),
-            duration = game.Affector:trigger("Dud Fire Duration",game.Player.gun.duds.fire.duration),
-        },
-    }
+    obj.properties = game.Player.gun.duds
+
     obj.color = {1,0,0,1}
 
     return obj

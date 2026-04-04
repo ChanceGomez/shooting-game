@@ -1,7 +1,6 @@
 local Affector = {}
 Affector.__index = Affector
 
-
 local function checkTrigger(self,trigger)
     if self.affectors[trigger] == nil then 
         self.affectors[trigger] = {
@@ -12,21 +11,26 @@ local function checkTrigger(self,trigger)
     end
 end
 
-function Affector:new()
-  local obj = setmetatable({}, self)
-  
-  obj.affectors = {}
-  obj.colors = {
+function Affector.new(handler)
+    local obj = setmetatable({}, Affector)
+
+    obj.handler = handler
+    obj.affectors = {}
+    obj.colors = {
     add = {0,0,.6,1},
     mult = {.6,0,0,1},
     bool = {0,.6,0,1},
-  }
+    }
 
-  return obj
+    return obj
 end
 
 function Affector:getColor(type) 
     return self.colors[type]
+end
+
+function Affector:getFormattedTrigger(trigger)
+    return customtext:formatString(trigger,{.2,.2,.4,1}) .. ": "
 end
 
 function Affector:getDescription(ids)
@@ -37,16 +41,15 @@ function Affector:getDescription(ids)
         local type = id[2]
         local variable = id[3]
 
-        local beforeStat = trim(self:getStat(trigger,type),2)
+        local beforeStat = self:getFormattedTrigger(trigger) .. trim(self:getRaw(trigger,type),2)
         self:add(trigger,type,variable)
-        local afterStat = trim(self:getStat(trigger,type),2)
-
+        local afterStat = trim(self:getRaw(trigger,type),2) .. game:getUnit(trigger)
+        self:remove(trigger,type,variable)
 
         -- get before variable
-        desc = desc .. " /n" .. customtext:formatString(trigger,{.2,.2,.4,1}) .. ": " .. customtext:formatString(tostring(beforeStat),self:getColor(type))
+        desc = desc .. " /n" .. beforeStat
         -- get after
-        desc = desc .. " -> " .. customtext:formatString(tostring(afterStat),self:getColor(type))
-        self:remove(trigger,type,variable)
+        desc = desc .. " -> " .. afterStat
     end 
     
     return desc
@@ -79,6 +82,7 @@ end
 function Affector:getMult(trigger,attribute)
     if self.affectors[trigger] == nil then return attribute end
     local returnAttribute = attribute 
+    if returnAttribute == 0 then returnAttribute = 1 end
     if returnAttribute == nil then returnAttribute = 0 end
 
     for i, mult in ipairs(self.affectors[trigger].mult) do
@@ -91,14 +95,30 @@ end
 function Affector:getStat(trigger,type)
     local type = type or "all"
 
+    local str = customtext:formatString(trigger,{.2,.2,.4,1}) .. ": "
+    local attribute = game:getVariable(trigger)
+
     if type == "add" then
-        return self:getAdd(trigger,game:getVariable(trigger))
+        str = str .. self:getAdd(trigger,attribute) 
     elseif type == "mult" then
-        return self:getMult(trigger,game:getVariable(trigger))
+        str = str .. self:getMult(trigger,attribute)
     elseif type == "bool" then
-        return self:getBool(trigger,game:getVariable(trigger))
+        str = str .. self:getBool(trigger,attribute)
+    elseif type == "all" then
+        str = str .. self:trigger(trigger,attribute)
+    end
+    return str .. game:getUnit(trigger) 
+end
+
+function Affector:getRaw(trigger,type)
+    if type == "add" then
+        return self:getAdd(trigger,game:getVariable(trigger)) 
+    elseif type == "mult" then
+        return  self:getMult(trigger,game:getVariable(trigger))
+    elseif type == "bool" then
+        return  self:getBool(trigger,game:getVariable(trigger))
     elseif type == "both" then
-        return self:trigger(trigger,game:getVariable(trigger))
+        return  self:trigger(trigger,game:getVariable(trigger))
     end
 end
 
@@ -108,7 +128,7 @@ function Affector:getStats(ids)
     for i, id in ipairs(ids) do
         local trigger = id[1]
         local type = id[2]
-        str = str .. ' /n'.. customtext:formatString(trigger,{.2,.2,.4,1}) .. ': ' .. tostring(self:getStat(trigger,type))
+        str = str .. ' /n'.. self:getStat(trigger,type)
     end
 
     return str
@@ -116,17 +136,26 @@ end
 
 function Affector:addIDs(ids) 
     for i, id in ipairs(ids) do
-        self:add(id[1],id[2],id[3])
+        self:addID(id)
     end
+end
+
+function Affector:addID(id)
+    self:add(id[1],id[2],id[3])
 end
 
 function Affector:removeIDs(ids)
     for i, id in ipairs(ids) do
-        self:remove(id[1],id[2],id[3])
+        self:removeID(id)
     end
 end
 
+function Affector:removeID(id)
+    self:remove(id[1],id[2],id[3])
+end
+
 function Affector:trigger(trigger,attribute)
+    local attribute = attribute or self.handler:getVariable(trigger)
     if self.affectors[trigger] == nil then return attribute end
     
     local returnAttribute = attribute 

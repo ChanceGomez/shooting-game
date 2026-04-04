@@ -12,7 +12,7 @@ function title:load()
     table.insert(self.backgroundImages,assetloader:getImage("background_title_middle"))
     table.insert(self.backgroundImages,assetloader:getImage("background_title_right"))
 
-    table.insert(self.buttons,{
+    table.insert(self.buttons,Button.new({
         x = 24,
         y = 300,
         color = {1,1,1,1},
@@ -21,18 +21,17 @@ function title:load()
         width = assetloader:getImage("button_agree"):getWidth(),
         height = assetloader:getImage("button_agree"):getHeight(),
         visible = true,
-        description = "Start the game",
-        clicked = function()
+        clicked = function(self)
             Scene = "difficultyselection"
         end
-    })
+    }))
 end
 
 function title:update(dt)
     --timer
     self.backgroundTimer = self.backgroundTimer + dt
     --buttons
-    button:updateAll(self.buttons)
+    Button.updateAll(self.buttons)
 end
 
 function title:draw()
@@ -49,7 +48,7 @@ function title:draw()
     love.graphics.draw(assetloader:getImage("background_title_text"))
 
 
-    button:drawAll(self.buttons)
+    Button.drawAll(self.buttons)
     
 
     --Cursor

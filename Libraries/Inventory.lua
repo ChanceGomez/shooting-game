@@ -1,5 +1,5 @@
 local Inventory = {
-    margin = 2,
+    marginBetweenSlots = 2,
 }
 Inventory.__index = Inventory
 
@@ -7,8 +7,6 @@ Inventory.__index = Inventory
 --Static width/heights
 local static_inventorySlotWidth = 40
 local static_inventorySlotHeight = 40
-
-
 
 
 local function generateSlots(cols,rows,x,y,margin)
@@ -22,7 +20,7 @@ local function generateSlots(cols,rows,x,y,margin)
             local x = (col-1) * (static_inventorySlotWidth+margin) + x
             local y = (row-1) * (static_inventorySlotHeight+margin) + y
             
-            table.insert(tbl,InventorySlot:new(x,y))
+            table.insert(tbl,InventorySlot.new(x,y))
         end
     end
 
@@ -36,7 +34,7 @@ local function generateFunctions(self,functions)
     local width = self.rightClickPanel.width
     local height = 16
 
-    table.insert(tbl,Button:new({
+    table.insert(tbl,Button.new({
         x = 0,
         y = 0,
         visible = false,
@@ -58,7 +56,7 @@ local function generateFunctions(self,functions)
 
     for i, func in ipairs(functions) do
         func.description.limit = width
-        table.insert(tbl,Button:new({
+        table.insert(tbl,Button.new({
             x = 0,
             y = 0,
             visible = false,
@@ -66,9 +64,12 @@ local function generateFunctions(self,functions)
             width = width,
             description = func.description,
             height = 16,
-            clicked = function()
-                func.clicked(self.rightClickedSlot)
+            clicked = function(self,passthrough)
+                func:clicked(passthrough)
             end,
+            updateText = function(self,passthrough)
+                func:updateText(passthrough)
+            end
         }))
         height = height + 16
     end
@@ -76,15 +77,6 @@ local function generateFunctions(self,functions)
     self.rightClickPanel.height = height
 
     return tbl
-end
-
-local function generateSlotsByPos(tbl) 
-    local returnTbl = {}
-    for i, slot in ipairs(tbl) do
-        --table.insert(returnTbl,InventorySlot)
-    end
-
-    return returnTbl
 end
 
 local function link(a, b, keys)
@@ -162,7 +154,11 @@ local function unlink(a, b)
   b._linked_keys = nil
 end
 
-function Inventory:new(x,y,col,row,functions)
+function Inventory.new(x,y,col,row,functions)
+    --Library guardrail
+    if controls == nil then
+        error("Needs control library to be set up.")
+    end
     local obj = setmetatable({},Inventory)
 
     local cols,rows = col or 0,row or 0
@@ -171,6 +167,9 @@ function Inventory:new(x,y,col,row,functions)
 
     obj.rows = rows
     obj.cols = cols
+
+    obj.clickPreventerInterval = .2
+    obj.clickPreventerTimer = 0
 
     obj.isRightClicked = false
     obj.rightClickedSlot = nil
@@ -193,7 +192,7 @@ function Inventory:new(x,y,col,row,functions)
     obj.y = y or 0
 
     if rows then 
-        obj.slots = generateSlots(cols,rows,x,y,obj.margin)
+        obj.slots = generateSlots(cols,rows,x,y,obj.marginBetweenSlots)
     end
 
 
@@ -214,32 +213,34 @@ function Inventory:getNextEmptySlot()
 end
 
 function Inventory:drag()
-    --Check to see if mouse is dropped and is holding an item
-    if not love.mouse.isDown(1) and self.heldItem then
-        local isHovered = false
-        --Cycle through all the slots to see if one is being hovered to drop item in there
-        for i, slot in pairs(self.slots) do
-            if slot.hovered and slot.item == nil then
-                isHovered = slot:addItem(self.heldItem)
-            end
-        end
-        --Check other inventory that can be hovered
-        for _, inventory in ipairs(self.inventories) do
-            for i, slot in pairs(inventory.slots) do
-                if slot.hovered then
-                    --Check to see if other inventory rejects item
-                    isHovered = inventory:addItem(self.heldItem,slot)
+
+    --Drop logic
+        --Check to see if mouse is dropped and is holding an item
+        if not love.mouse.isDown(1) and self.heldItem then
+            local isHovered = false
+            --Cycle through all the slots to see if one is being hovered to drop item in there
+            for i, slot in pairs(self.slots) do
+                if slot.hovered and slot.item == nil then
+                    isHovered = slot:addItem(self.heldItem)
                 end
             end
-        end
-        --If there was no slot being held then return to original slot
-        if not isHovered then
-            self.heldItemOriginalSlot:addItem(self.heldItem)
-        end
+            --Check other inventory that can be hovered
+            for _, inventory in ipairs(self.inventories) do
+                for i, slot in pairs(inventory.slots) do
+                    if slot.hovered then
+                        --Check to see if other inventory rejects item
+                        isHovered = inventory:addItem(self.heldItem,slot)
+                    end
+                end
+            end
+            --If there was no slot being held then return to original slot
+            if not isHovered then
+                self.heldItemOriginalSlot:addItem(self.heldItem)
+            end
 
-        --remove item from inventory held variable
-        self.heldItem = nil
-    end
+            --remove item from inventory held variable
+            self.heldItem = nil
+        end
 
     self.hoveredSlot = nil
     for i, slot in pairs(self.slots) do
@@ -248,7 +249,8 @@ function Inventory:drag()
             self.hoveredSlot = slot
         end
         --See if slot meets requirements to be held
-        if slot.hovered and love.mouse.isDown(1) and self.heldItem == nil then
+        if slot.hovered and love.mouse.isDown(1) and leftClick and self.heldItem == nil and not self.isRightClick and self.clickPreventerTimer >= self.clickPreventerInterval then
+            self.clickPreventerTimer = 0
             --Set helditem to the slots item
             self.heldItem = slot.item
             self.heldItemOriginalSlot = slot
@@ -296,7 +298,9 @@ end
 
 function Inventory:addItem(item,slot)
     slot = slot or self:getNextEmptySlot()
+    if slot == nil then return false end
     slot:addItem(item)
+    return true
 end
 
 function Inventory:addItems(tbl)
@@ -306,6 +310,7 @@ function Inventory:addItems(tbl)
 end 
 
 function Inventory:update(dt)
+    self.clickPreventerTimer = self.clickPreventerTimer + dt
     --Deal with dragging
     self:drag()
     for i, slot in pairs(self.slots) do
@@ -322,7 +327,7 @@ function Inventory:update(dt)
 
             button.x = x
             button.y = y + ((i-1)*16)
-            button:update()
+            button:update(self.rightClickedSlot)
         end
     else
         for i, button in pairs(self.rightClickPanel.functions) do
@@ -334,6 +339,11 @@ function Inventory:update(dt)
         self.isRightClick = false
         self.rightClickedSlot.rightClicked = false
         self.rightClickedSlot = nil
+    end
+
+    --reset click timer so that you don't pick up a object immediently after using a right click
+    if leftClick or rightClick then
+        self.clickPreventerTimer = 0
     end
 end
 
