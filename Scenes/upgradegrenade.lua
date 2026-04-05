@@ -1,8 +1,8 @@
-local upgradedud = {
+local upgradegrenade = {
     upgradeButtons = {},
 }
 
-function upgradedud:load(x,y,width,height)
+function upgradegrenade:load(x,y,width,height)
     self.Width = width or Width
     self.Height = height or Height
     self.x = x or 0
@@ -18,9 +18,9 @@ function upgradedud:load(x,y,width,height)
         wrapper = {
             level = 0,
             maxLevel = 100,
-            cost = 10,
+            cost = 5,
             stat = "",
-            id = {"Dud Damage","add",1}
+            id = {"Grenade Damage","add",1}
         },
         description = {text = "upgrade damage"},
         clicked = function(self)
@@ -43,45 +43,35 @@ function upgradedud:load(x,y,width,height)
             self.wrapper.stat = trigger .. " : " .. beforeStat .. " -> " .. afterStat .. afterString
         end,
     })
-    self.upgradeButtons.dud = Button.new({
+    self.upgradeButtons.buyGrenade = Button.new({
         x = 15,
         y = 58,
         width = 64,
         height = 32,
         wrapper = {
-            level = 0,
+            level = 3,
             maxLevel = 100,
-            cost = 10,
+            cost = 50,
             stat = "",
-            id = {"Dud Chance","add",1}
         },
-        description = {text = "upgrade damage"},
+        description = {text = "buy grenade"},
         clicked = function(self)
-            if self.wrapper.level < self.wrapper.maxLevel and game.Player:purchase(self.wrapper.cost) then
-                self.wrapper.cost = self.wrapper.cost * 2
-                self.wrapper.level = self.wrapper.level + 1
-                game.Affector:addID(self.wrapper.id)
+            if game.Player.explosions < 3 and game.Player:purchase(self.wrapper.cost) then
+                game.Player.explosions = game.Player.explosive + 1
             end
         end,
         updateText = function(self)
-            local trigger = self.wrapper.id[1]
-            local beforeStat = game.Affector:getAdd(trigger,game:getVariable(trigger))
-            local ignore,afterString = game:getVariable(trigger)
-            afterString = afterString or ""
-            game.Affector:addID(self.wrapper.id)
-            local afterStat = game.Affector:getAdd(trigger,game:getVariable(trigger))
-            game.Affector:removeID(self.wrapper.id)
-
-            self.wrapper.stat = trigger .. " : " .. beforeStat .. " -> " .. afterStat .. afterString
+            if game.Player.explosions >= self.wrapper.level then return end
+            self.wrapper.stat = game.Player.explosions .. " -> " .. game.Player.explosions + 1
         end,
     })
 end
 
-function upgradedud:update(dt)
+function upgradegrenade:update(dt)
     Button.updateAll(self.upgradeButtons,nil,self.x,self.y)
 end
 
-function upgradedud:draw()
+function upgradegrenade:draw()
     local oldCanvas = love.graphics.getCanvas()
 
     love.graphics.setCanvas(self.Canvas)
@@ -95,8 +85,8 @@ function upgradedud:draw()
         love.graphics.setColor(1,1,1,1)
         love.graphics.rectangle("line",0,0,self.Width,self.Height)
 
-    love.graphics.setColor(1,0,0,1)
-    love.graphics.draw(assetloader:getImage("background_bullet"))
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(assetloader:getImage("background_bomb"))
 
     Button.drawAll(self.upgradeButtons)
 
@@ -120,4 +110,4 @@ function upgradedud:draw()
     love.graphics.draw(self.Canvas,self.x,self.y)
 end
 
-return upgradedud
+return upgradegrenade

@@ -9,7 +9,6 @@ function NestBody.new(image,imageData,nest)
 
     obj.image = image
     obj.imageData = imageData
-    obj.color = {1,1,1,1}
     obj.health = 300
     obj.nest = nest
     obj.centerX = obj.image:getWidth()/2
@@ -18,16 +17,8 @@ function NestBody.new(image,imageData,nest)
     return setmetatable(obj,NestBody)
 end
 
-function NestBody:die()
-    Enemy.die(self)
-end
-
 function NestBody:delete()
-    self.nest:deleteArm(self)
-end
-
-function NestBody:hit(properties)
-    Enemy.hit(self,properties)
+    self.nest:deleteBody(self)
 end
 
 function NestBody:isCollision()
@@ -47,7 +38,7 @@ function NestBody:update(dt)
 end
 
 function NestBody:draw()
-    love.graphics.setColor(self.color)
+    love.graphics.setColor(self.colors[self.color])
     love.graphics.draw(self.image)
 end
 

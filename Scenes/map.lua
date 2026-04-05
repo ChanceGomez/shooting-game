@@ -110,6 +110,9 @@ function map:load()
         [1] = assetloader:getImage("background_clouds_night"),
         [2] = assetloader:getImage("background_clouds_layer1"),
     }
+    if not settings.loadMap then
+        return
+    end
     self.map = Map.new(0,3,9,self)
     self.map:expand()
     self.map:expand()

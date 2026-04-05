@@ -41,9 +41,9 @@ function Affector:getDescription(ids)
         local type = id[2]
         local variable = id[3]
 
-        local beforeStat = self:getFormattedTrigger(trigger) .. trim(self:getRaw(trigger,type),2)
+        local beforeStat = self:getFormattedTrigger(trigger) .. tostring(trim(self:getRaw(trigger,type),2))
         self:add(trigger,type,variable)
-        local afterStat = trim(self:getRaw(trigger,type),2) .. game:getUnit(trigger)
+        local afterStat = tostring(trim(self:getRaw(trigger,type),2)) .. game:getUnit(trigger)
         self:remove(trigger,type,variable)
 
         -- get before variable
@@ -140,7 +140,11 @@ function Affector:addIDs(ids)
 end
 
 function Affector:addID(id)
-    self:add(id[1],id[2],id[3])
+    local trigger = id[1]
+    local type = id[2]
+    local attribute = id[3]
+    --print(trigger,type,attribute)
+    self:add(trigger,type,attribute)
 end
 
 function Affector:removeIDs(ids)

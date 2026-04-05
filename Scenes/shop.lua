@@ -35,7 +35,7 @@ function shop:displayArtifacts(artifacts)
             artifact:add()
             self:artifactClicked()
         end
-
+        
         --Insert artifact into the artifacts table
         table.insert(self.artifacts,Button.new({
             x = artifact.x,
@@ -49,7 +49,10 @@ function shop:displayArtifacts(artifacts)
             clicked = function()
                 artifact:add()
                 self:artifactClicked()
-            end
+            end,
+            updateText = function(self)
+                return artifact.updateText(self)
+            end,
         }))
     end
 
@@ -120,6 +123,11 @@ function shop:load()
             draw = function() upgradedud:draw() end,
             load = function(x,y,width,height) upgradedud:load(x,y,width,height) end,
             update = function(dt) upgradedud:update(dt) end,
+        },
+        upgradegrenade = {
+            draw = function() upgradegrenade:draw() end,
+            load = function(x,y,width,height) upgradegrenade:load(x,y,width,height) end,
+            update = function(dt) upgradegrenade:update(dt) end,
         },
     }
     --load sub-scenes
@@ -205,12 +213,37 @@ function shop:load()
         end,
     })
 
+    self.buttons.upgradeGrenade = Button.new({
+        x = 10,
+        y = 156,
+        width = 128,
+        height = 32,
+        colors = {
+            normal = {.3,.3,.3,1},
+            hovered = {.5,.5,.5,1},
+        },
+        description = {
+            text = "Upgrade Grenade"
+        },
+        clicked = function()
+            if self.Scene == "upgradegrenade" then
+                self.Scene = "none"
+                return
+            end
+            self.Scene = "upgradegrenade"
+        end,
+    })
+
     if settings.loadShopOnStart then
-        self:displayArtifacts(artifacts:getAllArtifacts())
+        --self:displayArtifacts(artifacts:getAllArtifacts())
+        self:displayArtifacts(artifacts:getUniqueArtifacts(3))
     end
 end
 
 function shop:update(dt)
+    if rClick and settings.debug then
+        self:displayArtifacts(artifacts:getUniqueArtifacts(3))
+    end
     --update sub scenes
     self.Scenes[self.Scene]:update(dt)
 

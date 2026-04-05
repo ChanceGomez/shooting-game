@@ -158,6 +158,7 @@ function artifacts:load()
             {"Reload Rate","mult",.5},
             {"Automatic Reloading","bool",true},
         },
+        used = false,
         description = {
             text = "Increase dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase dud damage by " .. 
                 getFormat("positive") .. "+2" .. " decrease fire rate & reload rate by ".. getFormat("positive") .. "50%" .. " and " .. getFormat("positive") .. "automatic loading"
@@ -171,6 +172,7 @@ function artifacts:load()
             {"Bullet Damage","add",5},
             {"Reload Rate","mult",.8},
         },
+        used = false,
         description = {
             text = "Decrease dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase bullet damage by " .. 
                 getFormat("positive") .. "+5" .. " Increase reload rate by ".. getFormat("positive") .. "20%"
@@ -231,9 +233,10 @@ function artifacts:load()
 
         if artifact.add == nil then
             artifact.add = function(self)
-                if self.used == false then 
-                    self.used = true
+                if artifact.used == false then 
+                    artifact.used = true
                 end
+
                 self.active = true
                 game.Affector:addIDs(self.ids)
                 game.Player:addArtifact(self)
@@ -248,7 +251,7 @@ function artifacts:load()
         end
         --Create the update text function
         artifact.updateText = function(self)
-            local ids = self.ids
+            local ids = artifact.ids
             if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
             return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end
@@ -278,8 +281,8 @@ function artifacts:getUniqueArtifacts(amount,rarity)
     local amount = amount or 1
     local tbl = {}
 
+    --Start with random first selection
     table.insert(tbl,self:getRandomArtifact(rarity))
-
     local recursiveCount = 0
     while #tbl < amount and recursiveCount < 100 do
         recursiveCount = recursiveCount + 1
@@ -292,7 +295,7 @@ function artifacts:getUniqueArtifacts(amount,rarity)
         end
 
         if valid then 
-            table.insert(tbl,self:getRandomArtifact(rarity)) 
+            table.insert(tbl,artifact) 
         end
     end
 

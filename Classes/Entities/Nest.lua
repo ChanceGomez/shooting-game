@@ -28,6 +28,7 @@ function Nest.new(x,y,handler)
     obj.handler = handler
     obj.enemies = {}
     obj.spawnTimer = 0
+    obj.resources = 500
     obj.spawnInterval = 5
     obj.arms = {}
     table.insert(obj.arms,Enemies.NestArm.new(obj.images.arm1,obj.imageData.arm1,obj))
@@ -40,11 +41,26 @@ function Nest.new(x,y,handler)
     return obj
 end
 
+function Nest:delete()
+    game.lookouts[1].Report:action("resources",self.resources)
+    if self.handler then
+        self.handler:removeEnemy(self)
+    end
+end
+
+function Nest:deleteBody(arm)
+    self.body = nil
+    self:delete()
+end
+
 function Nest:deleteArm(arm)
     for i, instance in ipairs(self.arms) do
         if instance == arm then
             table.remove(self.arms,i)
         end
+    end
+    if #self.arms == 0 then
+        self:delete()
     end
 end
 

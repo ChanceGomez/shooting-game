@@ -6,7 +6,7 @@ function Player.new()
 
     obj.gun = nil
     obj.resources = 0
-    obj.parachuteOdds = 100
+    obj.parachuteOdds = 20
     obj.dudPercentage = 20
     obj.health = 3
     obj.automaticReloading = false
@@ -15,10 +15,10 @@ function Player.new()
     obj.explosions = 3
     obj.explosionProperties = {
         explosion = {
-            type = "Explosion",
+            type = "Grenade",
             interval = 0,
             damage = 20,
-            radius = 30,
+            radius = 20,
             duration = 0,
             executable = function(self,enemy)
                 enemy:damage(self.damage) 

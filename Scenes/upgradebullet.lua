@@ -18,7 +18,7 @@ function upgradebullet:load(x,y,width,height)
         wrapper = {
             level = 0,
             maxLevel = 100,
-            cost = 50,
+            cost = 10,
             stat = "",
             id = {"Bullet Damage","add",1}
         },
@@ -31,16 +31,13 @@ function upgradebullet:load(x,y,width,height)
             end
         end,
         updateText = function(self)
-            local function meow()
-                return 1,"hello"
-            end
             local trigger = self.wrapper.id[1]
             local ignore,afterString = game:getVariable(trigger) or ""
             afterString = afterString or ""
 
-            local beforeStat = game.Affector:getAdd(trigger,game:getVariable(trigger))
+            local beforeStat = game.Affector:trigger(trigger,game:getVariable(trigger))
             game.Affector:addID(self.wrapper.id)
-            local afterStat = game.Affector:getAdd(trigger,game:getVariable(trigger))
+            local afterStat = game.Affector:trigger(trigger,game:getVariable(trigger))
             game.Affector:removeID(self.wrapper.id)
 
             self.wrapper.stat = trigger .. " : " .. beforeStat .. " -> " .. afterStat .. afterString
@@ -54,7 +51,7 @@ function upgradebullet:load(x,y,width,height)
         wrapper = {
             level = 0,
             maxLevel = 100,
-            cost = 50,
+            cost = 10,
             stat = "",
             id = {"Dud Chance","add",-1}
         },

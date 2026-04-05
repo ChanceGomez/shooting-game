@@ -64,9 +64,12 @@ function game:getVariable(name)
         return player.gun.bullets.stun.duration
     elseif name == "Dud Stun Duration" then
         return player.gun.duds.stun.duration
+    elseif name == "Grenade Damage" then
+        return player.explosionProperties.explosion.damage
     end
 
-    return -1
+
+    return nil
 end
 
 function game:getUnit(trigger)
@@ -96,7 +99,9 @@ function game:load()
   self.Affector = Affector.new(self)
 
   -- artifacts:activateAllArtifacts()
-  -- artifacts:activateArtifact("methaneAir")
+  --artifacts:activateArtifact("flamingDuds")
+  --artifacts:activateArtifact("dudSurplus")
+  --artifacts:activateArtifact("dudSurplus")
   -- artifacts:activateArtifact("flamingDuds")
 end
 

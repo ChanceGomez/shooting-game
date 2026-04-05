@@ -61,41 +61,46 @@ function Enemy:hit(properties)
     
     --Insert effects 
     for i, effect in pairs(properties) do
+        --Trigger the damage/duration
+        local damage = game.Affector:trigger(effect.type .. " Damage") or 0
+        local duration = game.Affector:trigger(effect.type .. " Duration") or 0
+
+        --Insert effect into effects
         table.insert(self.effects,{
             type = effect.type or "",
             ticks = 0,
             interval = effect.interval or 1,
             timer = 0,
-            damage = effect.damage or 0,
-            duration = effect.duration or 0,
-            executable = function(enemy)
-                effect:executable(enemy) 
+            damage = damage,
+            duration = duration,
+            executable = function(passthroughEffect,enemy)
+                effect.executable(passthroughEffect,enemy) 
             end,
         })
     end
 
+    --For report
     game.lookouts[1].Report:action("shotHit")
 end
 
 function Enemy:damage(damage,type)
+    --Check to see if is still alive
     if not self.isAlive then return end
-    local type = type or ""
+    --Make sure damage is valid
+    if damage == 0 or damage == nil then return end
 
-    --Observer/Affector
-    print(damage,type)
-    local damage = game.Affector:trigger(type .. ' '.. "Damage",damage)
-    print(damage,type)
-
-    if damage == 0 then return end
-
+    --Flags
     self.isHit = true
-    game.lookouts[1].Report:action("damageDealt", damage)
-
+    --Health reductions
     self.health = self.health - damage
     
+    --For report
+    game.lookouts[1].Report:action("damageDealt", damage)
 
+    --Check if now dead
     if self.health <= 0 then
         self:die()
+        --For report
         game.lookouts[1].Report:action("enemyKilled")
     end
 
@@ -148,35 +153,41 @@ function Enemy:effectUpdate(dt)
     --check for effects
     for i = #self.effects, 1, -1 do 
         local effect = self.effects[i]
+        local remove = false
         effect.timer = effect.timer + dt
+
 
         --Tick system based off of 1 second
         if effect.timer >= 1 then
             effect.timer = 0
             effect.ticks = effect.ticks + 1
-            effect.executable(self)
+            effect.executable(effect,self)
             
             if effect.ticks >= effect.duration then
-                table.remove(self.effects,i)
+                remove = true
             end
-        --[[elseif effect.interval == 0 and effect.ticks == 0 then
-            effect.ticks = effect.ticks + 1
-            effect.executable(self)]]
         end
 
         --Tick system based off of instant effects
         if effect.interval == 0 and effect.duration > 0 then
-            effect.executable(self)
+            effect.executable(effect,self)
         end
 
         --Instant effect but instant removal check
         if effect.interval == 0 and effect.duration == 0 then
-            effect.executable(self)
-            table.remove(self.effects,i)
+            effect.executable(effect,self)
+                if effect.type == "Dud Fire" then error(2) end
+            remove = true
         end
 
         --remove instant execute effects at the end of loop
         if effect.interval == 0 and effect.ticks >= effect.duration then
+                if effect.type == "Dud Fire" then error(3) end
+
+            remove = true
+        end
+
+        if remove then
             table.remove(self.effects,i)
         end
     end

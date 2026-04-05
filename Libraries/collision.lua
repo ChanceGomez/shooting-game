@@ -61,13 +61,16 @@ function collision.twoRect(obj1,obj2)
          y1 + h1 > y2
 end
 
-function collision.rect(obj,x,y)
-  local x = x or 0
-  local y = y or 0
+function collision.rect(obj,x,y,cameraX,cameraY)
+    local cameraX = cameraX or 0
+    local cameraY = cameraY or 0
+
+    local x1 = x or CursorX
+    local y1 = y or CursorY
   
-  local x1 = CursorX + x
-  local y1 = CursorY + y
-  
+    x1 = x1 + cameraX
+    y1 = y1 + cameraY
+
   local x2 = obj.x
   local y2 = obj.y
   
@@ -84,6 +87,34 @@ function collision.rect(obj,x,y)
   
   return x1 >= x2 and x1 <= x2 + width
     and y1 >= y2 and y1 <= y2 + height
+end
+
+function collision.circleColor(circle,img)
+    local radius = circle.radius 
+    local imageData = img.imageData
+    local iX = img.x or 0
+    local iY = img.y or 0
+    local cX = circle.x
+    local cY = circle.y
+    -- Sample points inside the circle
+    local step = 2 -- pixel step, lower = more accurate but slower
+
+    for dy = -radius, radius, step do
+        for dx = -radius, radius, step do
+            -- Check if sample point is inside the circle
+            if dx*dx + dy*dy <= radius*radius then
+                -- Convert world position to image local position
+                local px = math.floor((cX + dx) - iX)
+                local py = math.floor((cY + dy) - iY)
+
+                if collision.color(img,px,py) then
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
 end
 
 function collision.circle(obj,x,y)
@@ -106,16 +137,16 @@ function collision.circle(obj,x,y)
   return distance <= radius
 end
 
-function collision.color(obj,color)
-    if not collision.rect(obj) then
+function collision.color(obj,x,y)
+    if false then --not collision.rect(obj,x,y) then
         return false
     end
     if obj.imageData == nil then
         return
     end
     local image = obj.imageData
-    local x = math.floor(CursorX - obj.x) or 0
-    local y = math.floor(CursorY - obj.y) or 0
+    local x = x or math.floor(CursorX - obj.x)
+    local y = y or math.floor(CursorY - obj.y)
     
     local r,g,b,a = image:getPixel(x,y)    
     if color then
@@ -126,6 +157,12 @@ function collision.color(obj,color)
 end
 
 function collision.circleRect(circle,rect)
+    local rX,rY = rect.x,rect.y
+    local cX,cY = circle.x,circle.y
+
+    if rX == nil or rY == nil or cX == nil or cY == nil then
+        return
+    end
 -- Find the closest point on the rect to the circle's center
     local closestX = math.max(rect.x, math.min(circle.x, rect.x + rect.width))
     local closestY = math.max(rect.y, math.min(circle.y, rect.y + rect.height))

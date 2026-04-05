@@ -9,23 +9,14 @@ function NestArm.new(image,imageData,nest)
 
     obj.image = image
     obj.imageData = imageData
-    obj.color = {1,1,1,1}
     obj.health = 40
     obj.nest = nest
 
     return setmetatable(obj,NestArm)
 end
 
-function NestArm:die()
-    Enemy.die(self)
-end
-
 function NestArm:delete()
     self.nest:deleteArm(self)
-end
-
-function NestArm:hit(properties)
-    Enemy.hit(self,properties)
 end
 
 function NestArm:isCollision()
@@ -45,7 +36,7 @@ function NestArm:update(dt)
 end
 
 function NestArm:draw()
-    love.graphics.setColor(self.color)
+    love.graphics.setColor(self.colors[self.color])
     love.graphics.draw(self.image)
 end
 

@@ -48,6 +48,7 @@
   buyequipment = require("Scenes/buyequipment")
   upgradebullet = require("Scenes/upgradebullet")
   upgradedud = require("Scenes/upgradedud")
+  upgradegrenade = require("Scenes/upgradegrenade")
 
 --Global vars
 Width,Height = 640,360
@@ -55,15 +56,17 @@ Scale = 3
 mainCanvas = nil
 settings = {
   volume = .6, -- Global volume
-  hitbox = true, -- Display hitboxes on enemies
+  hitbox = false, -- Display hitboxes on enemies
   showHealth = true,
   showAlive = false,
-  debug = true,
+  debug = false,
   difficulty = 'easy',
-  loadShopOnStart = true,
+  loadShopOnStart = false,
   crt = false,
+  loadMap = true,
 }
 
+Scene = "title" -- Current scene
 -- All scenes
 Scenes = {
   game = {
@@ -122,7 +125,7 @@ Scenes = {
     update = function(dt) losescreen:update(dt) end,
   },
 }
-Scene = "shop" -- Current scene
+
 
 -- Independant random for cosmetic purposes
 cosmeticRandom = love.math.newRandomGenerator(os.time())
@@ -158,16 +161,25 @@ local function loadClasses()
     Player = require("Classes/Player")
     Enemy = require("Classes/Entities/Enemy")
     ParachuteCrate = require("Classes/Entities/ParachuteCrate")
+    Bird = require("Classes/Entities/Bird")
+    InfectedBird = require("Classes/Entities/InfectedBird")
+    BigBird = require("Classes/Entities/BigBird")
+    BigInfectedBird = require("Classes/Entities/BigInfectedBird")
+    FastBird = require("Classes/Entities/FastBird")
+    ExplosionBird = require("Classes/Entities/ExplosionBird")
+    Nest = require("Classes/Entities/Nest")
+    NestArm = require("Classes/Entities/NestArm")
+    NestBody = require("Classes/Entities/NestBody")
     Enemies = {
-        Bird = require("Classes/Entities/Bird"),
-        InfectedBird = require("Classes/Entities/InfectedBird"),
-        BigBird = require("Classes/Entities/BigBird"),
-        BigInfectedBird = require("Classes/Entities/BigInfectedBird"),
-        FastBird = require("Classes/Entities/FastBird"),
-        ExplosionBird = require("Classes/Entities/ExplosionBird"),
-        Nest = require("Classes/Entities/Nest"),
-        NestArm = require("Classes/Entities/NestArm"),
-        NestBody = require("Classes/Entities/NestBody")
+        Bird = Bird,
+        InfectedBird = InfectedBird,
+        BigBird = BigBird,
+        BigInfectedBird = BigInfectedBird,
+        FastBird = FastBird,
+        ExplosionBird = ExplosionBird,
+        Nest = Nest,
+        NestArm = NestArm,
+        NestBody = NestBody,
     }
     Gun = require("Classes/Gun")
     Guns = {
@@ -185,7 +197,7 @@ end
 
 function love.load()
     --graphics
-    love.window.setVSync(false)
+    love.window.setVSync(0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.mouse.setVisible(false) -- set cursor to invisible
 

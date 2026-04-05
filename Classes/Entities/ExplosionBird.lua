@@ -7,7 +7,7 @@ setmetatable(ExplosionBird,{__index = Bird})
 local flyingAnimation = assetloader:getAnimation("animation_explosionbird_flying")
 
 function ExplosionBird.new(x,y,handler,difficulty,facing)
-    local obj = Enemies.Bird.new(x,y,handler,difficulty,facing) 
+    local obj = Bird.new(x,y,handler,difficulty,facing) 
 
     --Power scaling
     obj.health = 30 * (math.max(difficulty/2,1))
@@ -17,9 +17,10 @@ function ExplosionBird.new(x,y,handler,difficulty,facing)
     obj.explosionDuration = .5
     obj.resources = 5
 
-    obj.animations = {
+    local animations = {
         flying = flyingAnimation,
     }
+    obj.AnimationPlayer:setImages(animations)
 
     return setmetatable(obj,ExplosionBird)
 end

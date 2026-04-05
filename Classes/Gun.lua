@@ -10,17 +10,17 @@ function Gun.new()
             interval = 0,
             damage = 10,
             duration = 0,
-            executable = function(self,enemy)
-                enemy:damage(self.damage,self.type)
+            executable = function(effect,enemy)
+                enemy:damage(effect.damage)
             end,
         },
         fire = {
-            type = "Fire",
+            type = "Bullet Fire",
             interval = 1,
             damage = 0,
             duration = 0,
-            executable = function(self,enemy)
-                enemy:damage(self.damage,self.type)
+            executable = function(effect,enemy)
+                enemy:damage(effect.damage)
             end
         },
         stun = {
@@ -28,7 +28,7 @@ function Gun.new()
             interval = 0,
             damage = 0,
             duration = 0,
-            executable = function(self,enemy)
+            executable = function(effect,enemy)
                 enemy:stun()
             end
         },
@@ -39,17 +39,17 @@ function Gun.new()
             interval = 0,
             damage = 0,
             duration = 0,
-            executable = function(self,enemy)
-                enemy:damage(self.damage,self.type)
+            executable = function(effect,enemy)
+                enemy:damage(effect.damage)
             end,
         },
         fire = {
-            type = "Fire",
+            type = "Dud Fire",
             interval = 1,
             damage = 0,
             duration = 0,
-            executable = function(self,enemy)
-                enemy:damage(self.damage,self.type)
+            executable = function(effect,enemy)
+                enemy:damage(effect.damage)
             end
         },
         stun = {

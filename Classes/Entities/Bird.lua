@@ -2,7 +2,6 @@
     Author: Chance Francisco Gomez | chance.f.gomez@gmail.com
     File: Bird.lua | Parent Class: Enemy.lua
 ]]
-
 local Bird = {}
 Bird.__index = Bird
 
@@ -21,7 +20,7 @@ function Bird.new(x,y,handler,difficulty,isFlipped)
     if difficulty == nil then error() end
     local difficulty = difficulty or 1
 
-    obj.health = 40 * (math.max(difficulty/3,1))
+    obj.health = 20 * (math.max(difficulty/3,1))
     obj.speed = math.min(25 * (math.max(difficulty/6,1)),game.maxSpeed)
 
     obj.resources = 5

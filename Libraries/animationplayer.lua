@@ -37,6 +37,7 @@ function AnimationPlayer:setScale(scale)
 end
 
 function AnimationPlayer:setAnimation(animation)
+    if self.images == nil then return end
     if self.images[animation] == nil then return end
     self.animation = animation
     self.frame = 1

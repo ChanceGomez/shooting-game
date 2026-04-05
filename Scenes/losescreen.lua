@@ -6,6 +6,8 @@ function losescreen:load()
     table.insert(self.buttons,Button.new({
         visible = true,
         clicked = function()
+            map:load()
+            game:load()
             Scene = "title"
         end,
         width = 128,

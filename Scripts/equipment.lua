@@ -106,11 +106,14 @@ function equipment:load()
         rarity = 2,
         type = "stabalizer",
         ids = {
-            {"Fire Damage","add",5},
-            {"Fire Duration","mult",2},
+            {"Dud Fire Damage","add",5},
+            {"Bullet Fire Damage","add",5},
+            {"Bullet Fire Duration","add",1},
+            {"Dud Fire Duration","add",1},
+            --{"Fire Duration","mult",2},
         },
         description = {
-            text = customtext:formatString("Igniter Stabilizer:",{.2,.2,.5,1}) .. " /nIncrease fire damage by +5, and double fire duration"
+            text = customtext:formatString("Igniter Stabilizer:",{.2,.2,.5,1}) .. " /nIncrease fire damage by +5, and +1 duration"
         }
     }
     self.equipments.railgunBase = {

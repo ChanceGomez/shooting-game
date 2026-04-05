@@ -18,7 +18,7 @@ end
 
 function infopanel:draw(obj,panelMaxSize,cameraX,cameraY,width,height) 
 
-	local panelMaxSize = panelMaxSize or 256
+	local panelMaxSize = panelMaxSize or 316
 	local offsetX = self.defaultCursorOffsetX
 	local offsetY = self.defaultCursorOffsetY
 	local cameraX,cameraY = cameraX or 0, cameraY or 0

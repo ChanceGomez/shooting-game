@@ -9,7 +9,7 @@ local flyingAnimation = assetloader:getAnimation("animation_infectedbird_flying"
 local dyingAnimation = assetloader:getAnimation("animation_infectedbird_dying")
 
 function BigInfectedBird.new(x,y,handler,difficulty,facing)
-    local obj = Enemies.Bird.new(x,y,handler,difficulty,facing) 
+    local obj = Bird.new(x,y,handler,difficulty,facing) 
 
     --Power scaling
     obj.difficulty = difficulty

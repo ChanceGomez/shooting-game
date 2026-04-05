@@ -16,7 +16,7 @@ function assetloader:getImage(name,isAnimationCall)
 	local isAnimationCall = isAnimationCall or false
 	--try catch
 	if self.images[name] then	
-		return self.images[name]
+		return self.images[name] 
 	elseif not isAnimationCall then
 		print(name.. " not found settings default")
 		if self.images['default'] then

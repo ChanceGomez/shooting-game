@@ -8,17 +8,18 @@ local flyingAnimation = assetloader:getAnimation("animation_infectedbird_flying"
 local dyingAnimation = assetloader:getAnimation("animation_infectedbird_dying")
 
 function InfectedBird.new(x,y,handler,difficulty,facing)
-    local obj = Enemies.Bird.new(x,y,handler,difficulty,facing)
+    local obj = Bird.new(x,y,handler,difficulty,facing)
 
     --Power scaling
     obj.health = 30 * (math.max(difficulty/2,1))
     obj.speed = math.min(30 * (math.max(difficulty/6,1)),game.maxSpeed)
     obj.resources = 15
 
-    obj.animations = {
+    local animations = {
         flying = flyingAnimation,
         dying = dyingAnimation,
     }
+    obj.AnimationPlayer:setImages(animations)
 
     return setmetatable(obj,InfectedBird)
 end
