@@ -20,7 +20,7 @@ local customtext = {
 
 -- Load default font if wanting normal text to have a specific font
 function customtext:load()
-    self.defaultFont = perfect_dos_16 or love.graphics.newFont() -- Change 'perfect_dos_16' to default font
+    self.defaultFont = dogica_8 or love.graphics.newFont() -- Change 'perfect_dos_16' to default font
 end
 
 

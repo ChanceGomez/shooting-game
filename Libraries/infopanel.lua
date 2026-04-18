@@ -17,7 +17,6 @@ function infopanel.drawAll(tbl,x,y,width,height)
 end
 
 function infopanel:draw(obj,panelMaxSize,cameraX,cameraY,width,height) 
-
 	local panelMaxSize = panelMaxSize or 316
 	local offsetX = self.defaultCursorOffsetX
 	local offsetY = self.defaultCursorOffsetY
@@ -68,12 +67,12 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY,width,height)
 	local width,height = customtext:getDimensions(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
 
 	--figure out of panel would go over the border
-	if (y+cameraY) > window.GameHeight - height - self.margin then
-		y = window.GameHeight - height - self.margin + cameraY
+	if (y+cameraY) > Height - height - self.margin then
+		y = Height - height - self.margin + cameraY
 	end
 
-	if (x+cameraX) > window.GameWidth - width then
-		x = window.GameWidth - width - cameraX
+	if (x+cameraX) > Width - width then
+		x = Width - width - cameraX
   	end
 
 	

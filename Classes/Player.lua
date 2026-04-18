@@ -42,6 +42,12 @@ function Player.new()
     return obj
 end
 
+function Player:checkLose()
+    if self.health <= 0 and settings.canDie then
+        Scene = "losescreen"
+    end
+end
+
 function Player:addResources(resources)
     local resources = resources * game.Affector:trigger("Resource")
     game.Player.resources = game.Player.resources + resources
@@ -86,9 +92,7 @@ function Player:purchase(cost)
 end
 
 function Player:update(dt)
-    if self.health <= 0 and settings.canDie then
-        Scene = "losescreen"
-    end
+    self:checkLose()
 
     if leftHeld then
         self:fireGun()

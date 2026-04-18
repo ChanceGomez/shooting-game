@@ -9,6 +9,7 @@ function losescreen:load()
             map:load()
             game:load()
             shop:load()
+            gun:load()
 
             Scene = "title"
         end,
