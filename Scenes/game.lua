@@ -1,6 +1,6 @@
 local game = {
     Player = nil,
-    Observer = Observer.new(),
+    Observer = nil,
     Affector = nil,
     lookouts = {},
     round = 1,
@@ -97,6 +97,7 @@ function game:load()
   self.Player:ChangeGun("pistol")
 
   self.Affector = Affector.new(self)
+  Observer.new()
 
   --artifacts:activateAllArtifacts()
   --artifacts:activateArtifact("flamingDuds")

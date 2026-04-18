@@ -82,7 +82,7 @@ function upgradegrenade:load(x,y,width,height)
             stat = "",
             id = {"Grenade Radius","add",5},
         },
-        description = {text = "buy grenade"},
+        description = {text = "Increase radius"},
         clicked = function(self)
             if game.Player:purchase(game.Player.grenadeRadiusCost) then
                 game.Player.grenadeRadiusCost = game.Player.grenadeRadiusCost * 2

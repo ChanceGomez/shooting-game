@@ -55,7 +55,7 @@ function upgradedud:load(x,y,width,height)
             stat = "",
             id = {"Dud Chance","add",1}
         },
-        description = {text = "upgrade damage"},
+        description = {text = "Increase duds"},
         clicked = function(self)
             if self.wrapper.level < self.wrapper.maxLevel and game.Player:purchase(self.wrapper.cost) then
                 self.wrapper.cost = self.wrapper.cost * 2

@@ -160,8 +160,8 @@ function artifacts:load()
         },
         used = false,
         description = {
-            text = "Increase dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase dud damage by " .. 
-                getFormat("positive") .. "+2" .. " decrease fire rate & reload rate by ".. getFormat("positive") .. "50%" .. " and " .. getFormat("positive") .. "automatic loading"
+            text = "Increase dud chance by " .. getFormat("negative") .. "1000 " .. " but Increase dud damage by " .. 
+                getFormat("positive") .. "+2" .. " Increase fire rate & reload rate by ".. getFormat("positive") .. "50%" .. " and " .. getFormat("positive") .. "automatic loading"
         },
         image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
@@ -206,7 +206,7 @@ function artifacts:load()
     self.artifacts.biggerGrenades = {
         rarity = 1,
         ids = {
-            {"Grenade Damage","add",5},
+            {"Grenade Damage","add",10},
             {"Grenade Radius","mult",2},
         },
         description = {
@@ -226,6 +226,7 @@ function artifacts:load()
     self.artifacts.explodingBirds = {
         rarity = 1,
         observerID = 0,
+        used = false,
         event = {
             event = function(self,enemy)
                 enemy.handler.newExplosion(enemy.handler,enemy.x+enemy.width/2,enemy.y+enemy.height/2,15,10)
@@ -279,6 +280,8 @@ self.artifacts. = {
         --Get the artifact count
         self.artifactsCount = self.artifactsCount + 1
 
+        artifact.id = self.artifactsCount
+
         --check to see if image if not load default
         if artifact.image == nil then
             artifact.image = assetloader:getImage("upgrademaxammo_shop_icon")
@@ -318,6 +321,7 @@ self.artifacts. = {
         --Create the update text function
         artifact.updateText = function(self)
             local ids = artifact.ids
+            if ids == nil or type(ids) ~= "table" then return self.description.text end
             if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
             return self.description.text .. " /n " .. game.Affector:getDescription(ids)
         end

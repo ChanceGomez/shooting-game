@@ -10,6 +10,7 @@ function buyequipment:load(x,y,width,height)
     self.Width = width or window.GameWidth
     self.Height = height or window.GameHeight
 
+
     self.Canvas = love.graphics.newCanvas(self.Width,self.Height)
 
     --create all the equipments
@@ -51,6 +52,12 @@ function buyequipment:load(x,y,width,height)
         button.info = {
             text = name .. ' cost: ' .. (item.rarity * priceMult),
         }
+        button.updateText = function(self)
+            if item.ids == nil then return button.info.text end
+            local ids = item.ids
+
+            return button.info.text .. " /n " .. game.Affector:getDescription(ids)
+        end
         self.equipmentButtons[name] = button
         count = count + 1
         collumnCount = collumnCount + 1

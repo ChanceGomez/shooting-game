@@ -17,6 +17,27 @@ function EquipmentInventory.new(tbl,functions)
 
     obj.slots = generateSlots(tbl)
 
+    --get rid of equip button and change it to dequip
+    for i, func in ipairs(obj.rightClickPanel.functions) do
+        if func.description.text == "Equip" then
+            func.description.text = "Dequip"
+            func.clicked = function()
+                if obj.rightClickedSlot.item == nil then return end
+                
+                for i, inventory in ipairs(obj.inventories) do
+                    for j, slot in pairs(inventory.slots) do
+                        if slot.item == nil then
+                            slot:removeItem()
+                            slot:addItem(obj.rightClickedSlot.item)
+                            obj.rightClickedSlot:removeItem()
+                            return
+                        end
+                    end
+                end
+            end
+        end
+    end
+
     return obj
 end
 

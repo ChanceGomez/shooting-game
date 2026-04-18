@@ -242,7 +242,7 @@ end
 
 function shop:update(dt)
     if rClick and settings.debug then
-        self:displayArtifacts(artifacts:getUniqueArtifacts(3,2))
+        self:displayArtifacts(artifacts:getUniqueArtifacts(10))
     end
     --update sub scenes
     self.Scenes[self.Scene]:update(dt)

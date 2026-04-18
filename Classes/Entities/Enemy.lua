@@ -52,6 +52,7 @@ end
 function Enemy:escape()
     game.Player.health = game.Player.health - 1
     Enemy.delete(self)
+    game.Player:checkLose()
 end
 
 function Enemy:delete()
