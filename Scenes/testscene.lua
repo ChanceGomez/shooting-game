@@ -16,7 +16,7 @@
 
 function testscene:update(dt)
     if collision.polygon(addToAll(self.poly,100,100)) then
-        love.event.quit()
+  
     end
     if wheelUp then
         self.transparency = self.transparency + .1
@@ -28,6 +28,14 @@ end
  function testscene:draw()
     love.graphics.setColor(1,1,1,1)
     love.graphics.polygon("line",flatten(addToAll(self.poly,100,100)))
+
+
+    love.graphics.polygon("line",flatten(assetloader:getPolygon("nest_arm1")))
+    love.graphics.polygon("line",flatten(assetloader:getPolygon("nest_arm2")))
+    love.graphics.polygon("line",flatten(assetloader:getPolygon("nest_arm3")))
+    love.graphics.polygon("line",flatten(assetloader:getPolygon("nest_arm4")))
+    love.graphics.polygon("line",flatten(assetloader:getPolygon("nest_body")))
+
     love.graphics.setColor(1,1,1,self.transparency)
     love.graphics.draw(assetloader:getImage("nest_body"),100,100)
     

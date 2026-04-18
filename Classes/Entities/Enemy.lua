@@ -45,6 +45,10 @@ function Enemy:die()
     
 end
 
+function Enemy:checkCircleCollision(circle)
+    return collision.circleRect(circle,self)
+end
+
 function Enemy:escape()
     game.Player.health = game.Player.health - 1
     Enemy.delete(self)

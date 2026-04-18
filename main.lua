@@ -35,7 +35,7 @@ settings = {
   hitbox = false, -- Display hitboxes on enemies
   showHealth = true,
   showAlive = false,
-  debug = true,
+  debug = false,
   difficulty = 'easy',
   loadShopOnStart = false,
   crt = false,
@@ -71,7 +71,7 @@ settings = {
   upgradegrenade = require("Scenes/upgradegrenade")
   settingscene = require("Scenes/settingscene")
 
-Scene = "shop" -- Current scene
+Scene = "title" -- Current scene
 -- All scenes
 Scenes = {
   game = {

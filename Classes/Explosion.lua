@@ -41,12 +41,7 @@ function Explosion:update(dt)
 
     --Check for enemies in explosion
     for i, enemy in ipairs(self.handler.enemies) do
-        --[[
-        if enemy.polygon and collision.ciclePoly(self,enemy) and enemy.currentExplosionDamage ~= self then
-            enemy.currentExplosionDamage = self
-            enemy:hit(self.properties)
-        end]]
-        if collision.circleRect(self,enemy) and enemy.currentExplosionDamage ~= self then
+        if enemy.currentExplosionDamage ~= self and enemy:checkCircleCollision(self,self.properties) then
             enemy.currentExplosionDamage = self
             enemy:hit(self.properties)
         end

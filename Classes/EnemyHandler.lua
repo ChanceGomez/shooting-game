@@ -97,13 +97,13 @@ end
 ]]
 function EnemyHandler:checkHit(properties)
     for i, enemy in pairs(self.enemies) do
-        if enemy:isCollision() and enemy.isAlive then
+        if enemy:isCollision(properties) and enemy.isAlive then
             enemy:hit(properties) 
         end
     end
 
     for i, parachute in pairs(self.parachutes) do
-        if parachute:isCollision() and parachute.isAlive then
+        if parachute:isCollision(properties) and parachute.isAlive then
             parachute:hit(properties) 
         end
     end

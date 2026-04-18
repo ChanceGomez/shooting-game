@@ -188,21 +188,27 @@ function collision.circle(obj,x,y)
   return distance <= radius
 end
 
-function collision.color(obj,x,y)
+function collision.color(obj,x,y,color)
+    local color = color or false
+    print("meowburger")
     if false then --not collision.rect(obj,x,y) then
         return false
     end
     if obj.imageData == nil then
         return
     end
+    print("meowburger2")
     local image = obj.imageData
     local x = x or math.floor(CursorX - obj.x)
-    local y = y or math.floor(CursorY - obj.y)
+    local y = y or math.floor(CursorY - obj.y) 
+  
     
     local r,g,b,a = image:getPixel(x,y)    
     if color then
+        print("meowburger3",color)
         return color[1] == r and color[2] == g and color[3] == b and color[4] == a
     else
+        print("meowburger4")
         return a ~= 0
     end
 end

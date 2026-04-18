@@ -4,9 +4,10 @@ NestBody.__index = NestBody
 setmetatable(NestBody,{__index = Enemy})
 
 
-function NestBody.new(image,imageData,nest)
+function NestBody.new(image,imageData,nest,polygon)
     local obj = Enemy.new(0,0,nest.handler)
 
+    obj.polygon = polygon
     obj.image = image
     obj.imageData = imageData
     obj.health = 300
@@ -17,12 +18,21 @@ function NestBody.new(image,imageData,nest)
     return setmetatable(obj,NestBody)
 end
 
+function NestBody:checkCircleCollision(circle,properties)
+    if collision.ciclePoly(circle,self.polygon) then
+        self:hit(properties)
+        return true
+    end
+    return false
+end
+
 function NestBody:delete()
     self.nest:deleteBody(self)
 end
 
-function NestBody:isCollision()
+function NestBody:isCollision(properties)
     if collision.color(self) then
+        self:hit(properties)
         return true
     else
         return false
