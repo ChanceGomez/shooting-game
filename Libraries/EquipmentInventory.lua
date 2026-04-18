@@ -6,7 +6,7 @@ local function generateSlots(tbl)
     local returnTbl = {}
 
     for i, slot in pairs(tbl) do
-        returnTbl[i] = EquipmentSlot.new(slot[1],slot[2])
+        returnTbl[i] = EquipmentSlot.new(slot[1],slot[2],i)
     end
 
     return returnTbl 

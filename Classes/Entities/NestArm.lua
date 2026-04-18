@@ -4,12 +4,13 @@ NestArm.__index = NestArm
 setmetatable(NestArm,{__index = Enemy})
 
 
-function NestArm.new(image,imageData,nest)
+function NestArm.new(image,imageData,nest,polygon)
     local obj = Enemy.new(0,0,nest.handler)
 
+    obj.polygon = polygon
     obj.image = image
     obj.imageData = imageData
-    obj.health = 40
+    obj.health = 80
     obj.nest = nest
 
     return setmetatable(obj,NestArm)
@@ -19,8 +20,17 @@ function NestArm:delete()
     self.nest:deleteArm(self)
 end
 
-function NestArm:isCollision()
+function NestArm:checkCircleCollision(circle,properties)
+    if collision.ciclePoly(circle,self.polygon) then
+        self:hit(properties)
+        return true
+    end
+    return false
+end
+
+function NestArm:isCollision(properties)
     if collision.color(self) then
+        self:hit(properties)
         return true
     else
         return false

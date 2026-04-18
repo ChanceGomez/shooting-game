@@ -17,6 +17,7 @@ function map:getVariables(node)
         difficulty = generation,
         color = {1,1,1,1},
         images = {},
+        isEndnode = false
     }
 
     --get background
@@ -31,10 +32,11 @@ function map:getVariables(node)
         returnTbl.color = {.3,.3,.2,1}
     end
 
-    local enemyWeight = generator:random(math.floor(3+(generation/2)),5+generation)
+    local enemyWeight = generator:random(math.floor(3+(generation/2)),4+generation)
 
 
     if node.isEndNode then
+        returnTbl.isEndnode = true
         enemyWeight = enemyWeight * 2
     end
 
@@ -90,8 +92,13 @@ function map:nodeClicked(variables)
     local difficulty = variables.difficulty
     local artifacts = variables.artifacts
     local images = variables.images
+    local isEndnode = variables.isEndnode
 
     game:createLookout(enemies,difficulty,artifacts,images)
+
+    if isEndnode then
+        self.map:expand()
+    end
 
     Scene = "game"
 end
@@ -114,11 +121,6 @@ function map:load()
         return
     end
     self.map = Map.new(0,3,9,self)
-    self.map:expand()
-    self.map:expand()
-    self.map:expand()
-    self.map:expand()
-    self.map:expand()
 end
 
 function map:update(dt)

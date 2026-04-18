@@ -35,21 +35,21 @@ function game:getVariable(name)
     elseif name == "Bullet Damage" then
         return player.gun.bullets.bullet.damage
     elseif name == "Dud Chance" then 
-        return player.dudPercentage, "%"
+        return player.dudPercentage
     elseif name == "Fire Rate" then
-        return player.gun.fireRate, " /sec"
+        return player.gun.fireRate 
     elseif name == "Parachute Chance" then
-        return player.parachuteOdds, "%"
+        return player.parachuteOdds 
     elseif name == "Reload Rate" then
-        return player.gun.reloadRate, " /sec"
+        return player.gun.reloadRate 
     elseif name == "Dud Fire Damage" then
         return player.gun.duds.fire.damage
     elseif name == "Dud Fire Duration" then
-        return player.gun.duds.fire.duration, " /sec"
+        return player.gun.duds.fire.duration 
     elseif name == "Bullet Fire Damage" then
         return player.gun.bullets.fire.damage
     elseif name == "Bullet Fire Duration" then
-        return player.gun.bullets.fire.duration, " /sec"
+        return player.gun.bullets.fire.duration 
     elseif name == "Automatic Reloading" then
         return player.automaticReloading
     elseif name == "Max Ammo" then
@@ -57,7 +57,7 @@ function game:getVariable(name)
     elseif name == "Fire Damage" then
         return player.gun.fireDamageMult
     elseif name == "Fire Duration" then
-        return player.gun.fireDurationMult, " /sec"
+        return player.gun.fireDurationMult 
     elseif name == "Parachute Equipment Rarity" then
         return player.parachuteEquipmentRarity
     elseif name == "Bullet Stun Duration" then
@@ -66,19 +66,19 @@ function game:getVariable(name)
         return player.gun.duds.stun.duration
     elseif name == "Grenade Damage" then
         return player.explosionProperties.explosion.damage
+    elseif name == "Grenade Radius" then
+        return player.explosionProperties.explosion.radius
+    elseif name == "Grenade Cost" then
+        return player.grenadeCost
+    elseif name == "Max Grenade Count" then
+        return player.maxGrenades
+    elseif name == "Resource" then
+        return player.resourceMultiplier
     end
 
 
     return nil
 end
-
-function game:getUnit(trigger)
-    local ignore,unit = game:getVariable(trigger)
-    unit = unit or ""
-
-    return unit
-end
-
 
 ----------
 function game:createLookout(enemies,difficulty,artifacts,images)
@@ -92,16 +92,16 @@ function game:endRound(artifacts)
 end
 
 function game:load()
-  self.canvas = love.graphics.newCanvas(Width,Height)
+  self.canvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
   self.Player = Player.new()
   self.Player:ChangeGun("pistol")
 
   self.Affector = Affector.new(self)
 
-  -- artifacts:activateAllArtifacts()
+  --artifacts:activateAllArtifacts()
   --artifacts:activateArtifact("flamingDuds")
   --artifacts:activateArtifact("dudSurplus")
-  --artifacts:activateArtifact("dudSurplus")
+  --artifacts:activateArtifact("riskAndReward")
   -- artifacts:activateArtifact("flamingDuds")
 end
 

@@ -58,7 +58,7 @@ function EnemyHandler:startRound()
                 if random == 2 then 
                     facing = -1
                 end
-                self:newEnemy("Nest",math.random(200,Width-200),Height+30,self.difficulty,facing)
+                self:newEnemy("Nest",math.random(200,window.GameWidth-200),window.GameHeight+30,self.difficulty,facing)
             end
          })
     ]]
@@ -74,7 +74,7 @@ function EnemyHandler:startRound()
                 if random == 2 then 
                     facing = false
                 end
-                self:newEnemy(self.enemyList[i],math.random(200,Width-200),Height+30,facing)
+                self:newEnemy(self.enemyList[i],math.random(200,window.GameWidth-200),window.GameHeight+30,facing)
             end
          })
     end
@@ -97,13 +97,13 @@ end
 ]]
 function EnemyHandler:checkHit(properties)
     for i, enemy in pairs(self.enemies) do
-        if enemy:isCollision() and enemy.isAlive then
+        if enemy:isCollision(properties) and enemy.isAlive then
             enemy:hit(properties) 
         end
     end
 
     for i, parachute in pairs(self.parachutes) do
-        if parachute:isCollision() and parachute.isAlive then
+        if parachute:isCollision(properties) and parachute.isAlive then
             parachute:hit(properties) 
         end
     end

@@ -8,6 +8,8 @@ function losescreen:load()
         clicked = function()
             map:load()
             game:load()
+            shop:load()
+
             Scene = "title"
         end,
         width = 128,

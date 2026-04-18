@@ -28,7 +28,7 @@ end
 
 function Lazor:draw()
     love.graphics.setColor(1,1,1,1)
-    love.graphics.rectangle("fill",self.x,self.y,Width,size)
+    love.graphics.rectangle("fill",self.x,self.y,window.GameWidth,size)
 end
 
 return Lazor

@@ -191,8 +191,71 @@ function artifacts:load()
         },
         image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
+    self.artifacts.grenadeSurplus = {
+        rarity = 1,
+        ids = {
+            {"Grenade Damage","add",10},
+            {"Max Grenade Count","add",1},
+            {"Grenade Cost","mult",.5},
+        },
+        description = {
+            text = "Increase grenade damage by +10, max grenade count by +1, reduce grenade cost by 50%"
+        },
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.biggerGrenades = {
+        rarity = 1,
+        ids = {
+            {"Grenade Damage","add",5},
+            {"Grenade Radius","mult",2},
+        },
+        description = {
+            text = "Increase grenade damage by +5 and double the radius of grenades"
+        },
+        image = assetloader:getImage("upgrademaxammo_shop_icon")
+    }
+    self.artifacts.resourceful = {
+        rarity = 2,
+        ids = {
+            {"Resource","mult",2}
+        },
+        description = {
+            text = "Increase resources gained by x2",
+        },
+    }
+    self.artifacts.explodingBirds = {
+        rarity = 1,
+        observerID = 0,
+        event = {
+            event = function(self,enemy)
+                enemy.handler.newExplosion(enemy.handler,enemy.x+enemy.width/2,enemy.y+enemy.height/2,15,10)
+            end
+        },
+        add = function(self)
+            self.observerID = game.Observer:add("birdDied",self.event)
+        end,
+        remove = function(self)
+            game.Observer:remove("birdDied",self.event)
+        end,
+        description = {
+            text = "Birds now explode on death bird explosions: radius + 15, damage + 10"
+        }
+    }
+    self.artifacts.riskAndReward = {
+        rarity = 1,
+        ids = {
+            {"Dud Chance","add",40},
+            {"Bullet Damage","add",25},
+        },
+        description = {
+            text = "Increase dud chance +50 points but increase bullet damage by +25"
+        }
+    }
+    
     --[[
+self.artifacts. = {
 
+    }
     self.artifacts.horizontalLazer = {
         timer = 0,
         event = function(self)
@@ -244,6 +307,9 @@ function artifacts:load()
         end
         if artifact.remove == nil then
             artifact.remove = function(self)
+                if artifact.removed == true then 
+                    artifact.used = false
+                end
                 self.active = false
                 game.Affector:removeIDs(self.ids)
                 game.Player:removeArtifact(self)

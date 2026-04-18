@@ -49,6 +49,8 @@ end
 function Bird:die()
     Enemy.die(self)
     love.audio.play(self.sounds.die)
+    
+    game.Observer:trigger("birdDied",self)
 end
 
 function Bird:hit(damage)

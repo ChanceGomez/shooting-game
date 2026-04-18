@@ -3,8 +3,8 @@ local upgradegrenade = {
 }
 
 function upgradegrenade:load(x,y,width,height)
-    self.Width = width or Width
-    self.Height = height or Height
+    self.Width = width or window.GameWidth
+    self.Height = height or window.GameHeight
     self.x = x or 0
     self.y = y or 0
 
@@ -18,19 +18,22 @@ function upgradegrenade:load(x,y,width,height)
         wrapper = {
             level = 0,
             maxLevel = 100,
-            cost = 5,
+            cost = 0,
             stat = "",
             id = {"Grenade Damage","add",1}
         },
         description = {text = "upgrade damage"},
         clicked = function(self)
-            if self.wrapper.level < self.wrapper.maxLevel and game.Player:purchase(self.wrapper.cost) then
-                self.wrapper.cost = self.wrapper.cost * 2
+            if self.wrapper.level < self.wrapper.maxLevel and game.Player:purchase(game.Player.grenadeDamageCost) then
+                game.Player.grenadeDamageCost = game.Player.grenadeDamageCost * 2
+                self.wrapper.cost = game.Player.grenadeDamageCost
                 self.wrapper.level = self.wrapper.level + 1
                 game.Affector:addID(self.wrapper.id)
             end
         end,
         updateText = function(self)
+            self.wrapper.cost = game.Player.grenadeDamageCost
+
             local trigger = self.wrapper.id[1]
             local ignore,afterString = game:getVariable(trigger) or ""
             afterString = afterString or ""
@@ -51,18 +54,55 @@ function upgradegrenade:load(x,y,width,height)
         wrapper = {
             level = 3,
             maxLevel = 100,
-            cost = 50,
+            cost = 0,
             stat = "",
         },
         description = {text = "buy grenade"},
         clicked = function(self)
-            if game.Player.explosions < 3 and game.Player:purchase(self.wrapper.cost) then
-                game.Player.explosions = game.Player.explosive + 1
+            if game.Player.grenades < game.Player.maxGrenades and game.Player:purchase(game.Affector:trigger("Grenade Cost")) then
+                game.Player.grenades = game.Player.grenades + 1
             end
         end,
         updateText = function(self)
-            if game.Player.explosions >= self.wrapper.level then return end
-            self.wrapper.stat = game.Player.explosions .. " -> " .. game.Player.explosions + 1
+            --update cost
+            self.wrapper.cost = game.Affector:trigger("Grenade Cost")
+            if game.Player.grenades >= game.Player.maxGrenades then self.wrapper.stat = game.Player.grenades .. " Maxed" return end
+            self.wrapper.stat = game.Player.grenades .. " -> " .. game.Player.grenades + 1
+        end,
+    })
+    self.upgradeButtons.upgradeRadius = Button.new({
+        x = 15,
+        y = 96,
+        width = 64,
+        height = 32,
+        wrapper = {
+            level = 3,
+            maxLevel = 100,
+            cost = 0,
+            stat = "",
+            id = {"Grenade Radius","add",5},
+        },
+        description = {text = "buy grenade"},
+        clicked = function(self)
+            if game.Player:purchase(game.Player.grenadeRadiusCost) then
+                game.Player.grenadeRadiusCost = game.Player.grenadeRadiusCost * 2
+                self.wrapper.cost = game.Player.grenadeRadiusCost
+                game.Affector:addID(self.wrapper.id)
+            end
+        end,
+        updateText = function(self)
+            self.wrapper.cost = game.Player.grenadeRadiusCost
+
+            local trigger = self.wrapper.id[1]
+            local ignore,afterString = game:getVariable(trigger) or ""
+            afterString = afterString or ""
+
+            local beforeStat = game.Affector:getAdd(trigger,game:getVariable(trigger))
+            game.Affector:addID(self.wrapper.id)
+            local afterStat = game.Affector:getAdd(trigger,game:getVariable(trigger))
+            game.Affector:removeID(self.wrapper.id)
+
+            self.wrapper.stat = trigger .. " : " .. beforeStat .. " -> " .. afterStat .. afterString
         end,
     })
 end

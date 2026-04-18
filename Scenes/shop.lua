@@ -27,8 +27,8 @@ function shop:displayArtifacts(artifacts)
 
         totalWidth = totalWidth + width + margin
         --Change x to correct pos
-        artifact.x = Width/2 - width/2 + ((width+margin) * i)
-        artifact.y = Height/2 - width/2
+        artifact.x = window.GameWidth/2 - width/2 + ((width+margin) * i)
+        artifact.y = window.GameHeight/2 - width/2
 
         --create clicked function
         artifact.clicked = function()
@@ -57,7 +57,7 @@ function shop:displayArtifacts(artifacts)
     end
 
     --change position accordingly
-    local midPoint = Width/2
+    local midPoint = window.GameWidth/2
     local startPoint = midPoint - totalWidth/2
     for i, artifact in ipairs(self.artifacts) do
         artifact.x = startPoint + ((i-1) * (artifact.width+margin))
@@ -69,14 +69,14 @@ function shop:drawArtifactSelection()
     if self.isArtifact then
         --draw grayed out background
         love.graphics.setColor(.1,.1,.1,1)
-        love.graphics.rectangle("fill",0,0,Width,Height)
+        love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
 
         --draw the text
         love.graphics.setColor(1,1,1,1)
         local font = perfect_dos_32
         local text = "Choose an Artifact:"
         love.graphics.setFont(perfect_dos_32)
-        love.graphics.print(text,Width/2-(font:getWidth(text)/2),64)
+        love.graphics.print(text,window.GameWidth/2-(font:getWidth(text)/2),64)
 
 
         --draw artifacts
@@ -137,7 +137,7 @@ function shop:load()
     --This button is seperate from other buttons so it can be drawn 
     -- above the tint layer in artifact selection
     self.skipArtifactButton = Button.new({
-        x = Width/2-64,
+        x = window.GameWidth/2-64,
         y = 300,
         width = 128,
         height = 32,
@@ -236,13 +236,13 @@ function shop:load()
 
     if settings.loadShopOnStart then
         --self:displayArtifacts(artifacts:getAllArtifacts())
-        self:displayArtifacts(artifacts:getUniqueArtifacts(3))
+        self:displayArtifacts(artifacts:getUniqueArtifacts(5,2))
     end
 end
 
 function shop:update(dt)
     if rClick and settings.debug then
-        self:displayArtifacts(artifacts:getUniqueArtifacts(3))
+        self:displayArtifacts(artifacts:getUniqueArtifacts(3,2))
     end
     --update sub scenes
     self.Scenes[self.Scene]:update(dt)
@@ -271,7 +271,7 @@ function shop:draw()
     local text = "Resources: " .. game.Player.resources
     local font = perfect_dos_16
 
-    love.graphics.print(text,Width-font:getWidth(text)-4,28)
+    love.graphics.print(text,window.GameWidth-font:getWidth(text)-4,28)
 
     --draw tab
     tab:draw()

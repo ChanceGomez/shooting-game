@@ -12,7 +12,16 @@ function Player.new()
     obj.automaticReloading = false
     obj.artifacts = {}
     obj.parachuteEquipmentRarity = 1
-    obj.explosions = 3
+    obj.grenades = 3
+    obj.maxGrenades = 3
+
+    --costs
+    obj.grenadeCost = 50
+    obj.grenadeRadiusCost = 20
+    obj.grenadeDamageCost = 5
+
+
+    obj.resourceMultiplier = 1
     obj.explosionProperties = {
         explosion = {
             type = "Grenade",
@@ -31,6 +40,12 @@ function Player.new()
     end
 
     return obj
+end
+
+function Player:addResources(resources)
+    local resources = resources * game.Affector:trigger("Resource")
+    game.Player.resources = game.Player.resources + resources
+    game.lookouts[1].Report:action("resources",resources)
 end
 
 function Player:addArtifact(artifact)
@@ -56,8 +71,8 @@ function Player:fireGun()
 end
 
 function Player:useExplosion()
-    if self.explosions <= 0 then return end
-    self.explosions = self.explosions - 1
+    if self.grenades <= 0 then return end
+    self.grenades = self.grenades - 1
     local explosion = self.explosionProperties
     game:getHandler():newExplosion(CursorX,CursorY,explosion.radius,explosion.damage,explosion.duration)
 end
@@ -71,7 +86,7 @@ function Player:purchase(cost)
 end
 
 function Player:update(dt)
-    if self.health <= 0 and not settings.debug then
+    if self.health <= 0 and settings.canDie then
         Scene = "losescreen"
     end
 
@@ -93,9 +108,9 @@ function Player:draw()
     local x,y = CursorX,CursorY
 
     --draw explosion area
-    if love.mouse.isDown(2) and self.explosions > 0 then
+    if love.mouse.isDown(2) and self.grenades > 0 then
         love.graphics.setColor(.7,.7,.7,.5)
-        love.graphics.circle("fill",CursorX,CursorY,self.explosionProperties.explosion.radius)   
+        love.graphics.circle("fill",CursorX,CursorY,game.Affector:trigger("Grenade Radius"))   
     end
 
     love.graphics.setColor(1,1,1,1)
@@ -156,11 +171,11 @@ function Player:draw()
         end
 
     --Draw explosion count
-        local x,y = 36,Height
+        local x,y = 36,window.GameHeight
         local margin = 2
         local image = assetloader:getImage("bomb_ammo")
         
-        for i = 1, self.explosions do
+        for i = 1, self.grenades do
             local bombX,bombY = x, y - (i*(image:getWidth()+margin))
             love.graphics.setColor(1,1,1,1)
             love.graphics.draw(image,bombX,bombY)

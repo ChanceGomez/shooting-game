@@ -27,8 +27,19 @@ function Observer:add(trigger,obj)
     self.events[trigger] = {}
   end
   table.insert(self.events[trigger],obj)
+  
 end
 
+function Observer:remove(trigger,obj)
+  if self.events[trigger] == nil then 
+    return
+  end
+  for i, instance in pairs(self.events[trigger]) do
+    if instance == obj then
+      table.remove(self.events[trigger],i )
+    end
+  end
+end
 
 
 return Observer

@@ -25,14 +25,44 @@ function Affector.new(handler)
     return obj
 end
 
-function Affector:getColor(type) 
+--[[
+    Descriptions oriented functions
+]]
+
+local function getColor(affector,type) 
     return self.colors[type]
 end
 
-function Affector:getFormattedTrigger(trigger)
-    return customtext:formatString(trigger,{.2,.2,.4,1}) .. ": "
+local function getFormattedMult(variable)
+    return tostring(variable .. "%")
 end
 
+local function getDescriptionVariable(affector,trigger,type)
+    local variable = affector:getRaw(trigger,type)
+
+    if type == "mult" then
+        variable = variable * 100
+        variable = tostring(variable .. "%")
+    elseif type == "add" then
+        
+    end
+
+    return tostring(variable)
+end 
+
+local function getFormattedTrigger(trigger,type)
+    local str = ""
+    if type == "add" then
+        str = trigger 
+    elseif type == "bool" then
+        str = trigger
+    elseif type == "mult" then
+        str = trigger .. " Multiplier"
+    end
+    return customtext:formatString(str,{.2,.2,.4,1}) .. ": "
+end
+
+--Gets the description of the ids
 function Affector:getDescription(ids)
     local desc = ""
     --Cycle through the ids
@@ -41,9 +71,10 @@ function Affector:getDescription(ids)
         local type = id[2]
         local variable = id[3]
 
-        local beforeStat = self:getFormattedTrigger(trigger) .. tostring(trim(self:getRaw(trigger,type),2))
+        local formattedTrigger = getFormattedTrigger(trigger,type)
+        local beforeStat = formattedTrigger .. trim(getDescriptionVariable(self,trigger,type),2)
         self:add(trigger,type,variable)
-        local afterStat = tostring(trim(self:getRaw(trigger,type),2)) .. game:getUnit(trigger)
+        local afterStat = getDescriptionVariable(self,trigger,type)
         self:remove(trigger,type,variable)
 
         -- get before variable
@@ -54,6 +85,10 @@ function Affector:getDescription(ids)
     
     return desc
 end
+
+--[[
+    Logic oriented functions
+]]
 
 function Affector:getBool(trigger,attribute)
     if self.affectors[trigger] == nil then return attribute end
@@ -80,9 +115,10 @@ function Affector:getAdd(trigger,attribute)
 end
 
 function Affector:getMult(trigger,attribute)
+    local attribute = 1
     if self.affectors[trigger] == nil then return attribute end
     local returnAttribute = attribute 
-    if returnAttribute == nil then returnAttribute = 0 end
+    if returnAttribute == nil then returnAttribute = 1 end
 
     for i, mult in ipairs(self.affectors[trigger].mult) do
         returnAttribute = mult.event(returnAttribute)
@@ -106,7 +142,7 @@ function Affector:getStat(trigger,type)
     elseif type == "all" then
         str = str .. self:trigger(trigger,attribute)
     end
-    return str .. game:getUnit(trigger) 
+    return str
 end
 
 function Affector:getRaw(trigger,type)
@@ -164,14 +200,18 @@ function Affector:trigger(trigger,attribute)
     local returnAttribute = attribute 
     if returnAttribute == nil then returnAttribute = 0 end
 
+    --Check to see if the attribute is a boolean
+    if type(returnAttribute) == "boolean" then
+        --get bool
+        return self:getBool(trigger,returnAttribute)
+    end
     --get add
     returnAttribute = self:getAdd(trigger,returnAttribute)
 
     --get mult
-    returnAttribute = self:getMult(trigger,returnAttribute)
+    returnAttribute = returnAttribute * self:getMult(trigger,returnAttribute)
 
-    --get bool
-    returnAttribute = self:getBool(trigger,returnAttribute)
+    
 
   
     return returnAttribute
@@ -199,7 +239,7 @@ function Affector:mult(trigger,variable)
     table.insert(self.affectors[trigger].mult,{
         variable = variable,
         event = function(attribute)
-            return attribute * variable
+            return attribute + variable
         end,
     })
 end

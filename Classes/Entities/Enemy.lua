@@ -39,10 +39,14 @@ function Enemy:die()
     self.color = "dead"
     self.handler:enemyDied()
     self.isStunned = false
-    game.lookouts[1].Report:action("resources",self.resources)
+    game.Player:addResources(self.resources)
     self.AnimationPlayer:setAnimation("dying")
     self.AnimationPlayer:setIsLooped(false)
     
+end
+
+function Enemy:checkCircleCollision(circle)
+    return collision.circleRect(circle,self)
 end
 
 function Enemy:escape()
@@ -89,6 +93,8 @@ function Enemy:damage(damage,type)
     --Make sure damage is valid
     if damage == 0 or damage == nil then return end
 
+
+    --local damage = game.Affector:trigger(type .. " Damage")
     --Flags
     self.isHit = true
     --Health reductions
@@ -203,12 +209,12 @@ function Enemy:update(dt)
     self:effectUpdate(dt)
     
     --clean up
-    if not self.isAlive and self.y > Height then
+    if not self.isAlive and self.y > window.GameHeight then
         Enemy.delete(self)
     end
 
     local sideMargin = 32
-    if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=Width+sideMargin,height=Height+sideMargin},self) and self.y < Height-40 and self.lifeTimer > 5 then
+    if not collision.twoRect({x=-sideMargin,y=-sideMargin,width=window.GameWidth+sideMargin,height=window.GameHeight+sideMargin},self) and self.y < window.GameHeight-40 and self.lifeTimer > 5 then
         self:escape()
     end
 end

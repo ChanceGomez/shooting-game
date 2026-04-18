@@ -12,7 +12,7 @@ function Lookout.new(enemies,difficulty,artifacts,images)
     obj.difficulty = difficulty
     obj.enemyCount = #enemies
     obj.enemies = {}
-    obj.canvas = love.graphics.newCanvas(Width,Height)
+    obj.canvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
     obj.handler = EnemyHandler.new(obj,enemies,difficulty)
     obj.handler:startRound()
     obj.x = 0
@@ -23,7 +23,7 @@ function Lookout.new(enemies,difficulty,artifacts,images)
     obj.buttons = {}
     obj.isHoveringButton = false
     obj.reloadShelfOpen = true
-    obj.ReloadShelf = ReloadShelf.new(-128,obj.y + Height - 64)
+    obj.ReloadShelf = ReloadShelf.new(-128,obj.y + window.GameHeight - 64)
     obj.BackgroundHandler = BackgroundHandler.new()
     obj.outlineMargin = 0
 
@@ -142,13 +142,13 @@ function Lookout:draw()
     local font = dogica_8
     local text = "Health:"
     love.graphics.setFont(font)
-    love.graphics.print(text,(Width/2)-(font:getWidth(text)/2),15)
+    love.graphics.print(text,(window.GameWidth/2)-(font:getWidth(text)/2),15)
 
     local width,height,margin = 4,16,2
     local totalWidth = (width+margin) * game.Player.health
     for i = 1, game.Player.health do
         love.graphics.setColor(1,1,1,1)
-        love.graphics.rectangle("fill",Width/2+(i*(width+margin))-totalWidth,25,width,height)
+        love.graphics.rectangle("fill",window.GameWidth/2+(i*(width+margin))-totalWidth,25,width,height)
     end
     
 end
