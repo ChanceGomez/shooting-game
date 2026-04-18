@@ -3,16 +3,9 @@
   File: main.lua | Project: shooting game
 ]]
   
-  
- 
---Scripts
-  event = require("Scripts/events")
-  popup = require("Scripts/popup")
-  artifacts = require("Scripts/artifacts")
-  equipment = require("Scripts/equipment")
-  tab = require("Scripts/tab")
 
 --Libraries
+  window = require("Libraries/window")
   Observer = require("Libraries/Observer")
   Affector = require("Libraries/Affector")
   Event = require("Libraries/Event")
@@ -30,6 +23,33 @@
   EquipmentSlot = require("Libraries/EquipmentSlot")
   DamagePopup = require("Libraries/DamagePopup")
   infopanel = require("Libraries/infopanel")
+  polygon = require("Libraries/polygon")
+  
+ 
+--Global vars
+window.GameWidth,window.GameHeight = 640,360
+window.calculateScale()
+mainCanvas = nil
+settings = {
+  volume = .6, -- Global volume
+  hitbox = false, -- Display hitboxes on enemies
+  showHealth = true,
+  showAlive = false,
+  debug = true,
+  difficulty = 'easy',
+  loadShopOnStart = false,
+  crt = false,
+  loadMap = true,
+  isFullscreen = true,
+  canDie = true,
+}
+ 
+--Scripts
+  event = require("Scripts/events")
+  popup = require("Scripts/popup")
+  artifacts = require("Scripts/artifacts")
+  equipment = require("Scripts/equipment")
+  tab = require("Scripts/tab")
 
 
 
@@ -49,24 +69,9 @@
   upgradebullet = require("Scenes/upgradebullet")
   upgradedud = require("Scenes/upgradedud")
   upgradegrenade = require("Scenes/upgradegrenade")
+  settingscene = require("Scenes/settingscene")
 
---Global vars
-Width,Height = 640,360
-Scale = 3
-mainCanvas = nil
-settings = {
-  volume = .6, -- Global volume
-  hitbox = false, -- Display hitboxes on enemies
-  showHealth = true,
-  showAlive = false,
-  debug = false,
-  difficulty = 'easy',
-  loadShopOnStart = false,
-  crt = false,
-  loadMap = true,
-}
-
-Scene = "title" -- Current scene
+Scene = "shop" -- Current scene
 -- All scenes
 Scenes = {
   game = {
@@ -123,6 +128,11 @@ Scenes = {
     draw = function() losescreen:draw() end,
     load = function() losescreen:load() end,
     update = function(dt) losescreen:update(dt) end,
+  },
+  settingscene = {
+    draw = function() settingscene:draw() end,
+    load = function() settingscene:load() end,
+    update = function(dt) settingscene:update(dt) end,
   },
 }
 
@@ -193,6 +203,13 @@ local function loadClasses()
     GrenadeExplosion = require("Classes/GrenadeExplosion")
 end
 
+--default functions
+
+function drawCursor()
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+end
+
 -- love functions
 
 function love.load()
@@ -200,9 +217,10 @@ function love.load()
     love.window.setVSync(0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.mouse.setVisible(false) -- set cursor to invisible
+    --love.window.setMode(window.GameWidth,window.GameHeight,settings.isFullscreen)
 
     --Get main canvas
-    mainCanvas = love.graphics.newCanvas(Width,Height)
+    mainCanvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
 
     --load assets
     loadAssets()
@@ -233,6 +251,24 @@ function love.update(dt)
 	--update scene
 	Scenes[Scene].update(dt)
 
+  --settings whitelist
+  local blacklist = {
+    [1] = "difficultyselection",
+    [2] = "settingscene"
+  }
+  if escapeClick then
+    local valid = true
+    for i, blacklist in ipairs(blacklist) do
+      if blacklist == Scene then
+        valid = false
+      end
+    end
+    
+    if valid then
+      settingscene:switchScene()
+    end
+  end
+
 	--update scripts
 	controls:update()
 	event:update(dt)
@@ -248,7 +284,7 @@ function love.draw()
 
 	love.graphics.setCanvas()
 	love.graphics.setColor(1,1,1,1)
-	love.graphics.draw(mainCanvas,0,0,0,Scale)
+	love.graphics.draw(mainCanvas,0,0,0,window.Scale)
 
 
 	--gui debug

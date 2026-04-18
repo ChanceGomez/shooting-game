@@ -24,8 +24,8 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY,width,height)
 	local cameraX,cameraY = cameraX or 0, cameraY or 0
 	local font = nil
 	local text = nil
-	local Width = width or Width
-	local Height = height or Height
+	local Width = width or window.GameWidth
+	local Height = height or window.GameHeight
 
   	local x,y = CursorX + offsetX,CursorY + offsetY
 	
@@ -68,12 +68,12 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY,width,height)
 	local width,height = customtext:getDimensions(text,font,x+4,y+4,panelMaxSize,{0,0,0,1})
 
 	--figure out of panel would go over the border
-	if (y+cameraY) > Height - height - self.margin then
-		y = Height - height - self.margin + cameraY
+	if (y+cameraY) > window.GameHeight - height - self.margin then
+		y = window.GameHeight - height - self.margin + cameraY
 	end
 
-	if (x+cameraX) > Width - width then
-		x = Width - width - cameraX
+	if (x+cameraX) > window.GameWidth - width then
+		x = window.GameWidth - width - cameraX
   	end
 
 	

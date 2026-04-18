@@ -19,6 +19,8 @@ function Report:action(action,info)
     local info = info or 1
     if self[action] then
         self[action] = self[action] + info
+    else 
+        self[action] = info
     end
 end
 

@@ -61,6 +61,57 @@ function collision.twoRect(obj1,obj2)
          y1 + h1 > y2
 end
 
+function collision.ciclePoly(circle, polygon)
+    local cx,cy = circle.x,circle.y
+    local radius = circle.radius
+    local function circleIntersectsSegment(cx, cy, r, ax, ay, bx, by)
+        local dx, dy = bx - ax, by - ay
+        local fx, fy = ax - cx, ay - cy
+        local a = dx*dx + dy*dy
+        local b = 2 * (fx*dx + fy*dy)
+        local c = fx*fx + fy*fy - r*r
+        local disc = b*b - 4*a*c
+        if disc < 0 then return false end
+        disc = math.sqrt(disc)
+        local t1 = (-b - disc) / (2*a)
+        local t2 = (-b + disc) / (2*a)
+        return (t1 >= 0 and t1 <= 1) or (t2 >= 0 and t2 <= 1)
+    end
+    -- 1. Is the center inside the polygon?
+    if collision.polygon(polygon,cx,cy) then return true end
+
+    -- 2. Does the circle overlap any edge?
+    local j = #polygon
+    for i = 1, #polygon do
+        if circleIntersectsSegment(cx, cy, radius,
+            polygon[i][1], polygon[i][2],
+            polygon[j][1], polygon[j][2]) then
+            return true
+        end
+        j = i
+    end
+
+    return false
+end
+
+function collision.polygon(polygon, x, y)
+    local x = x or CursorX
+    local y = y or CursorY
+    
+    local inside = false
+    local j = #polygon
+    for i = 1, #polygon do
+        local xi, yi = polygon[i][1], polygon[i][2]
+        local xj, yj = polygon[j][1], polygon[j][2]
+        if ((yi > y) ~= (yj > y)) and
+           (x < (xj - xi) * (y - yi) / (yj - yi) + xi) then
+            inside = not inside
+        end
+        j = i
+    end
+    return inside
+end
+
 function collision.rect(obj,x,y,cameraX,cameraY)
     local cameraX = cameraX or 0
     local cameraY = cameraY or 0

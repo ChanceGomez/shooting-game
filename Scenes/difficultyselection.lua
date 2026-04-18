@@ -4,8 +4,9 @@ local difficultyselction = {
 
 
 function difficultyselction:load()
+    
     self.buttons.easy = Button.new({
-        x = Width/2 - assetloader:getImage("button_easy"):getWidth(),
+        x = window.GameWidth/2 - assetloader:getImage("button_easy"):getWidth(),
         y = 128,
         visible = true,
         image = assetloader:getImage("button_easy"),
@@ -21,6 +22,7 @@ function difficultyselction:update(dt)
     Button.updateAll(self.buttons)
 
     if escapeClick then 
+        escapeClick = false
         Scene = "title"
     end
 end
@@ -33,7 +35,7 @@ function difficultyselction:draw()
     local font = perfect_dos_32
     local text = "Select Difficulty:"
     love.graphics.setFont(perfect_dos_32)
-    love.graphics.print(text,Width/2-(font:getWidth(text)/2),48)
+    love.graphics.print(text,window.GameWidth/2-(font:getWidth(text)/2),48)
 
     --draw buttons
     Button.drawAll(self.buttons)

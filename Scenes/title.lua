@@ -25,6 +25,20 @@ function title:load()
             Scene = "difficultyselection"
         end
     }))
+
+    table.insert(self.buttons,Button.new({
+        x = 640-128-32,
+        y = 300,
+        width = 128,
+        height = 32,
+        description = {
+            text = "settings",
+        },
+        visible = true,
+        clicked = function(self)
+            settingscene:switchScene("settingscene")
+        end
+    }))
 end
 
 function title:update(dt)

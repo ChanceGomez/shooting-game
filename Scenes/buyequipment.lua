@@ -7,8 +7,8 @@ local buyequipment = {
 function buyequipment:load(x,y,width,height)
     self.x = x or 0
     self.y = y or 0
-    self.Width = width or Width
-    self.Height = height or Height
+    self.Width = width or window.GameWidth
+    self.Height = height or window.GameHeight
 
     self.Canvas = love.graphics.newCanvas(self.Width,self.Height)
 
@@ -84,8 +84,8 @@ function buyequipment:draw()
 
     love.graphics.setCanvas(oldCanvas)
     love.graphics.setColor(1,1,1,1)
-    local x = (Width-self.Width)/2
-    local y = (Height-self.Height)/2
+    local x = (window.GameWidth-self.Width)/2
+    local y = (window.GameHeight-self.Height)/2
     love.graphics.draw(self.Canvas,self.x,self.y)
 end
 

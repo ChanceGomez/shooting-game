@@ -58,7 +58,7 @@ function EnemyHandler:startRound()
                 if random == 2 then 
                     facing = -1
                 end
-                self:newEnemy("Nest",math.random(200,Width-200),Height+30,self.difficulty,facing)
+                self:newEnemy("Nest",math.random(200,window.GameWidth-200),window.GameHeight+30,self.difficulty,facing)
             end
          })
     ]]
@@ -74,7 +74,7 @@ function EnemyHandler:startRound()
                 if random == 2 then 
                     facing = false
                 end
-                self:newEnemy(self.enemyList[i],math.random(200,Width-200),Height+30,facing)
+                self:newEnemy(self.enemyList[i],math.random(200,window.GameWidth-200),window.GameHeight+30,facing)
             end
          })
     end

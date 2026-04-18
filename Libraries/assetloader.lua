@@ -9,6 +9,7 @@ local assetloader = {
 	images = {},
 	imageData = {},
   	audios = {},
+	polygons = {},
 }
 
 --Retrieves image based off a name
@@ -37,6 +38,22 @@ function assetloader:getImageData(name,isAnimationCall)
 		print(name.. " not found settings default")
 		if self.imageData['default'] then
 			return self.imageData['default']
+		else
+			print("No Default Image loaded")
+		end	
+	end
+end
+
+--Retrieves imagedata based off a name
+function assetloader:getPolygon(name)
+	local isAnimationCall = isAnimationCall or false
+	--try catch
+	if self.polygons[name] then	
+		return self.polygons[name]
+	elseif not isAnimationCall then
+		print(name.. " not found settings default")
+		if self.polygons['default'] then
+			return self.polygons['default']
 		else
 			print("No Default Image loaded")
 		end	
@@ -86,10 +103,12 @@ function assetloader:loadImages(filepath)
 					if not self.images[basename] then
 						self.images[basename] = {}
 						self.imageData[basename] = {}
+						self.polygons[basename] = {}
 					end
 					print(i .. ': ' .. basename .. ' | loaded')
 					self.images[basename] = love.graphics.newImage(assetsPath)
 					self.imageData[basename] = love.image.newImageData(assetsPath)
+					self.polygons[basename] = polygon.imageToPolygon(self.imageData[basename])
 				end
 			end
 		end

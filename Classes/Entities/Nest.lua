@@ -42,7 +42,7 @@ function Nest.new(x,y,handler)
 end
 
 function Nest:delete()
-    game.lookouts[1].Report:action("resources",self.resources)
+    game.Player:addResources(self.resources)
     if self.handler then
         self.handler:removeEnemy(self)
     end
@@ -92,9 +92,9 @@ function Nest:hit(properties)
 end
 
 function Nest:newEnemy()
-    local facing = -1
+    local facing = false
     local r = math.random(1,2) 
-    if r == 1 then facing = 1 end
+    if r == 1 then facing = true end
     self.handler:newEnemy("Bird",self.body.centerX,self.body.centerY+100,facing)
 end
 
@@ -102,6 +102,7 @@ function Nest:update(dt)
     self.spawnTimer = self.spawnTimer + dt
     --spawn enemies
     if self.spawnTimer >= self.spawnInterval then
+        self.spawnInterval = self.spawnInterval * .95
         self.spawnTimer = 0
         self:newEnemy()
     end

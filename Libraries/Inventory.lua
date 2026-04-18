@@ -54,6 +54,39 @@ local function generateFunctions(self,functions)
         end,
     }))
 
+    table.insert(tbl,Button.new({
+        x = 0,
+        y = 0,
+        visible = false,
+        color = {0,0,0,1},
+        width = width,
+        description = {
+            text = "Equip",
+            font = dogica_8,
+            x = 0,
+            y = 1,
+            limit = width,
+            defaultColor = {1,1,1,1},
+        },
+        height = 16,
+        clicked = function()
+            if self.rightClickedSlot.item == nil then return end
+            
+            for i, inventory in ipairs(self.inventories) do
+                for j, slot in pairs(inventory.slots) do
+                    if slot.type == self.rightClickedSlot.item.type then
+                        local temp = slot:getItem()
+                        slot:removeItem()
+                        slot:addItem(self.rightClickedSlot.item)
+                        self.rightClickedSlot:removeItem()
+                        self.rightClickedSlot:addItem(temp)
+                        return
+                    end
+                end
+            end
+        end,
+    }))
+
     for i, func in ipairs(functions) do
         func.description.limit = width
         table.insert(tbl,Button.new({

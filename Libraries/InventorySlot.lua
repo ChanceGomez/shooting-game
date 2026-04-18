@@ -30,6 +30,10 @@ function InventorySlot.new(x,y)
     return obj
 end
 
+function InventorySlot:getItem()
+    if self.item then return self.item end
+end
+
 function InventorySlot:addItem(item)
     if self.item then return false end
     self.item = item

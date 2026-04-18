@@ -30,7 +30,7 @@ function tab:load()
         end,   
     })
     tab.buttons.gun = Button.new({
-        x = Width - (Width/3)*2,
+        x = window.GameWidth - (window.GameWidth/3)*2,
         y = y,
         width = 640/3,
         height = height,
@@ -47,7 +47,7 @@ function tab:load()
         end,   
     })
     tab.buttons.map = Button.new({
-        x = Width - Width/3,
+        x = window.GameWidth - window.GameWidth/3,
         y = y,
         width = 640/3,
         height = height,

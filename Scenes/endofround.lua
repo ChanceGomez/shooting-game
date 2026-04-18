@@ -8,14 +8,13 @@ function endofround:getReport(report,artifacts)
     game.Player.gun.ammo = {}
     self.report = report
     self.artifacts = artifacts
-    game.Player.resources = game.Player.resources + self.report.resources
 end
 
 function endofround:load()
     local endshiftImage = assetloader:getImage("endshift_button")
     self.endRoundButton = Button.new({
         x = 0,
-        y = Height-32,
+        y = window.GameHeight-32,
         width = 128,
         height = 32,
         description = {

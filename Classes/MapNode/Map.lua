@@ -121,7 +121,7 @@ function Map.new(seed,generation,length,handler)
     obj.generation = generation
     obj.length = length
 
-    obj.midPointX = Width/2
+    obj.midPointX = window.GameWidth/2
     obj.midPointY = 300
 
     obj.unitsBetweenX = 30

@@ -65,7 +65,7 @@ function ParachuteCrate:update(dt)
     self.crate.x = self.x + ((self.parachute.width-self.crate.width)/2)
     self.crate.y = self.y + self.parachute.height
 
-    if self.y > Height then 
+    if self.y > window.GameHeight then 
         self:delete()
     end
 end

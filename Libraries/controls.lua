@@ -22,7 +22,7 @@ CursorX,CursorY = 0,0
 
 
 function controls:update()
-    local scale = Scale or 1
+    local scale = window.Scale or 1
     --Cursor
     CursorX,CursorY = love.mouse.getPosition()
     CursorX = CursorX/scale

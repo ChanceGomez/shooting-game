@@ -7,7 +7,7 @@ function Explosion.new(handler,x,y,radius,damage,duration)
     obj.x = x or 0
     obj.y = y or 0
     obj.damage = damage or 5
-    obj.duration = duration or 1
+    obj.duration = duration or .7
     obj.handler = handler
     obj.timer = 0 
     obj.radius = radius or 5
@@ -41,6 +41,11 @@ function Explosion:update(dt)
 
     --Check for enemies in explosion
     for i, enemy in ipairs(self.handler.enemies) do
+        --[[
+        if enemy.polygon and collision.ciclePoly(self,enemy) and enemy.currentExplosionDamage ~= self then
+            enemy.currentExplosionDamage = self
+            enemy:hit(self.properties)
+        end]]
         if collision.circleRect(self,enemy) and enemy.currentExplosionDamage ~= self then
             enemy.currentExplosionDamage = self
             enemy:hit(self.properties)

@@ -3,8 +3,8 @@ local upgradebullet = {
 }
 
 function upgradebullet:load(x,y,width,height)
-    self.Width = width or Width
-    self.Height = height or Height
+    self.Width = width or window.GameWidth
+    self.Height = height or window.GameHeight
     self.x = x or 0
     self.y = y or 0
 
