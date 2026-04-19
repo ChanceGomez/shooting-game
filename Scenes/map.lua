@@ -28,7 +28,7 @@ function map:getVariables(node)
     --get a random check to see if it becomes a artifact node
     local random = math.random(1,10)
     if random < 7 then 
-        returnTbl.artifacts = artifacts:getUniqueArtifacts(3,1)
+        returnTbl.artifacts = {3,1}
         returnTbl.color = {.3,.3,.2,1}
     end
 
@@ -71,7 +71,7 @@ function map:getVariables(node)
 
     --if end node then get special artifact and boss enemy
     if node.isEndNode then
-        returnTbl.artifacts = artifacts:getUniqueArtifacts(3,2)
+        returnTbl.artifacts = {3,2}
         returnTbl.enemies = {}
         table.insert(returnTbl.enemies,"Nest")
         returnTbl.color = {.3,.5,.2,1}
@@ -81,9 +81,10 @@ function map:getVariables(node)
     returnTbl.description = "Enemies " .. #returnTbl.enemies 
     
     if #returnTbl.artifacts > 0 then
-        returnTbl.description = returnTbl.description .. " /nHas Artifact"
+        returnTbl.description = returnTbl.description .. " /nHas an artifact"
     end
 
+    
     return returnTbl
 end
 

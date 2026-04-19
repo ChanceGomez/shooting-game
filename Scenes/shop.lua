@@ -12,7 +12,7 @@ local shop = {
 }
 
 
-function shop:displayArtifacts(artifacts)
+function shop:displayArtifacts(artifactsTable)
     self.artifacts = {}
     self.isArtifact = true
     self.skipArtifactButton.visible = true
@@ -20,6 +20,8 @@ function shop:displayArtifacts(artifacts)
     --positioning variables
     local totalWidth = 0
     local margin = 16
+
+    local artifacts = artifacts:getUniqueArtifacts(artifactsTable[1],artifactsTable[2])
 
     for i = 1, #artifacts do
         local artifact = deepCopy(artifacts[i])
@@ -236,13 +238,13 @@ function shop:load()
 
     if settings.loadShopOnStart then
         --self:displayArtifacts(artifacts:getAllArtifacts())
-        self:displayArtifacts(artifacts:getUniqueArtifacts(5,2))
+        self:displayArtifacts({5,2})
     end
 end
 
 function shop:update(dt)
     if rClick and settings.debug then
-        self:displayArtifacts(artifacts:getUniqueArtifacts(10))
+        self:displayArtifacts({10})
     end
     --update sub scenes
     self.Scenes[self.Scene]:update(dt)

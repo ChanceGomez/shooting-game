@@ -90,7 +90,8 @@ end
     Logic oriented functions
 ]]
 
-function Affector:getBool(trigger,attribute)
+function Affector:getBool(trigger)
+    local attribute = self.handler:getVariable(trigger)
     if self.affectors[trigger] == nil then return attribute end
     local returnAttribute = attribute 
     if returnAttribute == nil then return end
@@ -102,7 +103,8 @@ function Affector:getBool(trigger,attribute)
     return returnAttribute
 end
 
-function Affector:getAdd(trigger,attribute)
+function Affector:getAdd(trigger)
+    local attribute = self.handler:getVariable(trigger)
     if self.affectors[trigger] == nil then return attribute end
     local returnAttribute = attribute 
     if returnAttribute == nil then return end
@@ -111,14 +113,12 @@ function Affector:getAdd(trigger,attribute)
         returnAttribute = add.event(returnAttribute)
     end
 
-    return returnAttribute
+    return math.max(returnAttribute,0)
 end
 
-function Affector:getMult(trigger,attribute)
-    local attribute = 1
-    if self.affectors[trigger] == nil then return attribute end
-    local returnAttribute = attribute 
-    if returnAttribute == nil then returnAttribute = 1 end
+function Affector:getMult(trigger)
+    if self.affectors[trigger] == nil then return 0 end
+    local returnAttribute = 0 
 
     for i, mult in ipairs(self.affectors[trigger].mult) do
         returnAttribute = mult.event(returnAttribute)
@@ -169,6 +169,12 @@ function Affector:getStats(ids)
     return str
 end
 
+--[[
+
+Id logic
+
+]]
+
 function Affector:addIDs(ids) 
     for i, id in ipairs(ids) do
         self:addID(id)
@@ -193,8 +199,9 @@ function Affector:removeID(id)
     self:remove(id[1],id[2],id[3])
 end
 
+--Triggers the entire line
 function Affector:trigger(trigger,attribute)
-    local attribute = attribute or self.handler:getVariable(trigger)
+    local attribute,multType = self.handler:getVariable(trigger)
     if self.affectors[trigger] == nil then return attribute end
     
     local returnAttribute = attribute 
@@ -209,14 +216,23 @@ function Affector:trigger(trigger,attribute)
     returnAttribute = self:getAdd(trigger,returnAttribute)
 
     --get mult
-    returnAttribute = returnAttribute * self:getMult(trigger,returnAttribute)
-
+    if multType == "divide" then
+        local variable = self:getMult(trigger,returnAttribute)
+        if variable > 0 then
+            returnAttribute = returnAttribute / (1 + math.abs(self:getMult(trigger,returnAttribute)))
+        else
+            returnAttribute = returnAttribute * (1 + math.abs(self:getMult(trigger,returnAttribute)))
+        end
+    else
+        returnAttribute = returnAttribute * (1 + self:getMult(trigger,returnAttribute))
+    end
     
 
   
     return returnAttribute
 end
 
+--Add a new variable
 function Affector:add(trigger,type,variable)
     checkTrigger(self,trigger)
     table.insert(self.affectors[trigger][type],{
@@ -225,7 +241,7 @@ function Affector:add(trigger,type,variable)
             if type == "add" then
                 return attribute + variable
             elseif type == "mult" then
-                return attribute * variable
+                return attribute + variable
             elseif type == "bool" then
                 return variable
             end
@@ -234,16 +250,7 @@ function Affector:add(trigger,type,variable)
   return #self.affectors[trigger]
 end
 
-function Affector:mult(trigger,variable)
-    checkTrigger(self,trigger)
-    table.insert(self.affectors[trigger].mult,{
-        variable = variable,
-        event = function(attribute)
-            return attribute + variable
-        end,
-    })
-end
-
+--Remove a variable
 function Affector:remove(trigger,type,variable)
     if self.affectors[trigger] == nil then return end
     

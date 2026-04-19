@@ -25,6 +25,7 @@ function buyequipment:load(x,y,width,height)
     local margin = 16
     for  name, instance in pairs(equipment.equipments) do
         local item = equipment:getEquipment(name)
+        local name = item.name
         local image = item.image
         local width = item.width + margin
         local height = image:getHeight()

@@ -185,6 +185,11 @@ function Player:draw()
             love.graphics.draw(image,bombX,bombY)
         end
 
+        if settings.debug then
+            love.graphics.print(self.gun.reloadRate .. ' ' .. game.Affector:trigger("Reload Rate"),10,40)
+            love.graphics.print(self.gun.bullets.bullet.damage .. ' ' .. game.Affector:trigger("Bullet Damage"),10,60)
+        end
+
 
     if self.gun then
         self.gun:draw()
