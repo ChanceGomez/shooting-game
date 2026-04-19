@@ -7,30 +7,30 @@ local Enemy = {}
 Enemy.__index = Enemy
 
 function Enemy.new(x,y,handler)
-  local obj = setmetatable({}, Enemy)
-  obj.x = x or 0
-  obj.y = y or 0
-  obj.health = 100
-  obj.handler = handler
-  obj.speed = 10
-  obj.hitTimer = 0
-  obj.isHit = false
-  obj.stunned = false
-  obj.hitDuration = .3
-  obj.colors = {
+    local obj = setmetatable({}, Enemy)
+    obj.x = x or 0
+    obj.y = y or 0
+    obj.health = 100
+    obj.handler = handler
+    obj.speed = 10
+    obj.hitTimer = 0
+    obj.isHit = false
+    obj.stunned = false
+    obj.hitDuration = .3
+    obj.colors = {
     hit = {1,0,0,1},
     dead = {.6,.6,.6,1},
     normal = {1,1,1,1},
     stunned = {1,1,0,1},
-  }
-  obj.color = "normal"
-  obj.lifeTimer = 0 
-  obj.isAlive = true
-  obj.resources = 0
-  obj.effects = {}
-  obj.AnimationPlayer = AnimationPlayer:new()
+    }
+    obj.color = "normal"
+    obj.lifeTimer = 0 
+    obj.isAlive = true
+    obj.resources = 0
+    obj.effects = {}
+    obj.AnimationPlayer = AnimationPlayer:new()
 
-  return obj
+    return obj
 end
 
 function Enemy:die()

@@ -193,7 +193,7 @@ local function loadClasses()
     }
     Gun = require("Classes/Gun")
     Guns = {
-        pistol = require("Classes/Cannon"),
+        cannon = require("Classes/Cannon"),
     }
   
     Lazor = require("Classes/Lazor")

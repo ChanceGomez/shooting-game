@@ -8,9 +8,23 @@ local equipment = {
     }
 }
 
+local function camelToReadable(s)
+    s = s:gsub("(%u)", " %1")
+    s = s:sub(1,1):upper() .. s:sub(2)
+    return s
+end
+
 local function getFormat(name)
+
+    local name = name
+
+    if name == 1 then
+        name = "positive"
+    elseif name == -1 then
+        name = "negative"
+    end
     local returnString = "{"
-    for i, number in ipairs(equipment.colorFormat[name]) do
+    for i, number in ipairs(artifacts.colorFormat[name]) do
         returnString = returnString .. number
         if i == 4 then
             returnString = returnString .. "}"
@@ -22,142 +36,154 @@ local function getFormat(name)
 end
 
 function equipment:load()
-    --load artifacts
+    
     self.equipments.titaniumBarrel = {
         rarity = 1,
+        name = camelToReadable("titaniumBarrel"),
         type = "barrel",
         ids = {
-            {"Fire Rate","mult",.75},
+            {"Fire Rate","mult",.25},
         },
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Barrel: " .. "/nIncrease Fire Rate by 25%",
+            text = customtext:formatString("Titanium Barrel:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases fire rate",
         },
         image = assetloader:getImage("equipment_barrelimprovement"),
     }
+
     self.equipments.titaniumStabalizer = {
         rarity = 1,
+        name = camelToReadable("titaniumStabalizer"),
         type = "stabalizer",
         ids = {
-            {"Dud Chance","mult",.75},
+            {"Dud Chance","mult",-.25},
         },
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Stabilizer: " .. "/nDecrease dud chance by 25%",
+            text = customtext:formatString("Titanium Stabilizer:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Decreases dud chance",
         },
         image = assetloader:getImage("equipment_barrelimprovement"),
     }
+
     self.equipments.titaniumReloader = {
         rarity = 1,
+        name = camelToReadable("titaniumReloader"),
         type = "reloader",
         ids = {
-            {"Reload Rate","mult",.75},
+            {"Reload Rate","mult",.25},
         },
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Reloader: " .. "/nIncrease reload rate by 25%",
+            text = customtext:formatString("Titanium Reloader:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases reload rate",
         },
         image = assetloader:getImage("equipment_barrelimprovement"),
     }
+
     self.equipments.titaniumAntenna = {
         rarity = 1,
+        name = camelToReadable("titaniumAntenna"),
         type = "antenna",
         ids = {
-            {"Parachute Chance","mult",1.25},
+            {"Parachute Chance","mult",.25},
         },
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Antenna: " .. "/nIncrease parachutes by 25%",
+            text = customtext:formatString("Titanium Antenna:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases parachute chance",
         },
         image = assetloader:getImage("equipment_barrelimprovement"),
     }
+
     self.equipments.titaniumBase = {
         rarity = 1,
+        name = camelToReadable("titaniumBase"),
         type = "base",
         ids = {
-            {"Reload Rate","mult",.90},
-            {"Fire Rate","mult",.90},
+            {"Reload Rate","mult",.10},
+            {"Fire Rate","mult",.10},
         },
         description = {
-            text = "{.2,.2,.5}Titanium {.2,.2,.5}Base: " .. "/nIncrease reload rate by 10%, fire rate by 10%",
+            text = customtext:formatString("Titanium Base:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases reload rate and fire rate",
         },
         image = assetloader:getImage("equipment_barrelimprovement"),
     }
+
     self.equipments.jankyBase = {
         rarity = 1,
+        name = camelToReadable("jankyBase"),
         type = "base",
         ids = {
-            {"Dud Chance","mult",1.50},
-            {"Dud Damage","mult",1.50},
+            {"Dud Chance","mult",.50},
+            {"Dud Damage","mult",.50},
         },
         description = {
-            text = "{.2,.2,.5}Janky {.2,.2,.5}Base: " .. "/nIncrease dud chance by 50%, increase dud damage by 50%", 
+            text = customtext:formatString("Janky Base:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(-1) .. "Increases dud chance " .. getFormat(1) .. "and increases dud damage",
         },
         image = assetloader:getImage("equipment_barrelimprovement"),
     }
+
     self.equipments.greasedBarrel = {
         rarity = 1,
+        name = camelToReadable("greasedBarrel"),
         type = "barrel",
         ids = {
-            {"Fire Rate","mult",.85},
-            {"Reload Rate","mult",.85},
+            {"Fire Rate","mult",.15},
+            {"Reload Rate","mult",.15},
         },
         description = {
-            text = customtext:formatString("Greased Barrel:",{.2,.2,.5,1}) .. " /nIncrease fire rate and reload rate by 15%",
-        }
+            text = customtext:formatString("Greased Barrel:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases fire rate and reload rate",
+        },
+        image = assetloader:getImage("equipment_barrelimprovement"),
     }
+
     self.equipments.igniterStabilizer = {
         rarity = 2,
+        name = camelToReadable("igniterStabilizer"),
         type = "stabalizer",
         ids = {
             {"Dud Fire Damage","add",5},
             {"Bullet Fire Damage","add",5},
             {"Bullet Fire Duration","add",1},
             {"Dud Fire Duration","add",1},
-            --{"Fire Duration","mult",2},
         },
         description = {
-            text = customtext:formatString("Igniter Stabilizer:",{.2,.2,.5,1}) .. " /nIncrease fire damage by +5, and +1 duration"
-        }
+            text = customtext:formatString("Igniter Stabilizer:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases fire damage and burn duration for bullets and duds",
+        },
     }
+
     self.equipments.railgunBase = {
         rarity = 2,
+        name = camelToReadable("railgunBase"),
         type = "base",
         ids = {
             {"Bullet Damage","add",10},
             {"Dud Damage","add",10},
-            {"Reload Rate","mult",2},
+            {"Reload Rate","mult",-.50},
         },
         description = {
-            text = customtext:formatString("Railgun Base:",{.2,.2,.5,1}) .. " /nIncrease all bullet damage by +10, but -50% reload rate"
-        }
+            text = customtext:formatString("Railgun Base:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases bullet and dud damage " .. getFormat(-1) .. "but decreases reload rate",
+        },
     }
+
     self.equipments.higheffieciencyReloader = {
         rarity = 2,
+        name = camelToReadable("higheffieciencyReloader"),
         type = "reloader",
         ids = {
-            {"Reload Rate","mult",.33},
-            {"Fire Rate","mult",.75},
-            {"Bullet Damage","mult",.70},
-            {"Dud Damage","mult",.70},
-            {"Fire Damage","mult",.5},
+            {"Reload Rate","mult",.66},
+            {"Fire Rate","mult",.25},
+            {"Bullet Damage","mult",-.30},
+            {"Dud Damage","mult",-.30},
+            {"Fire Damage","mult",-.5},
         },
         description = {
-            text = customtext:formatString("High Effieciency Reloader:",{.2,.2,.5,1}) .. " /nDecrease reload rate by 66%, and decrease fire rate by 25%, but -30% damage, -50% fire damage"
-        }
-    }
-    self.equipments.advancedIntel = {
-        rarity = 1,
-        type = "antenna",
-        add = function()
-            self.active = true
-            settings.hitbox = true
-            settings.showHealth = true
-        end,
-        remove = function()
-            self.active = false
-            settings.hitboxe = false
-            settings.showHealth = false
-        end,
-        description = {
-            text = customtext:formatString("Advanced Intel Antenna:",{.2,.2,.5,1}) .. " /nShow enemy health and hitboxes"
-        }
+            text = customtext:formatString("High Efficiency Reloader:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Greatly increases reload and fire rate " .. getFormat(-1) .. "but reduces all damage",
+        },
     }
 
 
@@ -169,6 +195,8 @@ function equipment:load()
         if equipment.image == nil then
             equipment.image = assetloader:getImage("equipment_barrelimprovement")
         end
+
+        equipment.name = camelToReadable(i)
 
         --get height/width
         equipment.width = equipment.image:getWidth()

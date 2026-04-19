@@ -37,11 +37,11 @@ function game:getVariable(name)
     elseif name == "Dud Chance" then 
         return player.dudPercentage
     elseif name == "Fire Rate" then
-        return player.gun.fireRate 
+        return player.gun.fireRate,"divide"
     elseif name == "Parachute Chance" then
         return player.parachuteOdds 
     elseif name == "Reload Rate" then
-        return player.gun.reloadRate 
+        return player.gun.reloadRate,"divide"
     elseif name == "Dud Fire Damage" then
         return player.gun.duds.fire.damage
     elseif name == "Dud Fire Duration" then
@@ -94,10 +94,10 @@ end
 function game:load()
   self.canvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
   self.Player = Player.new()
-  self.Player:ChangeGun("pistol")
+  self.Player:ChangeGun("cannon")
 
   self.Affector = Affector.new(self)
-  Observer.new()
+  self.Observer = Observer.new()
 
   --artifacts:activateAllArtifacts()
   --artifacts:activateArtifact("flamingDuds")

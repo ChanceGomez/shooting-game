@@ -8,6 +8,12 @@ local artifacts = {
     }
 }
 
+local function camelToReadable(s)
+    s = s:gsub("(%u)", " %1")
+    s = s:sub(1,1):upper() .. s:sub(2)
+    return s
+end
+
 local function getFormat(name)
 
     local name = name
@@ -31,85 +37,85 @@ end
 
 function artifacts:load()
     --load artifacts
-    --[[
-    self.artifacts.autoReload = {
-        rarity = 2,
-        used = false,
-        ids = {
-            {"Automatic Reloading","bool",true},
-            {"Reload Rate","mult",1.25}
-        },
-        description = {
-            text = "start " .. getFormat("positive") .. "automatically reloading the chamber, " .. getFormat("negative") .. "-25% reload rate",
-        },
-    }]]
     self.artifacts.improvedAmmunition = {
         rarity = 2,
         ids = {
-            {"Dud Damage","mult",1.50},
-            {"Bullet Damage","mult",1.50},
-            {"Dud Chance","mult",.75},
+            {"Dud Damage","mult",.50},
+            {"Bullet Damage","mult",.50},
+            {"Dud Chance","mult",-.25},
         },
         description = {
-            text = "Increase damage from all bullets by " .. getFormat("positive") .. "50% aswell as " .. getFormat("positive") .. "-25% duds",
+            text = customtext:formatString("Improved Ammunition:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases all bullet damage " .. getFormat(1) .. "and decreases dud chance",
         },
         image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.railGun = {
         rarity = 1,
         ids = {
             {"Bullet Damage","mult",5},
-            {"Fire Rate","mult",3},
+            {"Fire Rate","mult",-2},
         },
         description = {
-            text = "Increase bullet damage by " .. getFormat("positive") .. "500% but fire rate is increased by " .. getFormat("negative") .. "300%",
+            text = customtext:formatString("Rail Gun:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Massively increases bullet damage " .. getFormat(-1) .. "but Massively decreases fire rate",
         },
         image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.extendedMagazine = {
         rarity = 1,
         ids = {
             {"Max Ammo","add",3},
         },
         description = {
-            text = "Increase ammo capacity by " .. getFormat("positive") .. "+3",
+            text = customtext:formatString("Extended Magazine:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases ammo capacity",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.increasedFireRate = {
         rarity = 1,
         ids = {
             {"Fire Rate","mult",.50},
-            {"Bullet Damage","mult",.50},
-            {"Dud Damage","mult",.50},
+            {"Bullet Damage","mult",-.50},
+            {"Dud Damage","mult",-.50},
         },
         description = {
-            text = "Increase fire rate by " .. getFormat("positive") .. "200% but reduce damage of all bullets by " .. getFormat("negative") .. "50%",  
+            text = customtext:formatString("Increased Fire Rate:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases fire rate " .. getFormat(-1) .. "but reduces all bullet damage",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.halfLifeDuds = {
         rarity = 1,
         ids = {
             {"Dud Damage","add",5},
-            {"Dud Chance","mult",1.10},
+            {"Dud Chance","mult",.10},
         },
         description = {
-            text = "Increase dud bullet damage by " .. getFormat("positive") .. "5 but increase duds by " .. getFormat("negative") .. "10%",
+            text = customtext:formatString("Half Life Duds:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases dud damage " .. getFormat(-1) .. "but increases dud chance",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.lighterBullets = {
         rarity = 1,
         ids = {
-            {"Bullet Damage","mult",.75},
+            {"Bullet Damage","mult",.25},
             {"Reload Rate","mult",.55},
         },
         description = {
-            text = "Increase reload rate by " .. getFormat("positive") .. "45% but reduce damage of all bullets by " .. getFormat("negative") .. "25%"
+            text = customtext:formatString("Lighter Bullets:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases reload rate " .. getFormat(-1) .. "but reduces bullet damage",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
-    }   
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
+    }
+
     self.artifacts.flamingDuds = {
         rarity = 1,
         ids = {
@@ -117,10 +123,12 @@ function artifacts:load()
             {"Dud Fire Duration","add",3},
         },
         description = {
-            text = "Duds now inflame enemies for " .. getFormat("positive") .. "+5 damage every second for " .. getFormat("positive") .. "+3 seconds"
+            text = customtext:formatString("Flaming Duds:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Duds now ignite enemies dealing fire damage over time",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.methaneAir = {
         rarity = 2,
         ids = {
@@ -131,117 +139,131 @@ function artifacts:load()
             {"Fire Damage","mult",2},
         },
         description = {
-            text = "All bullets now do " .. getFormat("positive") .. "+3 fire damage every second for " .. getFormat("positive") .. "+2 seconds, and increase fire damage " .. 
-                getFormat("positive") .. "200%"
+            text = customtext:formatString("Methane Air:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "All bullets ignite enemies and greatly increases fire damage",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.extraSupplies = {
         rarity = 1,
         used = false,
         ids = {
-            {"Parachute Chance","mult",1.5},
+            {"Parachute Chance","add",25},
             {"Parachute Equipment Rarity","add",1},
         },
         description = {
-            text = "Increase parachute chances by " .. getFormat("positive") .. "50% " .. "Increase equipment rarity by " .. 
-                getFormat("positive") .. "1"
+            text = customtext:formatString("Extra Supplies:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases parachute chance and improves equipment rarity from drops",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.dudSurplus = {
         rarity = 1,
+        used = false,
         ids = {
-            {"Dud Chance","add",1000},
+            {"Dud Chance","add",100},
             {"Dud Damage","add",2},
             {"Fire Rate","mult",.5},
             {"Reload Rate","mult",.5},
             {"Automatic Reloading","bool",true},
         },
-        used = false,
         description = {
-            text = "Increase dud chance by " .. getFormat("negative") .. "1000 " .. " but Increase dud damage by " .. 
-                getFormat("positive") .. "+2" .. " Increase fire rate & reload rate by ".. getFormat("positive") .. "50%" .. " and " .. getFormat("positive") .. "automatic loading"
+            text = customtext:formatString("Dud Surplus:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(-1) .. "Massively increases dud chance " .. getFormat(1) .. "but increases dud damage, fire rate, reload rate, and enables automatic reloading",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.ammoInspection = {
         rarity = 2,
-        ids = {
-            {"Dud Chance","add",-1000},
-            {"Bullet Damage","add",5},
-            {"Reload Rate","mult",.8},
-        },
         used = false,
-        description = {
-            text = "Decrease dud chance by " .. getFormat("positive") .. "1000 " .. " but Increase bullet damage by " .. 
-                getFormat("positive") .. "+5" .. " Increase reload rate by ".. getFormat("positive") .. "20%"
+        ids = {
+            {"Dud Chance","add",-100},
+            {"Bullet Damage","add",5},
+            {"Reload Rate","mult",.20},
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        description = {
+            text = customtext:formatString("Ammo Inspection:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Massively decreases dud chance, increases bullet damage and reload rate",
+        },
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.incendiaryRounds = {
         rarity = 2,
         ids = {
             {"Bullet Fire Damage","add",10},
             {"Bullet Fire Duration","add",5},
-            {"Reload Rate","mult",.8},
+            {"Reload Rate","mult",.20},
         },
         description = {
-            text = "Increase Fire Damage by " .. getFormat(1) .. "+10" .. " Increase Fire Duration by " .. getFormat(1) .. "+5" .. " and increase Reload Rate by " .. getFormat(1) .. "20%"
+            text = customtext:formatString("Incendiary Rounds:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Bullets ignite enemies dealing heavy fire damage and increases reload rate",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.grenadeSurplus = {
         rarity = 1,
         ids = {
             {"Grenade Damage","add",10},
             {"Max Grenade Count","add",1},
-            {"Grenade Cost","mult",.5},
+            {"Grenade Cost","mult",-.50},
         },
         description = {
-            text = "Increase grenade damage by +10, max grenade count by +1, reduce grenade cost by 50%"
+            text = customtext:formatString("Grenade Surplus:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases grenade damage and capacity and reduces grenade cost",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.biggerGrenades = {
         rarity = 1,
         ids = {
             {"Grenade Damage","add",10},
-            {"Grenade Radius","mult",2},
+            {"Grenade Radius","mult",1},
         },
         description = {
-            text = "Increase grenade damage by +5 and double the radius of grenades"
+            text = customtext:formatString("Bigger Grenades:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Increases grenade damage and doubles explosion radius",
         },
-        image = assetloader:getImage("upgrademaxammo_shop_icon")
+        image = assetloader:getImage("upgrademaxammo_shop_icon"),
     }
+
     self.artifacts.resourceful = {
         rarity = 2,
         ids = {
-            {"Resource","mult",2}
+            {"Resource","mult",1},
         },
         description = {
-            text = "Increase resources gained by x2",
+            text = customtext:formatString("Resourceful:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Doubles all resources gained",
         },
     }
+
     self.artifacts.explodingBirds = {
         rarity = 1,
         observerID = 0,
         used = false,
         event = {
-            event = function(self,enemy)
-                enemy.handler.newExplosion(enemy.handler,enemy.x+enemy.width/2,enemy.y+enemy.height/2,15,10)
+            event = function(self, enemy)
+                enemy.handler.newExplosion(enemy.handler, enemy.x+enemy.width/2, enemy.y+enemy.height/2, 15, 10)
             end
         },
         add = function(self)
-            self.observerID = game.Observer:add("birdDied",self.event)
+            self.observerID = game.Observer:add("birdDied", self.event)
         end,
         remove = function(self)
-            game.Observer:remove("birdDied",self.event)
+            game.Observer:remove("birdDied", self.event)
         end,
         description = {
-            text = "Birds now explode on death bird explosions: radius + 15, damage + 10"
-        }
+            text = customtext:formatString("Exploding Birds:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "Birds explode on death dealing damage in an area",
+        },
     }
+
     self.artifacts.riskAndReward = {
         rarity = 1,
         ids = {
@@ -249,8 +271,9 @@ function artifacts:load()
             {"Bullet Damage","add",25},
         },
         description = {
-            text = "Increase dud chance +50 points but increase bullet damage by +25"
-        }
+            text = customtext:formatString("Risk And Reward:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(-1) .. "Increases dud chance " .. getFormat(1) .. "but greatly increases bullet damage",
+        },
     }
     
     --[[
@@ -281,6 +304,9 @@ self.artifacts. = {
         self.artifactsCount = self.artifactsCount + 1
 
         artifact.id = self.artifactsCount
+
+        artifact.name = camelToReadable(i)
+
 
         --check to see if image if not load default
         if artifact.image == nil then
@@ -386,6 +412,7 @@ function artifacts:getRandomArtifact(rarity)
         return self:getRandomArtifact(rarity)
     end
     if self.artifacts[key].used then
+        print"hello"
         return self:getRandomArtifact(rarity)
     end
     return self.artifacts[key]
