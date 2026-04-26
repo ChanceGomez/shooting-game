@@ -13,12 +13,18 @@ function love.resize(width,height)
 end
 
 function  window.fullscreen(bool)
-    print(bool)
-    love.window.setFullscreen(bool)
-    settings.isFullscreen = bool
+    local _bool
+    if bool == nil then
+        _bool = not love.window.getFullscreen()
+    else
+        _bool = bool
+    end
+
+    love.window.setFullscreen(_bool)
+    settings.isFullscreen = _bool
 
     --Lower the window so user can move it around and resize
-    if bool == false then
+    if _bool == false then
         love.window.setPosition(0,32)
     end
 end

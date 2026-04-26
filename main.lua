@@ -217,7 +217,6 @@ function love.load()
     love.window.setVSync(0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.mouse.setVisible(false) -- set cursor to invisible
-    --love.window.setMode(window.GameWidth,window.GameHeight,settings.isFullscreen)
 
     --Get main canvas
     mainCanvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
