@@ -18,6 +18,11 @@ function ReloadShelfBullet.new(ReloadShelf,x,y)
     obj.inAnimation = false
     obj.ReloadShelf = ReloadShelf
     obj.color = {1,1,1,1}
+    obj.audios = {
+        load = assetloader:getAudio("bulletload"),
+        reload = nil
+    }
+    obj.audios.load:setPitch(cosmeticRandom:random(.9,1))
 
     return obj
 end
@@ -40,6 +45,7 @@ function ReloadShelfBullet:loadingAnimation()
     function() 
         game.Player.gun:loadBullet(self) 
         game.lookouts[1].Report:action("loadedBullet")
+        love.audio.play(self.audios.load)
         self:delete() 
     end)
 end

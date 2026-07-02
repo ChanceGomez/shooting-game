@@ -27,6 +27,13 @@ function Lookout.new(enemies,difficulty,artifacts,images)
     obj.BackgroundHandler = BackgroundHandler.new()
     obj.outlineMargin = 0
 
+    --Background audio
+    obj.background_audio = assetloader:getAudio("jungleatmosphere")
+    obj.background_audio:setVolume(.02)
+    obj.background_audio:setPitch(cosmeticRandom:random(.9,1))
+
+    love.audio.play(obj.background_audio)
+
     obj:openReloadShelf()
 
     return obj

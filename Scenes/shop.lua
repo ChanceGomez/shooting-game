@@ -240,6 +240,16 @@ function shop:load()
         --self:displayArtifacts(artifacts:getAllArtifacts())
         self:displayArtifacts({5,2})
     end
+
+    self.audios = {
+        background = assetloader:getAudio("industryatmosphere"),
+    }
+    self.audios.background:setPitch(cosmeticRandom:random(.95,1))
+    self.audios.background:setVolume(.2)
+end
+
+function shop:loadScene()
+    love.audio.play(self.audios.background)
 end
 
 function shop:update(dt)
@@ -283,8 +293,7 @@ function shop:draw()
     --draw artifacts
     self:drawArtifactSelection()
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 

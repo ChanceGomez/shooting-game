@@ -15,11 +15,13 @@ function title:load()
     table.insert(self.buttons,Button.new({
         x = 24,
         y = 300,
-        color = {1,1,1,1},
-        image = assetloader:getImage("button_agree"),
-        hoveredImage = assetloader:getImage("button_agree_hovered"),
-        width = assetloader:getImage("button_agree"):getWidth(),
-        height = assetloader:getImage("button_agree"):getHeight(),
+        width = 128,
+        height = 32,
+        description = {
+            text = "Play",
+            font = dogica_16,
+            format = "center",
+        },
         visible = true,
         clicked = function(self)
             Scene = "difficultyselection"
@@ -66,8 +68,7 @@ function title:draw()
     
 
     --Cursor
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 return title

@@ -95,6 +95,9 @@ function map:nodeClicked(variables)
     local images = variables.images
     local isEndnode = variables.isEndnode
 
+    --Stop any sounds that were playing
+    love.audio.stop()
+
     game:createLookout(enemies,difficulty,artifacts,images)
 
     if isEndnode then
@@ -150,8 +153,7 @@ function map:draw()
     tab:draw()
 
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"), math.floor(CursorX),math.floor(CursorY))
+    drawCursor()
 end
 
 return map

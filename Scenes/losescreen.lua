@@ -41,8 +41,7 @@ function losescreen:draw()
     end
 
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 return losescreen

@@ -24,20 +24,20 @@
   DamagePopup = require("Libraries/DamagePopup")
   infopanel = require("Libraries/infopanel")
   polygon = require("Libraries/polygon")
-  
+  Slider = require("Libraries/Slider")
  
 --Global vars
 window.GameWidth,window.GameHeight = 640,360
 window.calculateScale()
 mainCanvas = nil
 settings = {
-  volume = .6, -- Global volume
+  volume = .5, -- Global volume
   hitbox = false, -- Display hitboxes on enemies
   showHealth = true,
   showAlive = false,
   debug = true,
   difficulty = 'easy',
-  loadShopOnStart = true,
+  loadShopOnStart = false,
   crt = false,
   loadMap = true,
   isFullscreen = true,
@@ -71,7 +71,7 @@ settings = {
   upgradegrenade = require("Scenes/upgradegrenade")
   settingscene = require("Scenes/settingscene")
 
-Scene = "shop" -- Current scene
+Scene = "title" -- Current scene
 -- All scenes
 Scenes = {
   game = {
@@ -217,6 +217,7 @@ function love.load()
     love.window.setVSync(0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.mouse.setVisible(false) -- set cursor to invisible
+
 
     --Get main canvas
     mainCanvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)

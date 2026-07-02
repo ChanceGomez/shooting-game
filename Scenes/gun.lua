@@ -88,8 +88,7 @@ function gun:draw()
     tab:draw()
 
     --cursor
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 return gun

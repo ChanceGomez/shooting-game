@@ -88,6 +88,7 @@ end
 
 function game:endRound(artifacts)
     endofround:getReport(self.lookouts[1].Report,artifacts)
+    love.audio.stop()
     Scene = "endofround"
 end
 

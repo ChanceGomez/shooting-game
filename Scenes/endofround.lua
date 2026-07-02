@@ -26,6 +26,7 @@ function endofround:load()
             if #self.artifacts > 0 then
                 shop:displayArtifacts(self.artifacts)
             end
+            shop:loadScene()
         end,
     })
 end
@@ -57,8 +58,7 @@ function endofround:draw()
     self.endRoundButton:draw()
 
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 

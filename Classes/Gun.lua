@@ -71,6 +71,11 @@ function Gun.new()
     obj.fireDamageMult = 1
     obj.fireDurationMult = 1
 
+    obj.audios = {
+        shot = assetloader:getAudio("bulletshot")
+    }
+    obj.audios.shot:setPitch(cosmeticRandom:random(.90,1))
+    obj.audios.shot:setVolume(.5)
 
   return obj
 end
@@ -88,6 +93,8 @@ function Gun:fire()
    game.lookouts[1].handler:checkHit(self.ammo[1].properties)
    game.lookouts[1].Report:action("shotFired")
    table.remove(self.ammo,1)
+
+   love.audio.play(self.audios.shot)
 end
 
 function Gun:update(dt)
