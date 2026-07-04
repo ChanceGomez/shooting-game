@@ -19,7 +19,13 @@ function difficultyselction:load()
             settings.difficulty = 'easy'
             game:createTutorial()
             Scene = "game"
-        end
+        end,
+        updateText = function(self)
+            return {
+                text = "A short tutorial on how to play",
+                font = dogica_8,
+            }
+        end,
     })
     self.buttons.easy = Button.new({
         x = window.GameWidth/2 - 128,
@@ -36,7 +42,13 @@ function difficultyselction:load()
             settings.difficulty = 'easy'
             Scene = "map"
             map:activateCurrentNode()
-        end
+        end,
+        updateText = function(self)
+            return {
+                text = "Easy mode for beginner players",
+                font = dogica_8,
+            }
+        end,
     })
 end
 

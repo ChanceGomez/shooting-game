@@ -107,9 +107,10 @@ local function generateNodes(obj,generation,length)
     end
 
     --generate end node and start downward generation
+    local endNode = generateNode(0,length-1+nodeY,nil,true)
     generateDownwardGeneration(generateNode(0,length-1+nodeY,nil,true))
 
-    return tbl
+    return tbl,endNode.y
 end
 
 function Map.new(seed,generation,length,handler)
@@ -132,15 +133,15 @@ function Map.new(seed,generation,length,handler)
     obj.generator = love.math.newRandomGenerator(seed or 1)
 
     obj.nodes = {}
-    obj.nodes = generateNodes(obj,generation,length)
-
+    obj.nodes,obj.maxHeight = generateNodes(obj,generation,length)
+    print(obj.maxHeight)
     obj.playerLocation = 0 .. ' ' .. 0
 
     return obj
 end
 
 function Map:expand()
-    self.nodes = generateNodes(self,self.generation,self.length)
+    self.nodes,self.maxHeight = generateNodes(self,self.generation,self.length)
 end
 
 function Map:update(dt,camera)

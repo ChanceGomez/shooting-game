@@ -34,18 +34,20 @@ function infopanel:draw(obj,panelMaxSize,cameraX,cameraY,width,height)
 	if font == nil and obj.info then
 		font = obj.info.font
 	end
-	if text == nil and obj.description then 
-		if type(obj.description) == "string" then
-			text = obj.description
-		elseif obj.description.text then
-			text = obj.description.text
-		end
-	end
+	
 	if text == nil and obj.info then 
 		if type(obj.info) == "string" then
 			text = obj.info
 		elseif obj.info.text then
 			text = obj.info.text
+		end
+	end
+
+	if text == nil and obj.description then 
+		if type(obj.description) == "string" then
+			text = obj.description
+		elseif obj.description.text then
+			text = obj.description.text
 		end
 	end
 

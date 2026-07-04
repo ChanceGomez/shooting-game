@@ -1,7 +1,7 @@
 local map = {
     map = nil,
     camera = {x=0,y=0},
-    cameraYMax = 1000,
+    cameraYMax = 300,
     cameraYMin = 0,
 }
 
@@ -131,7 +131,8 @@ function map:update(dt)
     tab:update(dt)
 
     if love.keyboard.isDown("up") or wheelUp then
-        self.camera.y = math.min(self.camera.y - 5000 * dt,self.cameraYMax)
+        local offsetY = 100
+        self.camera.y = math.max(self.camera.y - 5000 * dt,self.map.maxHeight-offsetY)
     elseif love.keyboard.isDown("down") or wheelDown then
         self.camera.y = math.min(self.camera.y + 5000 * dt,self.cameraYMin)
     end
