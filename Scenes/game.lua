@@ -85,6 +85,9 @@ function game:createLookout(enemies,difficulty,artifacts,images)
     self.lookouts[1] = Lookout.new(enemies,difficulty,artifacts,images)
 end
 
+function game:createTutorial()
+    self.lookouts[1] = TutorialLookout.new()
+end
 
 function game:endRound(artifacts)
     endofround:getReport(self.lookouts[1].Report,artifacts)

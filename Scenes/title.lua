@@ -27,18 +27,34 @@ function title:load()
             Scene = "difficultyselection"
         end
     }))
-
     table.insert(self.buttons,Button.new({
         x = 640-128-32,
         y = 300,
         width = 128,
         height = 32,
         description = {
-            text = "settings",
+            text = "Settings",
+            format = "center",
+            font = dogica_16
         },
         visible = true,
         clicked = function(self)
             settingscene:switchScene("settingscene")
+        end
+    }))
+    table.insert(self.buttons,Button.new({
+        x = 640-128-32,
+        y = 300-48,
+        width = 128,
+        height = 32,
+        description = {
+            text = "Quit",
+            font = dogica_16,
+            format = "center",
+        },
+        visible = true,
+        clicked = function(self)
+            love.event.quit()
         end
     }))
 end

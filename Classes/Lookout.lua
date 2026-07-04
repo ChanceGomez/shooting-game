@@ -4,8 +4,16 @@ Lookout.__index = Lookout
 local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
 crt_shader:send("screen_size", {love.graphics.getDimensions()})
 
+local defaultBackground = {
+    background = assetloader:getImage("background_night_level1")
+}
+local defaultEnemies = {"Bird","Bird","Bird"}
+
 function Lookout.new(enemies,difficulty,artifacts,images)
     local obj = setmetatable({}, Lookout)
+
+    local enemies = enemies or defaultEnemies
+    local images = images or defaultBackground
 
     obj.images = images
     obj.artifacts = artifacts

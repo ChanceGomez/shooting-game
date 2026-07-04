@@ -65,7 +65,6 @@ function settingscene:load()
             love.audio.setVolume(self.slider.value/100)
         end,
     })
-
     self.buttons.mainmenu = Button.new({
         x = 0,
         y = 360-32,
@@ -82,6 +81,22 @@ function settingscene:load()
             Scene = "title"
         end,
     })
+    self.buttons.back = Button.new({
+        x = 640-128,
+        y = 0,
+        width = 128,
+        height = 32,
+        colors = {
+            --normal = {1,1,1,1},
+        },
+        description = {
+            text = "Back",
+            format = "center",
+        },
+        clicked = function(self)
+            settingscene:resumeScene()
+        end,
+    })
 
     local isVsync = ""
     local vsync = love.window.getVSync()
@@ -91,6 +106,13 @@ function settingscene:load()
         isVsync = "false"
     end
     self.buttons.vsync.description.text = "Vsync: " .. isVsync
+end
+
+function settingscene:resumeScene()
+    Scene = self.oldScene or "title"
+    if self.oldAudio then
+        love.audio.play(self.oldAudio)
+    end
 end
 
 function settingscene:update(dt)
@@ -103,10 +125,7 @@ function settingscene:update(dt)
 
     if escapeClick then
         escapeClick = false
-        Scene = self.oldScene
-        if self.oldAudio then
-            love.audio.play(self.oldAudio)
-        end
+        self:resumeScene()
     end
 end
 

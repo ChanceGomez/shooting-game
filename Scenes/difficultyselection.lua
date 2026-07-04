@@ -4,8 +4,25 @@ local difficultyselction = {
 
 
 function difficultyselction:load() 
+    self.buttons.tutorial = Button.new({
+        x = window.GameWidth/2 - 128,
+        y = 128-48,
+        width = 128,
+        height = 32,
+        description = {
+            text = "Tutorial",
+            font = dogica_16,
+            format = "center",
+        },
+        visible = true,
+        clicked = function(self)
+            settings.difficulty = 'easy'
+            game:createTutorial()
+            Scene = "game"
+        end
+    })
     self.buttons.easy = Button.new({
-        x = window.GameWidth/2 - assetloader:getImage("button_easy"):getWidth(),
+        x = window.GameWidth/2 - 128,
         y = 128,
         width = 128,
         height = 32,

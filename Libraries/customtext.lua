@@ -156,6 +156,7 @@ local function getFormattedWords(text,defaultColor)
 end
 
 local function argumentHandler(self,arg1,arg2,arg3,arg4,arg5,arg6)
+
     local text = arg1 or ""
     local font = arg2 or self.defaultFont
     local x = arg3 or 0
@@ -252,6 +253,7 @@ function customtext:draw(arg1,arg2,arg3,arg4,arg5,arg6)
 
     -- Send arguments through the handler to get nils out
     local text,font,x,y,limit,defaultColor = argumentHandler(self,arg1,arg2,arg3,arg4,arg5,arg6)
+
 
     -- Get the text into a formatted array
     words = getFormattedWords(text,defaultColor)

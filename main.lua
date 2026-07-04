@@ -25,6 +25,7 @@
   infopanel = require("Libraries/infopanel")
   polygon = require("Libraries/polygon")
   Slider = require("Libraries/Slider")
+  Label = require("Libraries/Label")
  
 --Global vars
 window.GameWidth,window.GameHeight = 640,360
@@ -162,6 +163,7 @@ end
 
 local function loadClasses()
     Lookout = require("Classes/Lookout")
+    TutorialLookout = require("Classes/TutorialLookout")
     Report = require("Classes/Report")
     BackgroundHandler = require("Classes/BackgroundHandler")
     ReloadShelf = require("Classes/ReloadShelf")
