@@ -172,9 +172,9 @@ function Player:draw()
         
         --Check to see if there is ammo in the gun, if not than gray out the crosshair
         if #gun.ammo > 0 and gun.fireRateTimer > gun.fireRate then
-            love.graphics.setColor(1,1,1,1)
+            love.graphics.setColor(.6,.8,.6,1)
         else
-            love.graphics.setColor(0.6,.6,.6,1)
+            love.graphics.setColor(0.8,.6,.6,1)
         end
 
         -- Draw the crosshair
@@ -183,7 +183,7 @@ function Player:draw()
         --draw the reloadrate beside the crosshair
         local margin = 2
         local width = 2
-        local height = -math.min(math.max(gun.fireRateTimer/gun.fireRate,0) * crosshairHeight,crosshairHeight)
+        local height = -math.min(math.max(gun.fireRateTimer/game.Affector:trigger("Fire Rate",self.fireRate),0) * crosshairHeight,crosshairHeight)
         local x = x + crosshairWidth/2 + margin
         local y = y + crosshairHeight/2
         love.graphics.rectangle("fill",x,y,width,height)

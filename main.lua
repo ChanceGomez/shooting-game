@@ -38,7 +38,7 @@ settings = {
   showAlive = false,
   debug = true,
   difficulty = 'easy',
-  loadShopOnStart = true,
+  loadShopOnStart = false,
   crt = false,
   loadMap = true,
   isFullscreen = true,
@@ -278,15 +278,19 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(0,0,0,1)
+  love.graphics.rectangle("fill",0,0,window.Width,window.Height)
+
 	love.graphics.setCanvas(mainCanvas)
 	love.graphics.clear()
+
 
 	--scenes
 	Scenes[Scene]:draw()
 
 	love.graphics.setCanvas()
 	love.graphics.setColor(1,1,1,1)
-	love.graphics.draw(mainCanvas,0,0,0,window.Scale)
+	love.graphics.draw(mainCanvas,window.windowX,window.windowY,0,window.Scale)
 
 
 	--gui debug

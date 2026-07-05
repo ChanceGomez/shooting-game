@@ -254,9 +254,11 @@ function artifacts:load()
         },
         add = function(self)
             self.observerID = game.Observer:add("birdDied", self.event)
+            game.Player:addArtifact(self)
         end,
         remove = function(self)
             game.Observer:remove("birdDied", self.event)
+            game.Player:removeArtifact(self)
         end,
         description = {
             text = customtext:formatString("Exploding Birds:", {.2,.2,.5,1}) ..

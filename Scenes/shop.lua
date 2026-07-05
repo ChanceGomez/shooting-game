@@ -247,7 +247,7 @@ function shop:load()
         background = assetloader:getAudio("industryatmosphere"),
     }
     self.audios.background:setPitch(cosmeticRandom:random(.95,1))
-    self.audios.background:setVolume(.2)
+    self.audios.background:setVolume(.05)
 end
 
 function shop:loadScene()
@@ -283,7 +283,8 @@ function shop:update(dt)
 end
 
 function shop:draw()
-    love.graphics.setBackgroundColor(.1,.1,.1,1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
 
      --draw sub scenes
     self.Scenes[self.Scene]:draw()
@@ -318,7 +319,7 @@ function shop:draw()
         
         for i, artifact in ipairs(game.Player.artifacts) do
             local image = artifact.image
-            local x,y,width,height = (i-1) * 64 + 8,y+16,image:getWidth(),image:getHeight()
+            local x,y,width,height = (i-1) * 70 + 8,y+16,image:getWidth(),image:getHeight()
             love.graphics.setColor(1,1,1,1)
             love.graphics.draw(image,x,y)
             table.insert(infopanel_table,{

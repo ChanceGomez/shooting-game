@@ -59,6 +59,7 @@ function upgradegrenade:load(x,y,width,height)
         },
         description = {text = "buy grenade"},
         clicked = function(self)
+            print(game.Player.grenadeCost,game.Affector:trigger("Grenade Cost"))
             if game.Player.grenades < game.Player.maxGrenades and game.Player:purchase(game.Affector:trigger("Grenade Cost")) then
                 game.Player.grenades = game.Player.grenades + 1
             end

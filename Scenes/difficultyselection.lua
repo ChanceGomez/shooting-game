@@ -62,7 +62,8 @@ function difficultyselction:update(dt)
 end
 
 function difficultyselction:draw()
-    love.graphics.setBackgroundColor(.1,.1,.1,1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
 
     --Text
     love.graphics.setColor(1,1,1,1)

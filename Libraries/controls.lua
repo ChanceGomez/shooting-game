@@ -25,12 +25,15 @@ function controls:update()
     local scale = window.Scale or 1
     --Cursor
     CursorX,CursorY = love.mouse.getPosition()
-    CursorX = CursorX/scale
-    CursorY = CursorY/scale
 
-    CursorX = math.ceil(CursorX)
-    CursorY = math.ceil(CursorY)
-
+    --Convert cursor to the correct scale differecial
+    CursorX = (CursorX-window.windowX)/scale
+    CursorY = (CursorY-window.windowY)/scale
+    
+    --Cap the max/min to the games windows dimensions
+    CursorX = math.min(math.max(math.ceil(CursorX),0),window.GameWidth)
+    CursorY = math.min(math.max(math.ceil(CursorY),0),window.GameHeight)
+    
     -- alphabet
     aClick = false
     bClick = false

@@ -74,8 +74,8 @@ function Gun.new()
     obj.audios = {
         shot = assetloader:getAudio("bulletshot")
     }
-    obj.audios.shot:setPitch(cosmeticRandom:random(.90,1))
-    obj.audios.shot:setVolume(.5)
+    obj.audios.shot:setPitch(cosmeticRandom:random(.95,1))
+    obj.audios.shot:setVolume(.25)
 
   return obj
 end

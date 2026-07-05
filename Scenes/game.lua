@@ -133,7 +133,8 @@ function game:draw()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
 
-    love.graphics.setBackgroundColor(0.1,0.1,0.1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
 
     --Draw lookouts
     self.lookouts[1]:draw()

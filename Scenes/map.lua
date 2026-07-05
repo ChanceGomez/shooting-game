@@ -145,7 +145,8 @@ function map:draw()
     love.graphics.push()
     love.graphics.translate(-self.camera.x,-self.camera.y)
 
-    love.graphics.setBackgroundColor(.1,.1,.1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,window.GameHeight,window.GameWidth,-window.GameHeight*10)
 
     self.map:draw(self.camera)
 

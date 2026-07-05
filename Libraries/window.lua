@@ -4,12 +4,27 @@ local window = {
     Height = 1080,
     GameWidth = 1920,
     GameHeight = 1080,
+    windowX = 0,
+    windowY = 0,
 }
 
 --function to calculate scale and resolution change
 function love.resize(width,height)
-    local scale = width/window.GameWidth
-    window.Scale = scale
+    local xScale = width/window.GameWidth
+    local yScale = height/window.GameHeight
+    local newScale = 1
+
+    if xScale >= yScale then
+        newScale = yScale
+    else 
+        newScale = xScale
+    end
+
+    window.windowX = (width - (window.GameWidth * newScale))/2
+    window.windowY = (height - (window.GameHeight * newScale))/2
+    
+
+    window.Scale = newScale
 end
 
 function  window.fullscreen(bool)

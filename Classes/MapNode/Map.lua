@@ -134,7 +134,7 @@ function Map.new(seed,generation,length,handler)
 
     obj.nodes = {}
     obj.nodes,obj.maxHeight = generateNodes(obj,generation,length)
-    print(obj.maxHeight)
+    
     obj.playerLocation = 0 .. ' ' .. 0
 
     return obj

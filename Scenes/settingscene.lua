@@ -130,7 +130,9 @@ function settingscene:update(dt)
 end
 
 function settingscene:draw()
-    love.graphics.setBackgroundColor(.1,.1,.1,1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
+    
     for i, button in pairs(self.buttons) do
         button:draw()
     end
