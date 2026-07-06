@@ -7,6 +7,7 @@ local function checkTrigger(self,trigger)
             add = {},
             mult = {},
             bool = {},
+            scale = {},
         }
     end
 end
@@ -58,6 +59,8 @@ local function getFormattedTrigger(trigger,type)
         str = trigger
     elseif type == "mult" then
         str = trigger .. " Multiplier"
+    elseif type == "scale" then
+        str = trigger
     end
     return customtext:formatString(str,{.2,.2,.4,1}) .. ": "
 end
@@ -76,6 +79,7 @@ function Affector:getDescription(ids)
         self:add(trigger,type,variable)
         local afterStat = getDescriptionVariable(self,trigger,type)
         self:remove(trigger,type,variable)
+
 
         -- get before variable
         desc = desc .. " /n" .. beforeStat
@@ -127,6 +131,17 @@ function Affector:getMult(trigger)
     return returnAttribute
 end
 
+function Affector:getScale(trigger)
+    if self.affectors[trigger] == nil then return 0 end
+    local returnAttribute = 1
+
+    for i, scale in ipairs(self.affectors[trigger].scale) do
+        returnAttribute = scale.event(returnAttribute)
+    end
+
+    return returnAttribute
+end
+
 function Affector:getStat(trigger,type)
     local type = type or "all"
 
@@ -150,6 +165,8 @@ function Affector:getRaw(trigger,type)
         return self:getAdd(trigger,game:getVariable(trigger)) 
     elseif type == "mult" then
         return  self:getMult(trigger,game:getVariable(trigger))
+    elseif type == "scale" then
+        return self:getScale(trigger,game:getVariable(trigger))
     elseif type == "bool" then
         return  self:getBool(trigger,game:getVariable(trigger))
     elseif type == "both" then
@@ -227,7 +244,7 @@ function Affector:trigger(trigger,attribute)
         returnAttribute = returnAttribute * (1 + self:getMult(trigger,returnAttribute))
     end
     
-
+    returnAttribute = returnAttribute * self:getScale(trigger)
   
     return returnAttribute
 end
@@ -244,6 +261,8 @@ function Affector:add(trigger,type,variable)
                 return attribute + variable
             elseif type == "bool" then
                 return variable
+            elseif type == "scale" then
+                return attribute * variable
             end
         end,
     })

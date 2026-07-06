@@ -24,7 +24,7 @@ function Gun.new()
             end
         },
         stun = {
-            type = "Stun",
+            type = "Bullet Stun",
             interval = 0,
             damage = 0,
             duration = 0,
@@ -53,7 +53,7 @@ function Gun.new()
             end
         },
         stun = {
-            type = "Stun",
+            type = "Dud Stun",
             interval = 0,
             damage = 0,
             duration = 0,
@@ -90,11 +90,29 @@ function Gun:fire()
     if game.lookouts[1].isHoveringButton then
         return false
     end
-   game.lookouts[1].handler:checkHit(self.ammo[1].properties)
-   game.lookouts[1].Report:action("shotFired")
-   table.remove(self.ammo,1)
 
-   love.audio.play(self.audios.shot)
+
+    --Get bullets properties
+    local properties = self.ammo[1].properties
+    
+    --Calculate all the effects
+    for i, effect in pairs(properties) do 
+        effect.damage = game.Affector:trigger(effect.type .. " Damage")
+        effect.duration = game.Affector:trigger(effect.type .. " Duration")
+    end
+
+    --Send each effect to the enemy
+    game.lookouts[1].handler:checkHit(properties)
+
+
+    --Report an action
+    game.lookouts[1].Report:action("shotFired")
+
+    --remove bullet
+    table.remove(self.ammo,1)
+
+    --Play sound
+    love.audio.play(self.audios.shot)
 end
 
 function Gun:update(dt)

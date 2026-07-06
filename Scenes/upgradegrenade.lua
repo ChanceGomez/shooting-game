@@ -59,15 +59,14 @@ function upgradegrenade:load(x,y,width,height)
         },
         description = {text = "buy grenade"},
         clicked = function(self)
-            print(game.Player.grenadeCost,game.Affector:trigger("Grenade Cost"))
-            if game.Player.grenades < game.Player.maxGrenades and game.Player:purchase(game.Affector:trigger("Grenade Cost")) then
+            if game.Player.grenades < game.Affector:trigger("Max Grenade Count") and game.Player:purchase(game.Affector:trigger("Grenade Cost")) then
                 game.Player.grenades = game.Player.grenades + 1
             end
         end,
         updateText = function(self)
             --update cost
             self.wrapper.cost = game.Affector:trigger("Grenade Cost")
-            if game.Player.grenades >= game.Player.maxGrenades then self.wrapper.stat = game.Player.grenades .. " Maxed" return end
+            if game.Player.grenades >= game.Affector:trigger("Max Grenade Count") then self.wrapper.stat = game.Player.grenades .. " Maxed" return end
             self.wrapper.stat = game.Player.grenades .. " -> " .. game.Player.grenades + 1
         end,
     })

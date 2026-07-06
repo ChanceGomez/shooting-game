@@ -210,7 +210,7 @@ function artifacts:load()
         ids = {
             {"Grenade Damage","add",10},
             {"Max Grenade Count","add",1},
-            {"Grenade Cost","mult",-.50},
+            {"Grenade Cost","scale",.50},
         },
         description = {
             text = customtext:formatString("Grenade Surplus:", {.2,.2,.5,1}) ..
@@ -223,7 +223,7 @@ function artifacts:load()
         rarity = 1,
         ids = {
             {"Grenade Damage","add",10},
-            {"Grenade Radius","mult",1},
+            {"Grenade Radius","scale",2},
         },
         description = {
             text = customtext:formatString("Bigger Grenades:", {.2,.2,.5,1}) ..
@@ -278,10 +278,19 @@ function artifacts:load()
         },
     }
     
-    --[[
-self.artifacts. = {
-
+    self.artifacts.stunBullets = {
+        rarity = 1,
+        ids = {
+            {"Bullet Stun Duration","add",2},
+            {"Dud Stun Duration","add",2},
+        },
+        description = {
+            text = customtext:formatString("Stun Bullets:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(1) .. "increase stun time on enemies",
+        },
     }
+    --[[
+    --Not yet implemented
     self.artifacts.horizontalLazer = {
         timer = 0,
         event = function(self)
@@ -297,16 +306,18 @@ self.artifacts. = {
         },
         image = assetloader:getImage("upgrademaxammo_shop_icon")
     }
-        ]]
+    ]]
 
 
     --get count of how many artifacts and get there widths/heights aswell as add the fonts for description
     for i, artifact in pairs(self.artifacts) do
-        --Get the artifact count
+        --Increase the artifact count for the total.
         self.artifactsCount = self.artifactsCount + 1
 
+        --Get id for which number the artifact is
         artifact.id = self.artifactsCount
 
+        --Switch the name from camel case to user readable language.
         artifact.name = camelToReadable(i)
 
 
@@ -351,7 +362,12 @@ self.artifacts. = {
             local ids = artifact.ids
             if ids == nil or type(ids) ~= "table" then return self.description.text end
             if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
-            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
+
+            if settings.advancedTooltips then
+                return self.description.text .. " /n " .. game.Affector:getDescription(ids)
+            else
+                return self.description.text
+            end
         end
     end
     --get keys
@@ -361,7 +377,7 @@ self.artifacts. = {
 end
 
 function artifacts:activateArtifact(name)
-    local artifact = deepCopy(self.artifacts[name]:add())
+    deepCopy(self.artifacts[name]:add())
 end
 
 function artifacts:activateAllArtifacts()
@@ -408,14 +424,20 @@ function artifacts:getAllArtifacts()
     return tbl
 end
 
-function artifacts:getRandomArtifact(rarity)
+function artifacts:getRandomArtifact(rarity,recursion)
+    local recursion = recursion or 1
+    recursion = recursion + 1
+
+    if recursion > 20 then
+        return 
+    end
+
     local key = self.keys[math.random(#self.keys)]
     if self.artifacts[key].rarity ~= rarity then 
-        return self:getRandomArtifact(rarity)
+        return self:getRandomArtifact(rarity,recursion)
     end
     if self.artifacts[key].used then
-        print"hello"
-        return self:getRandomArtifact(rarity)
+        return self:getRandomArtifact(rarity,recursion)
     end
     return self.artifacts[key]
 end

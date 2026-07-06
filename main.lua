@@ -43,6 +43,7 @@ settings = {
   loadMap = true,
   isFullscreen = true,
   canDie = true,
+  advancedTooltips = true,
 }
  
 --Scripts

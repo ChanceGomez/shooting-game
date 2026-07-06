@@ -110,6 +110,19 @@ function EnemyHandler:checkHit(properties)
 
 end
 
+--Report system
+function EnemyHandler:onHit()
+    game.lookouts[1].Report:action("shotHit")
+end
+
+function EnemyHandler:onDamage(damage)
+    game.lookouts[1].Report:action("damageDealt", damage)
+end
+
+function EnemyHandler:onKilled()
+    game.lookouts[1].Report:action("enemyKilled")
+end
+
 function EnemyHandler:newExplosion(x,y,radius,damage,duration)
     table.insert(self.Explosions,GrenadeExplosion.new(self,x,y))
 end
@@ -178,12 +191,12 @@ function EnemyHandler:draw()
     for i, parachute in pairs(self.parachutes) do
         parachute:draw()
     end
+    for i, explosion in pairs(self.Explosions) do
+        explosion:draw()
+    end
     for i, damagePopup in pairs(self.damagePopups) do
         damagePopup:draw()
     end
-    for i, explosion in pairs(self.Explosions) do
-            explosion:draw()
-        end
 end
 
 

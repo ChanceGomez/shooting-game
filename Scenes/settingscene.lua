@@ -98,6 +98,26 @@ function settingscene:load()
         end,
     })
 
+    self.buttons.advancedTooltips = Button.new({
+        x = 196,
+        y = 0,
+        width = 128,
+        height = 32,
+        description = {
+            text = "Advanced Tooltips:",
+            y = 4,
+        },
+        clicked = function(self)
+            if not settings.advancedTooltips then
+                self.description.text = "Advanced Tooltips:/n on"
+                settings.advancedTooltips = true
+            else
+                self.description.text = "Advanced Tooltips:/n off"
+                settings.advancedTooltips = false
+            end 
+        end,
+    })
+
     local isVsync = ""
     local vsync = love.window.getVSync()
     if vsync == 1 then
@@ -132,7 +152,7 @@ end
 function settingscene:draw()
     love.graphics.setColor(.1,.1,.1,1)
     love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
-    
+
     for i, button in pairs(self.buttons) do
         button:draw()
     end

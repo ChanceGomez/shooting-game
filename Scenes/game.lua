@@ -8,6 +8,97 @@ local game = {
     maxSpeed = 50,
 }
 
+game.stats = {
+    ["Dud Damage"] = {
+        get = function() return game.Player.gun.duds.bullet.damage end,
+        mode = "multiply",
+    },
+    ["Bullet Damage"] = {
+        get = function() return game.Player.gun.bullets.bullet.damage end,
+        mode = "multiply",
+    },
+    ["Dud Chance"] = {
+        get = function() return game.Player.dudPercentage end,
+        mode = "multiply",
+    },
+    ["Fire Rate"] = {
+        get = function() return game.Player.gun.fireRate end,
+        mode = "divide",
+    },
+    ["Parachute Chance"] = {
+        get = function() return game.Player.parachuteOdds end,
+        mode = "multiply",
+    },
+    ["Reload Rate"] = {
+        get = function() return game.Player.gun.reloadRate end,
+        mode = "divide",
+    },
+    ["Dud Fire Damage"] = {
+        get = function() return game.Player.gun.duds.fire.damage end,
+        mode = "multiply",
+    },
+    ["Dud Fire Duration"] = {
+        get = function() return game.Player.gun.duds.fire.duration end,
+        mode = "multiply",
+    },
+    ["Bullet Fire Damage"] = {
+        get = function() return game.Player.gun.bullets.fire.damage end,
+        mode = "multiply",
+    },
+    ["Bullet Fire Duration"] = {
+        get = function() return game.Player.gun.bullets.fire.duration end,
+        mode = "multiply",
+    },
+    ["Automatic Reloading"] = {
+        get = function() return game.Player.automaticReloading end,
+        mode = "bool",
+    },
+    ["Max Ammo"] = {
+        get = function() return game.Player.gun.maxAmmo end,
+        mode = "multiply",
+    },
+    ["Fire Damage"] = {
+        get = function() return game.Player.gun.fireDamageMult end,
+        mode = "multiply",
+    },
+    ["Fire Duration"] = {
+        get = function() return game.Player.gun.fireDurationMult end,
+        mode = "multiply",
+    },
+    ["Parachute Equipment Rarity"] = {
+        get = function() return game.Player.parachuteEquipmentRarity end,
+        mode = "multiply",
+    },
+    ["Bullet Stun Duration"] = {
+        get = function() return game.Player.gun.bullets.stun.duration end,
+        mode = "multiply",
+    },
+    ["Dud Stun Duration"] = {
+        get = function() return game.Player.gun.duds.stun.duration end,
+        mode = "multiply",
+    },
+    ["Grenade Damage"] = {
+        get = function() return game.Player.explosionProperties.explosion.damage end,
+        mode = "multiply",
+    },
+    ["Grenade Radius"] = {
+        get = function() return game.Player.explosionProperties.explosion.radius end,
+        mode = "multiply",
+    },
+    ["Grenade Cost"] = {
+        get = function() return game.Player.grenadeCost end,
+        mode = "multiply",
+    },
+    ["Max Grenade Count"] = {
+        get = function() return game.Player.maxGrenades end,
+        mode = "multiply",
+    },
+    ["Resource"] = {
+        get = function() return game.Player.resourceMultiplier end,
+        mode = "multiply",
+    },
+}
+
 --[[
     Get Methods
 ]]
@@ -25,62 +116,12 @@ function game:getPlayerGun()
     return self.Player.gun
 end
 
---Charter system
 function game:getVariable(name)
-    local player = self.Player
-    local gun = player.gun
-
-    if name == "Dud Damage" then
-        return player.gun.duds.bullet.damage
-    elseif name == "Bullet Damage" then
-        return player.gun.bullets.bullet.damage
-    elseif name == "Dud Chance" then 
-        return player.dudPercentage
-    elseif name == "Fire Rate" then
-        return player.gun.fireRate,"divide"
-    elseif name == "Parachute Chance" then
-        return player.parachuteOdds 
-    elseif name == "Reload Rate" then
-        return player.gun.reloadRate,"divide"
-    elseif name == "Dud Fire Damage" then
-        return player.gun.duds.fire.damage
-    elseif name == "Dud Fire Duration" then
-        return player.gun.duds.fire.duration 
-    elseif name == "Bullet Fire Damage" then
-        return player.gun.bullets.fire.damage
-    elseif name == "Bullet Fire Duration" then
-        return player.gun.bullets.fire.duration 
-    elseif name == "Automatic Reloading" then
-        return player.automaticReloading
-    elseif name == "Max Ammo" then
-        return player.gun.maxAmmo
-    elseif name == "Fire Damage" then
-        return player.gun.fireDamageMult
-    elseif name == "Fire Duration" then
-        return player.gun.fireDurationMult 
-    elseif name == "Parachute Equipment Rarity" then
-        return player.parachuteEquipmentRarity
-    elseif name == "Bullet Stun Duration" then
-        return player.gun.bullets.stun.duration
-    elseif name == "Dud Stun Duration" then
-        return player.gun.duds.stun.duration
-    elseif name == "Grenade Damage" then
-        return player.explosionProperties.explosion.damage
-    elseif name == "Grenade Radius" then
-        return player.explosionProperties.explosion.radius
-    elseif name == "Grenade Cost" then
-        return player.grenadeCost
-    elseif name == "Max Grenade Count" then
-        return player.maxGrenades
-    elseif name == "Resource" then
-        return player.resourceMultiplier
-    end
-
-
-    return nil
+    local stat = self.stats[name]
+    if not stat then return nil end
+    return stat.get(), stat.mode
 end
 
-----------
 function game:createLookout(enemies,difficulty,artifacts,images)
     self.lookouts[1] = Lookout.new(enemies,difficulty,artifacts,images)
 end

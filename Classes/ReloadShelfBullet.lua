@@ -14,13 +14,13 @@ function ReloadShelfBullet.new(ReloadShelf,x,y)
     obj.x = x or 0
     obj.y = y or 0
     obj.hovered = false
-    obj.properties = game.Player.gun.bullets
+    obj.properties = deepCopy(game.Player.gun.bullets)
     obj.inAnimation = false
     obj.ReloadShelf = ReloadShelf
     obj.color = {1,1,1,1}
     obj.audios = {
         load = assetloader:getAudio("bulletload"),
-        reload = nil
+        reload = nil,
     }
     obj.audios.load:setPitch(cosmeticRandom:random(.9,1))
 

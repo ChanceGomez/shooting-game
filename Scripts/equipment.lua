@@ -231,7 +231,11 @@ function equipment:load()
 
             
             if self.active then return self.description.text .. '/n' .. game.Affector:getStats(ids) end
-            return self.description.text .. " /n " .. game.Affector:getDescription(ids)
+            if settings.advancedTooltips then
+                return self.description.text .. " /n " .. game.Affector:getDescription(ids)
+            else
+                return self.description.text
+            end
         end
     end
     --get keys

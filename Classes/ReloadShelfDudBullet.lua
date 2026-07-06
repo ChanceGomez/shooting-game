@@ -5,7 +5,7 @@ function ReloadShelfDudBullet.new(ReloadShelf,x,y)
     local obj = setmetatable(ReloadShelfBullet.new(ReloadShelf,x,y),ReloadShelfDudBullet)
 
     obj.isDud = true
-    obj.properties = game.Player.gun.duds
+    obj.properties = deepCopy(game.Player.gun.duds)
 
     obj.color = {1,0,0,1}
 
