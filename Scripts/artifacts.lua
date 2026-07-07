@@ -289,6 +289,25 @@ function artifacts:load()
                 " /n" .. getFormat(1) .. "increase stun time on enemies",
         },
     }
+
+    self.artifacts.fireOnly = {
+        rarity = 1,
+        used = false,
+        ids = {
+            {"Bullet Damage","add",-9999},
+            {"Dud Damage","add",-9999},
+            {"Bullet Fire Duration","add",5},
+            {"Dud Fire Duration","add",5},
+            {"Dud Fire Damage","add",5},
+            {"Bullet Fire Damage","add",5},
+        },
+        description = {
+            text = customtext:formatString("Fire Only:", {.2,.2,.5,1}) ..
+                " /n" .. getFormat(-1) .. "Decrease all bullet damage indefinitely".. getFormat(1) .. "Increase fire damage and duration",
+        },
+    }
+
+    
     --[[
     --Not yet implemented
     self.artifacts.horizontalLazer = {
@@ -325,6 +344,10 @@ function artifacts:load()
         if artifact.image == nil then
             artifact.image = assetloader:getImage("upgrademaxammo_shop_icon")
         end
+
+        
+
+
         --Get dimensions
         artifact.width = artifact.image:getWidth()
         artifact.height = artifact.image:getHeight()

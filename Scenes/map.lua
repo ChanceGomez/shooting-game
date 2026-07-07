@@ -6,10 +6,9 @@ local map = {
 }
 
 function map:getVariables(node)
-    local enemies = {}
+    local seed = node.seed
     local generation = node.nodeY
-    local seed = node.seed 
-    local generator = love.math.newRandomGenerator(seed)
+    local artifact = false
 
     local returnTbl = {
         artifacts = {},
@@ -20,54 +19,26 @@ function map:getVariables(node)
         isEndnode = false
     }
 
+    --get a random check to see if it becomes a artifact node
+    local random = math.random(1,10)
+    if random < 7 then 
+        artifact = true
+        returnTbl.artifacts = {3,1}
+        returnTbl.color = {.3,.3,.2,1}
+    end
+
+    
+    if artifact then generation = generation + 1 returnTbl.difficulty = generation end
+    local enemies = EnemyHandler.decodeSeed(seed,generation)
+
+    local generator = love.math.newRandomGenerator(seed)
+
     --get background
     local random = generator:random(1,#self.backgrounds)
     returnTbl.images.background = self.backgrounds[random]
     returnTbl.images.clouds = self.clouds[random % 2]
 
-    --get a random check to see if it becomes a artifact node
-    local random = math.random(1,10)
-    if random < 7 then 
-        returnTbl.artifacts = {3,1}
-        returnTbl.color = {.3,.3,.2,1}
-    end
-
-    local enemyWeight = generator:random(math.floor(3+(generation/2)),4+generation)
-
-
-    if node.isEndNode then
-        returnTbl.isEndnode = true
-        enemyWeight = enemyWeight * 2
-    end
-
-    while enemyWeight > 0 do
-        local random = generator:random(1,100)
-
-        if random < math.min(100-(generation*5),10) then
-            table.insert(returnTbl.enemies,"Bird")
-            enemyWeight = enemyWeight - 1
-        end
-        if random < math.min((generation*5)-15,10) then
-            table.insert(returnTbl.enemies,"FastBird")
-            enemyWeight = enemyWeight - 2
-        end
-        if random < math.min((generation*5)-30,10) then
-            table.insert(returnTbl.enemies,"ExplosionBird")
-        end
-        if random < -20 + (generation*5) then
-            table.insert(returnTbl.enemies,"BigBird")
-            enemyWeight = enemyWeight - 3
-        end
-        if random < -30 + (generation*7) then
-            table.insert(returnTbl.enemies,"InfectedBird")
-            enemyWeight = enemyWeight - 3
-        end
-        if random < -30 + (generation*4) then
-            table.insert(returnTbl.enemies,"InfectedBird")
-            enemyWeight = enemyWeight - 5
-        end
-    end
-
+    returnTbl.enemies = enemies
 
     --if end node then get special artifact and boss enemy
     if node.isEndNode then
@@ -78,7 +49,7 @@ function map:getVariables(node)
     end
 
     --create description
-    returnTbl.description = "Enemies " .. #returnTbl.enemies 
+    returnTbl.description = "Enemies " .. #returnTbl.enemies
     
     if #returnTbl.artifacts > 0 then
         returnTbl.description = returnTbl.description .. " /nHas an artifact"
@@ -88,7 +59,7 @@ function map:getVariables(node)
     return returnTbl
 end
 
-function map:nodeClicked(variables)
+function map:nodeClicked(variables,seed)
     local enemies = variables.enemies
     local difficulty = variables.difficulty
     local artifacts = variables.artifacts
@@ -98,7 +69,7 @@ function map:nodeClicked(variables)
     --Stop any sounds that were playing
     love.audio.stop()
 
-    game:createLookout(enemies,difficulty,artifacts,images)
+    game:createLookout(seed,difficulty,artifacts,images)
 
     if isEndnode then
         self.map:expand()
@@ -116,6 +87,7 @@ function map:load()
     self.backgrounds = {
         [1] = assetloader:getImage("background_night_level1"),
         [2] = assetloader:getImage("background_day_level2"),
+        [3] = assetloader:getImage("night_sky_background"),
     }
     self.clouds = {
         [1] = assetloader:getImage("background_clouds_night"),
@@ -124,7 +96,7 @@ function map:load()
     if not settings.loadMap then
         return
     end
-    self.map = Map.new(0,3,9,self)
+    self.map = Map.new(game.seed,3,9,self)
 end
 
 function map:update(dt)

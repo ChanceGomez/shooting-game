@@ -193,7 +193,7 @@ function equipment:load()
         self.equipmentCount = self.equipmentCount + 1
 
         if equipment.image == nil then
-            equipment.image = assetloader:getImage("equipment_barrelimprovement")
+            equipment.image = assetloader:getImage("equipment_icon")
         end
 
         equipment.name = camelToReadable(i)
@@ -204,6 +204,9 @@ function equipment:load()
 
         --default vars
         equipment.active = false
+
+        --Get the color based on rarity
+        equipment.color = {(equipment.rarity*.50),.5,.5,1}
 
         --set default font
         if not equipment.description.font then

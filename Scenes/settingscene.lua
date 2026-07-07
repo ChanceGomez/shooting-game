@@ -99,7 +99,7 @@ function settingscene:load()
     })
 
     self.buttons.advancedTooltips = Button.new({
-        x = 196,
+        x = 148,
         y = 0,
         width = 128,
         height = 32,
@@ -117,6 +117,11 @@ function settingscene:load()
             end 
         end,
     })
+
+    --Set the colors of the buttons
+    for i, button in pairs(self.buttons) do
+        button.colors.normal = {.2,.2,.4,1}
+    end
 
     local isVsync = ""
     local vsync = love.window.getVSync()

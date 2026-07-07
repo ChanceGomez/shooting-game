@@ -22,7 +22,7 @@ local function generateNodes(obj,generation,length)
             return tbl[key]
         end
         local x,y = (nodeX * obj.unitsBetweenX) + obj.midPointX,(-nodeY * obj.unitsBetweenY) + obj.midPointY
-        tbl[key] = Node.new(x,y,nodeX,nodeY,obj,obj.generator:random(1,1000),isEndNode)
+        tbl[key] = Node.new(x,y,nodeX,nodeY,obj,obj.generator:random(1,10000),isEndNode)
 
         linkNode()
 

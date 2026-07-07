@@ -9,19 +9,18 @@ local defaultBackground = {
 }
 local defaultEnemies = {"Bird","Bird","Bird"}
 
-function Lookout.new(enemies,difficulty,artifacts,images)
+function Lookout.new(seed,difficulty,artifacts,images)
     local obj = setmetatable({}, Lookout)
 
-    local enemies = enemies or defaultEnemies
+    local seed = seed or 0
     local images = images or defaultBackground
 
     obj.images = images
     obj.artifacts = artifacts
     obj.difficulty = difficulty
-    obj.enemyCount = #enemies
     obj.enemies = {}
     obj.canvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
-    obj.handler = EnemyHandler.new(obj,enemies,difficulty)
+    obj.handler,obj.enemyCount = EnemyHandler.new(obj,seed,difficulty)
     obj.handler:startRound()
     obj.x = 0
     obj.y = 0
@@ -104,7 +103,13 @@ function Lookout:draw()
 
 
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(self.images.background)
+    --Calculate Background
+    local width,height = self.images.background:getDimensions()
+
+    local scaleX = window.GameWidth/width
+    local scaleY = window.GameHeight/height
+
+    love.graphics.draw(self.images.background,0,0,0,scaleX,scaleY)
 
     --clouds 
 

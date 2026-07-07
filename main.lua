@@ -147,6 +147,7 @@ cosmeticRandom = love.math.newRandomGenerator(os.time())
 local function loadAssets()
   --images
     assetloader:loadImages("Assets/Sprites")
+    assetloader:loadImages("Assets/Sprites/Backgrounds")
     assetloader:loadAudios("Assets/Audios")
   
     --perfect dos font

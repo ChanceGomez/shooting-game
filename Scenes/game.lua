@@ -6,6 +6,7 @@ local game = {
     round = 1,
     pause = false,
     maxSpeed = 50,
+    seed = 1,
 }
 
 game.stats = {

@@ -247,7 +247,7 @@ function shop:load()
         background = assetloader:getAudio("industryatmosphere"),
     }
     self.audios.background:setPitch(cosmeticRandom:random(.95,1))
-    self.audios.background:setVolume(.05)
+    self.audios.background:setVolume(.2)
 end
 
 function shop:loadScene()

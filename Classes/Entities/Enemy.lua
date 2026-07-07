@@ -94,7 +94,7 @@ function Enemy:damage(damage,type)
     --Check to see if is still alive
     if not self.isAlive then return end
     --Make sure damage is valid
-    if damage == 0 or damage == nil then return end
+    if damage <= 0 or damage == nil then return end
 
 
     --local damage = game.Affector:trigger(type .. " Damage")
