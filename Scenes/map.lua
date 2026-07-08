@@ -1,15 +1,14 @@
 local map = {
     map = nil,
     camera = {x=0,y=0},
-    cameraYMax = 1000,
+    cameraYMax = 300,
     cameraYMin = 0,
 }
 
 function map:getVariables(node)
-    local enemies = {}
+    local seed = node.seed
     local generation = node.nodeY
-    local seed = node.seed 
-    local generator = love.math.newRandomGenerator(seed)
+    local artifact = false
 
     local returnTbl = {
         artifacts = {},
@@ -20,54 +19,26 @@ function map:getVariables(node)
         isEndnode = false
     }
 
+    --get a random check to see if it becomes a artifact node
+    local random = math.random(1,10)
+    if random < 7 then 
+        artifact = true
+        returnTbl.artifacts = {3,1}
+        returnTbl.color = {.3,.3,.2,1}
+    end
+
+    
+    if artifact then generation = generation + 1 returnTbl.difficulty = generation end
+    local enemies = EnemyHandler.decodeSeed(seed,generation)
+
+    local generator = love.math.newRandomGenerator(seed)
+
     --get background
     local random = generator:random(1,#self.backgrounds)
     returnTbl.images.background = self.backgrounds[random]
     returnTbl.images.clouds = self.clouds[random % 2]
 
-    --get a random check to see if it becomes a artifact node
-    local random = math.random(1,10)
-    if random < 7 then 
-        returnTbl.artifacts = {3,1}
-        returnTbl.color = {.3,.3,.2,1}
-    end
-
-    local enemyWeight = generator:random(math.floor(3+(generation/2)),4+generation)
-
-
-    if node.isEndNode then
-        returnTbl.isEndnode = true
-        enemyWeight = enemyWeight * 2
-    end
-
-    while enemyWeight > 0 do
-        local random = generator:random(1,100)
-
-        if random < math.min(100-(generation*5),10) then
-            table.insert(returnTbl.enemies,"Bird")
-            enemyWeight = enemyWeight - 1
-        end
-        if random < math.min((generation*5)-15,10) then
-            table.insert(returnTbl.enemies,"FastBird")
-            enemyWeight = enemyWeight - 2
-        end
-        if random < math.min((generation*5)-30,10) then
-            table.insert(returnTbl.enemies,"ExplosionBird")
-        end
-        if random < -20 + (generation*5) then
-            table.insert(returnTbl.enemies,"BigBird")
-            enemyWeight = enemyWeight - 3
-        end
-        if random < -30 + (generation*7) then
-            table.insert(returnTbl.enemies,"InfectedBird")
-            enemyWeight = enemyWeight - 3
-        end
-        if random < -30 + (generation*4) then
-            table.insert(returnTbl.enemies,"InfectedBird")
-            enemyWeight = enemyWeight - 5
-        end
-    end
-
+    returnTbl.enemies = enemies
 
     --if end node then get special artifact and boss enemy
     if node.isEndNode then
@@ -78,7 +49,7 @@ function map:getVariables(node)
     end
 
     --create description
-    returnTbl.description = "Enemies " .. #returnTbl.enemies 
+    returnTbl.description = "Enemies " .. #returnTbl.enemies
     
     if #returnTbl.artifacts > 0 then
         returnTbl.description = returnTbl.description .. " /nHas an artifact"
@@ -88,14 +59,17 @@ function map:getVariables(node)
     return returnTbl
 end
 
-function map:nodeClicked(variables)
+function map:nodeClicked(variables,seed)
     local enemies = variables.enemies
     local difficulty = variables.difficulty
     local artifacts = variables.artifacts
     local images = variables.images
     local isEndnode = variables.isEndnode
 
-    game:createLookout(enemies,difficulty,artifacts,images)
+    --Stop any sounds that were playing
+    love.audio.stop()
+
+    game:createLookout(seed,difficulty,artifacts,images)
 
     if isEndnode then
         self.map:expand()
@@ -113,6 +87,7 @@ function map:load()
     self.backgrounds = {
         [1] = assetloader:getImage("background_night_level1"),
         [2] = assetloader:getImage("background_day_level2"),
+        [3] = assetloader:getImage("night_sky_background"),
     }
     self.clouds = {
         [1] = assetloader:getImage("background_clouds_night"),
@@ -121,14 +96,15 @@ function map:load()
     if not settings.loadMap then
         return
     end
-    self.map = Map.new(0,3,9,self)
+    self.map = Map.new(game.seed,3,9,self)
 end
 
 function map:update(dt)
     tab:update(dt)
 
     if love.keyboard.isDown("up") or wheelUp then
-        self.camera.y = math.min(self.camera.y - 5000 * dt,self.cameraYMax)
+        local offsetY = 100
+        self.camera.y = math.max(self.camera.y - 5000 * dt,self.map.maxHeight-offsetY)
     elseif love.keyboard.isDown("down") or wheelDown then
         self.camera.y = math.min(self.camera.y + 5000 * dt,self.cameraYMin)
     end
@@ -141,7 +117,8 @@ function map:draw()
     love.graphics.push()
     love.graphics.translate(-self.camera.x,-self.camera.y)
 
-    love.graphics.setBackgroundColor(.1,.1,.1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,window.GameHeight,window.GameWidth,-window.GameHeight*10)
 
     self.map:draw(self.camera)
 
@@ -150,8 +127,7 @@ function map:draw()
     tab:draw()
 
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"), math.floor(CursorX),math.floor(CursorY))
+    drawCursor()
 end
 
 return map

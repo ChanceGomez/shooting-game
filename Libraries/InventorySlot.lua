@@ -57,7 +57,7 @@ function InventorySlot:draw()
     love.graphics.rectangle("fill",self.x,self.y,self.width,self.height)
 
     if self.item then
-        love.graphics.setColor(1,1,1,1)
+        love.graphics.setColor(self.item.color or {1,1,1,1})
         love.graphics.draw(self.item.image,self.x,self.y)
     end
 end

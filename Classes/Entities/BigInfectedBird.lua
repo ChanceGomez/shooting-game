@@ -13,7 +13,7 @@ function BigInfectedBird.new(x,y,handler,difficulty,facing)
 
     --Power scaling
     obj.difficulty = difficulty
-    obj.health = 30 * (math.max(difficulty/1.5,1))
+    obj.health = 30 * (math.max(difficulty/3,1))
     obj.speed = 20 * (math.max(difficulty/8,1))
     obj.resources = 15
 
@@ -39,7 +39,7 @@ end
 function BigInfectedBird:draw()
     local flipped = self.facing ~= -1
     local speed = 5/self.speed
-    Enemy.Draw(self)
+    Enemy.draw(self)
 end
 
 return BigInfectedBird

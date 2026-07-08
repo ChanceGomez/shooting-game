@@ -1,5 +1,16 @@
 local array = {}
 
+function hexToColor(hex)
+    hex = hex:gsub("#", "")
+    return
+    {
+        tonumber(hex:sub(1,2), 16) / 255,
+        tonumber(hex:sub(3,4), 16) / 255,
+        tonumber(hex:sub(5,6), 16) / 255,
+        1
+    }
+end
+
 function flatten(tbl)
 	local points = {}
 		for _, point in ipairs(tbl) do

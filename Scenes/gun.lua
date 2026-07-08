@@ -64,7 +64,8 @@ end
 function gun:draw()
     local x,y = self.offsetX,self.offsetY
     
-    love.graphics.setBackgroundColor(.1,.1,.1,1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
 
 
     --background
@@ -88,8 +89,7 @@ function gun:draw()
     tab:draw()
 
     --cursor
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 return gun

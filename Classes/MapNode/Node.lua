@@ -37,7 +37,7 @@ function Node:clicked()
         if self.map.playerLocation == node.key and node.nodeY < self.nodeY then
             self.map.playerLocation = self.key
             node.enabled = false
-            self.map.handler:nodeClicked(self.variables)
+            self.map.handler:nodeClicked(self.variables,self.seed)
         end
     end
 end

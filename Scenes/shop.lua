@@ -11,6 +11,8 @@ local shop = {
     maxLevel = 5,
 }
 
+local artifact_camera_x,artifact_camera_y = 0,0
+local artifact_x,artifact_y = 10,280
 
 function shop:displayArtifacts(artifactsTable)
     self.artifacts = {}
@@ -240,6 +242,16 @@ function shop:load()
         --self:displayArtifacts(artifacts:getAllArtifacts())
         self:displayArtifacts({5,2})
     end
+
+    self.audios = {
+        background = assetloader:getAudio("industryatmosphere"),
+    }
+    self.audios.background:setPitch(cosmeticRandom:random(.95,1))
+    self.audios.background:setVolume(.2)
+end
+
+function shop:loadScene()
+    love.audio.play(self.audios.background)
 end
 
 function shop:update(dt)
@@ -259,10 +271,20 @@ function shop:update(dt)
         end
         self.skipArtifactButton:update()
     end
+
+    if collision.rect({x = artifact_x,y=artifact_y,width = window.GameWidth,height = window.GameHeight-280}) and 
+        #game.Player.artifacts > 9 then 
+            if wheelUp then
+                artifact_camera_x = math.min(artifact_camera_x + (3000 *dt),#game.Player.artifacts*64-window.GameWidth+32)
+            elseif wheelDown then
+                artifact_camera_x = math.max(artifact_camera_x - (3000 * dt),0)
+            end
+        end
 end
 
 function shop:draw()
-    love.graphics.setBackgroundColor(.1,.1,.1,1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
 
      --draw sub scenes
     self.Scenes[self.Scene]:draw()
@@ -278,13 +300,53 @@ function shop:draw()
     --draw tab
     tab:draw()
 
+
+
     Button.drawAll(self.buttons)
+
+    --Draw the players Artifacts
+    if #game.Player.artifacts > 0 then
+        local x,y = artifact_x,artifact_y
+
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.setFont(dogica_8)
+        love.graphics.print("Current Artifacts: ", x,y)
+
+        love.graphics.push()
+        love.graphics.translate(-artifact_camera_x,-artifact_camera_y)
+    
+        local infopanel_table = {}
+        
+        for i, artifact in ipairs(game.Player.artifacts) do
+            local image = artifact.image
+            local x,y,width,height = (i-1) * 70 + 8,y+16,image:getWidth(),image:getHeight()
+            love.graphics.setColor(1,1,1,1)
+            love.graphics.draw(image,x,y)
+            table.insert(infopanel_table,{
+                x = x,
+                y = y,
+                width = width,
+                height = height,
+                info = artifact.description,
+            })
+
+        end
+
+        --Info panel 
+        for i, artifact in ipairs(infopanel_table) do
+            if collision.rect(artifact,nil,nil,artifact_camera_x,artifact_camera_y) then
+                infopanel:draw(artifact,nil,artifact_camera_x,artifact_camera_y)
+            end
+        end
+
+        love.graphics.pop()
+    end
 
     --draw artifacts
     self:drawArtifactSelection()
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+
+    drawCursor()
 end
 
 

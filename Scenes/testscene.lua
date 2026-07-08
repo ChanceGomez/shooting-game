@@ -41,7 +41,7 @@ end
     
 
 
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
  end
 
  return testscene

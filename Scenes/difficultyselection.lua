@@ -3,17 +3,51 @@ local difficultyselction = {
 }
 
 
-function difficultyselction:load()
-    
-    self.buttons.easy = Button.new({
-        x = window.GameWidth/2 - assetloader:getImage("button_easy"):getWidth(),
-        y = 128,
+function difficultyselction:load() 
+    self.buttons.tutorial = Button.new({
+        x = window.GameWidth/2 - 128,
+        y = 128-48,
+        width = 128,
+        height = 32,
+        description = {
+            text = "Tutorial",
+            font = dogica_16,
+            format = "center",
+        },
         visible = true,
-        image = assetloader:getImage("button_easy"),
-        clicked = function()
+        clicked = function(self)
+            settings.difficulty = 'easy'
+            game:createTutorial()
+            Scene = "game"
+        end,
+        updateText = function(self)
+            return {
+                text = "A short tutorial on how to play",
+                font = dogica_8,
+            }
+        end,
+    })
+    self.buttons.easy = Button.new({
+        x = window.GameWidth/2 - 128,
+        y = 128,
+        width = 128,
+        height = 32,
+        description = {
+            text = "Easy",
+            font = dogica_16,
+            format = "center",
+        },
+        visible = true,
+        clicked = function(self)
             settings.difficulty = 'easy'
             Scene = "map"
             map:activateCurrentNode()
+        end,
+        updateText = function(self)
+            return {
+                text = "Easy mode for beginner players",
+                font = dogica_8,
+            }
         end,
     })
 end
@@ -28,7 +62,8 @@ function difficultyselction:update(dt)
 end
 
 function difficultyselction:draw()
-    love.graphics.setBackgroundColor(.1,.1,.1,1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
 
     --Text
     love.graphics.setColor(1,1,1,1)
@@ -47,8 +82,7 @@ function difficultyselction:draw()
     end
 
     --Cursor
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 

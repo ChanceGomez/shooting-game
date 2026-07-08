@@ -41,6 +41,10 @@ function EquipmentInventory.new(tbl,functions)
     return obj
 end
 
+function EquipmentInventory:itemHeld()
+    Inventory.itemHeld(self)
+end
+
 function EquipmentInventory:addItem(item,slot)
     local valid = false
     local slot = slot or self:getNextSlot()

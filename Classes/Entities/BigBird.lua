@@ -12,7 +12,7 @@ function BigBird.new(x,y,handler,difficulty,facing)
 
     --Power scaling
     obj.difficulty = difficulty
-    obj.health = 60 * (math.max(difficulty/1.7,1))
+    obj.health = 40 * (math.max(difficulty/3,1))
     obj.speed = 20 * (math.max(difficulty/8,1))
     obj.resources = 30
 

@@ -14,8 +14,8 @@ function Explosion.new(handler,x,y,radius,damage,duration)
     obj.properties = {
         damage = {
         type = "Explosion",
-        radius = obj.radius,
-        damage = obj.damage,
+        radius = deepCopy(obj.radius),
+        damage = deepCopy(obj.damage),
         interval = 0,
         duration = 0,
         executable = function(self,enemy)
@@ -42,10 +42,23 @@ function Explosion:update(dt)
     --Check for enemies in explosion
     for i, enemy in ipairs(self.handler.enemies) do
         if enemy.currentExplosionDamage ~= self and enemy:checkCircleCollision(self,self.properties) then
+            --Get bullets properties
+            local properties = self.properties
+            
+            --Calculate all the effects
+            for i, effect in pairs(properties) do 
+                effect.damage = game.Affector:trigger(effect.type .. " Damage")
+                effect.duration = game.Affector:trigger(effect.type .. " Duration")
+            end
+
+            --Send each effect to the enemy
+            game.lookouts[1].handler:checkHit(properties)
+        
             enemy.currentExplosionDamage = self
-            enemy:hit(self.properties)
+            enemy:hit(properties)
         end
     end
+
 end
 
 function Explosion:draw()

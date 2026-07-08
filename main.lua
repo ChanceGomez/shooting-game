@@ -24,24 +24,26 @@
   DamagePopup = require("Libraries/DamagePopup")
   infopanel = require("Libraries/infopanel")
   polygon = require("Libraries/polygon")
-  
+  Slider = require("Libraries/Slider")
+  Label = require("Libraries/Label")
  
 --Global vars
 window.GameWidth,window.GameHeight = 640,360
 window.calculateScale()
 mainCanvas = nil
 settings = {
-  volume = .6, -- Global volume
+  volume = .5, -- Global volume
   hitbox = false, -- Display hitboxes on enemies
   showHealth = true,
   showAlive = false,
   debug = true,
   difficulty = 'easy',
-  loadShopOnStart = true,
+  loadShopOnStart = false,
   crt = false,
   loadMap = true,
   isFullscreen = true,
   canDie = true,
+  advancedTooltips = true,
 }
  
 --Scripts
@@ -145,6 +147,7 @@ cosmeticRandom = love.math.newRandomGenerator(os.time())
 local function loadAssets()
   --images
     assetloader:loadImages("Assets/Sprites")
+    assetloader:loadImages("Assets/Sprites/Backgrounds")
     assetloader:loadAudios("Assets/Audios")
   
     --perfect dos font
@@ -162,6 +165,7 @@ end
 
 local function loadClasses()
     Lookout = require("Classes/Lookout")
+    TutorialLookout = require("Classes/TutorialLookout")
     Report = require("Classes/Report")
     BackgroundHandler = require("Classes/BackgroundHandler")
     ReloadShelf = require("Classes/ReloadShelf")
@@ -217,7 +221,7 @@ function love.load()
     love.window.setVSync(0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     love.mouse.setVisible(false) -- set cursor to invisible
-    --love.window.setMode(window.GameWidth,window.GameHeight,settings.isFullscreen)
+
 
     --Get main canvas
     mainCanvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
@@ -276,15 +280,19 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setColor(0,0,0,1)
+  love.graphics.rectangle("fill",0,0,window.Width,window.Height)
+
 	love.graphics.setCanvas(mainCanvas)
 	love.graphics.clear()
+
 
 	--scenes
 	Scenes[Scene]:draw()
 
 	love.graphics.setCanvas()
 	love.graphics.setColor(1,1,1,1)
-	love.graphics.draw(mainCanvas,0,0,0,window.Scale)
+	love.graphics.draw(mainCanvas,window.windowX,window.windowY,0,window.Scale)
 
 
 	--gui debug

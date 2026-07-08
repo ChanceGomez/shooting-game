@@ -31,7 +31,9 @@ function losescreen:update(dt)
 end
 
 function losescreen:draw()
-    love.graphics.setBackgroundColor(.1,.1,.1,1)
+    love.graphics.setColor(.1,.1,.1,1)
+    love.graphics.rectangle("fill",0,0,window.GameWidth,window.GameHeight)
+    
     love.graphics.setFont(dogica_64)
     love.graphics.setColor(1,1,1,1)
     love.graphics.print("Lost",4,4)
@@ -41,8 +43,7 @@ function losescreen:draw()
     end
 
 
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(assetloader:getImage("cursor"),CursorX,CursorY)
+    drawCursor()
 end
 
 return losescreen

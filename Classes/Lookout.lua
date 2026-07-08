@@ -4,16 +4,23 @@ Lookout.__index = Lookout
 local crt_shader = love.graphics.newShader("Assets/Shaders/crt.glsl")
 crt_shader:send("screen_size", {love.graphics.getDimensions()})
 
-function Lookout.new(enemies,difficulty,artifacts,images)
+local defaultBackground = {
+    background = assetloader:getImage("background_night_level1")
+}
+local defaultEnemies = {"Bird","Bird","Bird"}
+
+function Lookout.new(seed,difficulty,artifacts,images)
     local obj = setmetatable({}, Lookout)
+
+    local seed = seed or 0
+    local images = images or defaultBackground
 
     obj.images = images
     obj.artifacts = artifacts
     obj.difficulty = difficulty
-    obj.enemyCount = #enemies
     obj.enemies = {}
     obj.canvas = love.graphics.newCanvas(window.GameWidth,window.GameHeight)
-    obj.handler = EnemyHandler.new(obj,enemies,difficulty)
+    obj.handler,obj.enemyCount = EnemyHandler.new(obj,seed,difficulty)
     obj.handler:startRound()
     obj.x = 0
     obj.y = 0
@@ -26,6 +33,13 @@ function Lookout.new(enemies,difficulty,artifacts,images)
     obj.ReloadShelf = ReloadShelf.new(-128,obj.y + window.GameHeight - 64)
     obj.BackgroundHandler = BackgroundHandler.new()
     obj.outlineMargin = 0
+
+    --Background audio
+    obj.background_audio = assetloader:getAudio("jungleatmosphere")
+    obj.background_audio:setVolume(.02)
+    obj.background_audio:setPitch(cosmeticRandom:random(.9,1))
+
+    love.audio.play(obj.background_audio)
 
     obj:openReloadShelf()
 
@@ -89,7 +103,13 @@ function Lookout:draw()
 
 
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(self.images.background)
+    --Calculate Background
+    local width,height = self.images.background:getDimensions()
+
+    local scaleX = window.GameWidth/width
+    local scaleY = window.GameHeight/height
+
+    love.graphics.draw(self.images.background,0,0,0,scaleX,scaleY)
 
     --clouds 
 

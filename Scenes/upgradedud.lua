@@ -72,7 +72,7 @@ function upgradedud:load(x,y,width,height)
             local afterStat = game.Affector:getAdd(trigger,game:getVariable(trigger))
             game.Affector:removeID(self.wrapper.id)
 
-            self.wrapper.stat = trigger .. " : " .. beforeStat .. " -> " .. afterStat .. afterString
+            self.wrapper.stat = trigger .. " : " .. beforeStat .. " -> " .. afterStat
         end,
     })
 end

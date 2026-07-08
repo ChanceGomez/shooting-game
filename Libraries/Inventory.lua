@@ -228,6 +228,12 @@ function Inventory.new(x,y,col,row,functions)
         obj.slots = generateSlots(cols,rows,x,y,obj.marginBetweenSlots)
     end
 
+    --Audios
+    obj.audios = {
+        held = nil,
+        dropped = nil,
+    }
+
 
     return obj
 end
@@ -245,6 +251,14 @@ function Inventory:getNextEmptySlot()
     end
 end
 
+function Inventory:itemHeld()
+    
+end
+
+function Inventory:itemDropped()
+
+end
+
 function Inventory:drag()
 
     --Drop logic
@@ -255,6 +269,9 @@ function Inventory:drag()
             for i, slot in pairs(self.slots) do
                 if slot.hovered and slot.item == nil then
                     isHovered = slot:addItem(self.heldItem)
+
+                    --For audio cue
+                    self:itemDropped()
                 end
             end
             --Check other inventory that can be hovered
@@ -263,6 +280,9 @@ function Inventory:drag()
                     if slot.hovered then
                         --Check to see if other inventory rejects item
                         isHovered = inventory:addItem(self.heldItem,slot)
+
+                        --For audio cue
+                        self:itemDropped()
                     end
                 end
             end
@@ -289,6 +309,9 @@ function Inventory:drag()
             self.heldItemOriginalSlot = slot
             --Remove item from the slot
             slot:removeItem()
+
+            --For audio cue
+            self:itemHeld()
         end
         -- See if slot can be rightclicked
         if slot.hovered and rightClick and self.heldItem == nil and slot.item then

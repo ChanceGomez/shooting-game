@@ -73,11 +73,11 @@ function Enemy:hit(properties)
         --Insert effect into effects
         table.insert(self.effects,{
             type = effect.type or "",
-            ticks = 0,
+            lifetimeTimer = 0,
+            tickTimer = 0,
+            damage = damage or 0,
+            duration = duration or 0,
             interval = effect.interval or 1,
-            timer = 0,
-            damage = damage,
-            duration = duration,
             executable = function(passthroughEffect,enemy)
                 effect.executable(passthroughEffect,enemy) 
             end,
@@ -85,14 +85,16 @@ function Enemy:hit(properties)
     end
 
     --For report
-    game.lookouts[1].Report:action("shotHit")
+    if self.handler and self.handler.shotHit then
+        self.handler:shotHit()
+    end
 end
 
 function Enemy:damage(damage,type)
     --Check to see if is still alive
     if not self.isAlive then return end
     --Make sure damage is valid
-    if damage == 0 or damage == nil then return end
+    if damage <= 0 or damage == nil then return end
 
 
     --local damage = game.Affector:trigger(type .. " Damage")
@@ -102,13 +104,16 @@ function Enemy:damage(damage,type)
     self.health = self.health - damage
     
     --For report
-    game.lookouts[1].Report:action("damageDealt", damage)
+    if self.handler and self.handler.onDamage then
+        self.handler:onDamage(damage)
+    end
 
     --Check if now dead
     if self.health <= 0 then
         self:die()
-        --For report
-        game.lookouts[1].Report:action("enemyKilled")
+        if self.handler and self.handler.onKilled then
+            self.handler:onKilled()
+        end
     end
 
     --damage popup
@@ -157,44 +162,28 @@ function Enemy:deadColor()
 end
 
 function Enemy:effectUpdate(dt)
-    --check for effects
+    --Check to see if enemy has any effects
     for i = #self.effects, 1, -1 do 
         local effect = self.effects[i]
         local remove = false
-        effect.timer = effect.timer + dt
 
+        --Track the time the effect has been alive and time since last tick.
+        effect.lifetimeTimer = (effect.lifetimeTimer or 0) + dt
+        effect.tickTimer = (effect.tickTimer or 0) + dt
 
-        --Tick system based off of 1 second
-        if effect.timer >= 1 then
-            effect.timer = 0
-            effect.ticks = effect.ticks + 1
-            effect.executable(effect,self)
-            
-            if effect.ticks >= effect.duration then
-                remove = true
+        --Execute tick based effects
+        if effect.interval > 0 then
+            while effect.tickTimer >= effect.interval do
+                effect.tickTimer = effect.tickTimer - effect.interval
+                effect.executable(effect,self)
             end
-        end
 
-        --Tick system based off of instant effects
-        if effect.interval == 0 and effect.duration > 0 then
+        --Continues effects
+        else
             effect.executable(effect,self)
         end
 
-        --Instant effect but instant removal check
-        if effect.interval == 0 and effect.duration == 0 then
-            effect.executable(effect,self)
-                if effect.type == "Dud Fire" then error(2) end
-            remove = true
-        end
-
-        --remove instant execute effects at the end of loop
-        if effect.interval == 0 and effect.ticks >= effect.duration then
-                if effect.type == "Dud Fire" then error(3) end
-
-            remove = true
-        end
-
-        if remove then
+        if effect.lifetimeTimer >= effect.duration then
             table.remove(self.effects,i)
         end
     end
